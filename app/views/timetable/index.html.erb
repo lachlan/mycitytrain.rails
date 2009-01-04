@@ -1,0 +1,29 @@
+<ul class='panel'>
+	<li>
+		<%= link_to 'Timetable', :controller => 'timetable', :action => 'departing' %>
+	</li>
+</ul>
+<% if @journeys and @journeys.length > 0 %>
+	<h2>
+		Favourites
+		<% link_to(:controller => 'timetable', :action => 'destroy_favourites', :confirm => 'Remove all favourites?') do %>
+			<%= image_tag '/images/silk/bullet_delete.png', :alt => '' %>
+		<% end %>
+	</h2>
+	<ul class='panel'>
+		<% @journeys.each do |journey| %>
+			<% if journey %>
+				<li>
+					<% link_to(:controller => 'timetable', :action => 'upcoming', :departing => journey.departing.code, :arriving => journey.arriving.code) do %>
+						<%= h journey.departing.name %> to <%= h journey.arriving.name %>
+						<% if journey.departing_at %>
+							<span class='secondary'>
+								&nbsp;<%= image_tag '/images/silk/bullet_go.png', :alt => '' %> <%= h format_time(journey.departing_at) %>
+							</span>
+						<% end %>
+					<% end %>
+				</li>
+			<% end %>
+		<% end %>
+	</ul>
+<% end %>

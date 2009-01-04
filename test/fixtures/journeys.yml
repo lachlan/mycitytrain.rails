@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  depart_station: 
+  depart_at: 2008-12-23 12:33:14
+  arrive_station: 
+
+two:
+  depart_station: 
+  depart_at: 2008-12-23 12:33:14
+  arrive_station: 

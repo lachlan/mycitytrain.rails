@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="<%= @html_class if @html_class %>">
+<head>
+<title>Citytrain<%= ": " + @title if @title %></title>
+<link rel="apple-touch-icon" href="images/logo_60x60.png" />
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/grids', 'yui/3_0_0pr1/base-min', 'base', 'mobile', :cache => true %>
+<% if @refresh %>
+<meta http-equiv="refresh" content="<%= h @refresh.to_s %>">
+<% end %>
+</head>
+<body>
+<div class="container">
+	<div class="header <%= @header_class ||= 'yui-g' %>"> 
+		<div class="brand <%= 'yui-u first' if @actions %>"> 
+			<h1 class="name">
+				<% title = @title || "Citytrain" %>
+				<%= link_to title, :controller => "timetable", :action => "index" %>
+			</h1>
+		</div>
+		<% if @actions %>
+		<div class="yui-g">
+			<%= yield :actions %>
+		</div>
+		<% end %>
+	</div>
+	<div class="nav yui-g">
+		<%= yield :nav %>
+	</div>
+	<div class="content yui-g">
+		<%= yield %>
+	</div>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6816538-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
