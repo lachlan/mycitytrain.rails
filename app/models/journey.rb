@@ -1,4 +1,5 @@
 class Journey < ActiveRecord::Base
+  include Comparable
   belongs_to :departing, :class_name => 'Station'
   belongs_to :arriving, :class_name => 'Station'
   has_many :stops, :order => :position
@@ -11,7 +12,12 @@ class Journey < ActiveRecord::Base
   named_scope :departing_from, lambda { |station| { :conditions => ['departing_id = ?', station] }}
   named_scope :arriving_to, lambda { |station| { :conditions => ['arriving_id = ?', station] }}
   named_scope :limit, lambda { |limit| { :limit => limit }}
-    
+  
+  #Comparing the departing_at for two journeys
+  def <=> (b)    
+    (b and b.departing_at) ? (departing_at ? departing_at <=> b.departing_at : 1) : ( departing_at ? -1 : 0)
+  end
+      
   def changes
     changes, service, last_stop = [], [], nil
     

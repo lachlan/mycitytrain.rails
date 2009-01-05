@@ -3,7 +3,7 @@
 		<%= link_to 'Timetable', :controller => 'timetable', :action => 'departing' %>
 	</li>
 </ul>
-<% if @journeys and @journeys.length > 0 %>
+<% if @journeys.length > 0 %>
 	<h2>
 		Favourites
 		<% link_to(:controller => 'timetable', :action => 'destroy_favourites', :confirm => 'Remove all favourites?') do %>
