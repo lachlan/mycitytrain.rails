@@ -1,18 +1,16 @@
 set :application, "mycitytrain"
-set :repository,  "git://github.com/dogeth/mycitytrain.git"
 
-# If you aren't deploying to /u/apps/#{application} on the target
-# servers (which is the default), you can specify the actual location
-# via the :deploy_to variable:
-# set :deploy_to, "/var/www/#{application}"
+#git
+set :scm, :git
+set :deploy_via, :remote_cache
+set :repository,  "git://github.com/dogeth/mycitytrain.git"
 set :deploy_to, "/home/train/domains/mycitytrain.info/"
 
-# If you aren't using Subversion to manage your source code, specify
-# your SCM below:
-# set :scm, :subversion
-set :scm, :git
-
-server "mycitytrain.info", :app, :web, :db, :primary => true
-
+#server
+server "deploy.mycitytrain.info", :app, :web, :db, :primary => true
 set :user, "train"
+ssh_options[:port] = 3636
 set :use_sudo, false
+
+
+
