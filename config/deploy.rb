@@ -15,5 +15,4 @@ set :scm, :git
 server "mycitytrain.info", :app, :web, :db, :primary => true
 
 set :user, "train"
-set :scm_username, "lachlan"
 set :use_sudo, false
