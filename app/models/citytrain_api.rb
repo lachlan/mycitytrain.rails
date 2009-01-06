@@ -1,4 +1,5 @@
 require 'soap/wsdlDriver'
+require 'soap/rpc/driver'
 
 class CitytrainAPI
   @@service = SOAP::WSDLDriverFactory.new('http://www.citytrain.com.au/soaplisten/CityTrain.WSDL').create_rpc_driver
@@ -49,7 +50,7 @@ class CitytrainAPI
               position += 1
               
               #kkk this method name/call is a little long
-              Station.find_or_create_by_journey_id_and_station_id_and_platform_and_departing_at_and_arriving_at_and_position(:journey => journey, :station => station, :platform => platform, :departing_at => departing_at, :arriving_at => arriving_at)
+              Stop.find_or_create_by_journey_id_and_station_id_and_platform_and_departing_at_and_arriving_at_and_position(:journey => journey, :station => station, :platform => platform, :departing_at => departing_at, :arriving_at => arriving_at)
               
               break if trip['sStationName'] = jp['ArrivalNodeName']
               
@@ -75,7 +76,12 @@ class CitytrainAPI
   end
   
   def self.ws_get_trip_patterns(trip_name, daysop, departing_on)
-    @@service.WSGetTripPatterns(departing_on, trip_name, daysop, "")
+    # create SOAP driver and add trip patterns method by hand because the auto WSDL parse seems to screw it up
+    service = SOAP::RPC::Driver.new("http://www.citytrain.com.au/soaplisten/CityTrain.WSDL",                                  # endpoint uri
+                                    "http://www.qr.com.au/passenger_services/CityTrain/message/",                             # namespace
+                                    "http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetTripPatterns")   # SOAPAction
+    service.add_method('WSGetTripPatterns', 'searchDate', 'Trip', 'DaysOp', 'targetSchema')
+    service.WSGetTripPatterns(departing_on, trip_name, daysop, "")
   end
   
 end
