@@ -34,19 +34,19 @@ class CitytrainAPI
   private
   
   def self.ws_get_stations
-    @@service.WSGetStations(nil)
+    @@service.WSGetStations("")
   end
   
-  def self.ws_get_journeys(departing_station_code, arriving_station_code, departing_on = Time.zone.now)
-    @@service.WSGetJourneys(departing_station_code, arriving_station_code, 0, 86400, "DEF", departing_on, departing_on, 9999, nil)
+  def self.ws_get_journeys(departing_station_code, arriving_station_code, departing_on)
+    @@service.WSGetJourneys(departing_station_code, arriving_station_code, 0, 86400, "DEP", departing_on, true, 9999, "")
   end
   
   def self.ws_get_fares(departing_station_code, arriving_station_code)
-    @@service.WSGetFares(departing_station_code, arriving_station_code, nil)
+    @@service.WSGetFares(departing_station_code, arriving_station_code, "")
   end
   
-  def self.ws_get_trip_patterns(trip_name, daysop, departing_on = Time.zone.now)
-    @@service.WSGetTripPatterns(departing_on, trip_name, daysop, nil)
+  def self.ws_get_trip_patterns(trip_name, daysop, departing_on)
+    @@service.WSGetTripPatterns(departing_on, trip_name, daysop, "")
   end
   
 end
