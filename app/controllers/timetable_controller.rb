@@ -151,6 +151,11 @@ class TimetableController < ApplicationController
   	if departing and arriving and departing_at  	
     	@journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at, :include => :stops)
 
+  		if @journey and (!@journey.stops or @journey.stops.length == 0)
+  		  CitytrainAPI.stops @journey #kkk need to move this
+  		  @journey = Journey.find_by_id(@journey.id, :include => :stops)
+  		end
+  		
       respond_to do |format|
         format.html 
         format.xml  { render :xml => @stops }

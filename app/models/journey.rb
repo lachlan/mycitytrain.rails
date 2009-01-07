@@ -22,12 +22,12 @@ class Journey < ActiveRecord::Base
     changes, service, last_stop = [], [], nil
     
     stops.each do |stop|
-        if last_stop == stop.station.id
+        if last_stop == stop.station_name
           changes << service
           service = []
         end
         service << stop
-        last_stop = stop.station.id
+        last_stop = stop.station_name
     end
     changes << service if service and service.length > 0
   end

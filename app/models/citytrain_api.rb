@@ -4,6 +4,10 @@ require 'soap/rpc/driver'
 class CitytrainAPI
   @@service = SOAP::WSDLDriverFactory.new('http://www.citytrain.com.au/soaplisten/CityTrain.WSDL').create_rpc_driver
   
+  def self.logger
+    RAILS_DEFAULT_LOGGER
+  end
+
   def self.stations
     stations = XmlSimple.xml_in(self.ws_get_stations, 'force_array' => ['Station'])
     stations['Station'].each do |station|
@@ -13,46 +17,63 @@ class CitytrainAPI
   
   def self.journeys(departing, arriving, departing_on = Time.zone.now)
     Time.zone = "Brisbane"
-    departing_on = Time.zone.local(departing_on.year, departing_on.month, departing_on.day) # set time to midnight
-    xml = self.ws_get_journeys(departing.code, arriving.code, departing_on)
+    departing_date = Time.zone.local(departing_on.year, departing_on.month, departing_on.day) # set time to midnight
+    xml = self.ws_get_journeys(departing.code, arriving.code, departing_date)
     journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
     if journey_parts and journey_parts['Journey']
       
-      last_journey = nil #kkk test removal
+      last_journey = nil 
       journey_parts['Journey'].each do |jp|
-        
         #add any new journey
-        if jp['iJourneyID'] != last_journey 
+        if jp['iJourneyID'] == '0' or jp['iJourneyID'] != last_journey 
           last_journey = jp['iJourneyID']
-          departing_at = departing_on + jp['sDepartureTime'].to_i.seconds
-          journey = Journey.find_or_create_by_departing_id_and_arriving_id_and_departing_at(:departing => departing, :arriving => arriving, :departing_at => departing_at) 
+          departing_at = departing_date + jp['sDepartureTime'].to_i.seconds
+          logger.debug "adding journey for '#{departing.name}' to '#{arriving.name}' at #{departing_at}"
+          journey = Journey.find_or_create_by_departing_id_and_arriving_id_and_departing_at(:departing_id => departing.id, :arriving_id => arriving.id, :departing_at => departing_at) 
         end
-        
+      end
+    end
+  end
+  
+  def self.stops(journey)
+    Time.zone = "Brisbane"
+    departing_date = Time.zone.local(journey.departing_at.year, journey.departing_at.month, journey.departing_at.day) # set time to midnight
+    departing_time_seconds = journey.departing_at.sec + (journey.departing_at.min * 60) + (journey.departing_at.hour * 3600)
+    
+    xml = self.ws_get_journeys(journey.departing.code, journey.arriving.code, departing_date, departing_time_seconds, 1)
+    journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
+    if journey_parts and journey_parts['Journey']
+      
+      journey_parts['Journey'].each do |jp|
+
         #get the trip patterns for this journey
-        xml = self.ws_get_trip_patterns(jp['sTripName'], jp['sDaysOp'].to_i, departing_on)
+        trip = jp['sTripname']
+        daysop = jp['sDaysOp'].to_i
+        base_departing_at = departing_date + jp['sDepartureTime'].to_i.seconds
+        
+        xml = self.ws_get_trip_patterns(trip, daysop, base_departing_at)
         trips = XmlSimple.xml_in(xml, 'force_array' => ['TripStop'])
         if trips and trips['TripStop']
           
-          part_of_journey = false #kkk test removal (remember to test for multitrips - probably need to initialise depends on ruby, if variable is re-initialised depending on scope)
-          position = 0 #kkk refactor this out
+          part_of_journey, position, base_seconds  = false, 0, 0
           trips['TripStop'].sort! {|a,b| a['sDepartureTime'].to_i <=> b['sDepartureTime'].to_i} #need to order by sDepartureTime
           trips['TripStop'].each do |trip| 
             
-            part-of-journey = true if !part_of_journey and jp['DepartureNodeName'] = trip['sStationName']
+            part_of_journey = true if !part_of_journey and jp['DepartureNodeName'] == trip['sStationName']
             
-            if part-of-journey
+            if part_of_journey
               #add this new stop
-              station = Station.find_by_name trip['sStationName']
-              departing_at = departing_on + trip['sDepartureTime'].to_i.seconds
-              arriving_at = departing_on + trip['sArrivalTime'].to_i.seconds
-              platform = trip['sPlatformName'].to_i 
-              platform = nil if !(platform > 0 and platform < 20)
+              base_seconds = trip['sDepartureTime'].to_i if base_seconds == 0
+              departing_at = base_departing_at + (trip['sDepartureTime'].to_i - base_seconds).seconds
+              arriving_at = base_departing_at + (trip['sArrivalTime'].to_i - base_seconds).seconds
+              station_name = trip['sStationName']
+              platform = trip['sPlatformName']
+              platform = '0' unless (1..20) === platform.to_i 
               position += 1
               
-              #kkk this method name/call is a little long
-              Stop.find_or_create_by_journey_id_and_station_id_and_platform_and_departing_at_and_arriving_at_and_position(:journey => journey, :station => station, :platform => platform, :departing_at => departing_at, :arriving_at => arriving_at)
-              
-              break if trip['sStationName'] = jp['ArrivalNodeName']
+              Stop.find_or_create_by_journey_id_and_position(:journey_id => journey.id, :station_name => station_name, :platform => platform, :departing_at => departing_at, :arriving_at => arriving_at, :position => position)
+                            
+              break if station_name == jp['ArrivalNodeName']
               
             end    
           end  
@@ -67,21 +88,19 @@ class CitytrainAPI
     @@service.WSGetStations("")
   end
   
-  def self.ws_get_journeys(departing_station_code, arriving_station_code, departing_on)
-    @@service.WSGetJourneys(departing_station_code, arriving_station_code, 0, 86400, "DEP", departing_on, true, 9999, "")
+  def self.ws_get_journeys(departing_station_code, arriving_station_code, search_dt, from_time_seconds = 0, limit = 9999)
+    @@service.WSGetJourneys(departing_station_code, arriving_station_code, from_time_seconds, 86400, "DEP", search_dt, true, limit, "")
   end
   
-  def self.ws_get_fares(departing_station_code, arriving_station_code)
-    @@service.WSGetFares(departing_station_code, arriving_station_code, "")
-  end
-  
-  def self.ws_get_trip_patterns(trip_name, daysop, departing_on)
+  def self.ws_get_trip_patterns(trip_name, daysop, search_dt)
+    #Guarding against incompatbilities between rails and soap.  TimeWithZone can't be used, use Time instead
+	search_dt = search_dt.utc if search_dt.class.name == "ActiveSupport::TimeWithZone"
+	
     # create SOAP driver and add trip patterns method by hand because the auto WSDL parse seems to screw it up
     service = SOAP::RPC::Driver.new("http://www.citytrain.com.au/soaplisten/CityTrain.WSDL",                                  # endpoint uri
                                     "http://www.qr.com.au/passenger_services/CityTrain/message/",                             # namespace
                                     "http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetTripPatterns")   # SOAPAction
     service.add_method('WSGetTripPatterns', 'searchDate', 'Trip', 'DaysOp', 'targetSchema')
-    service.WSGetTripPatterns(departing_on, trip_name, daysop, "")
+    service.WSGetTripPatterns(search_dt, trip_name, daysop, "")
   end
-  
 end

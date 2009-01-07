@@ -1,5 +1,7 @@
 class TestData < ActiveRecord::Migration
   def self.up
+  	return if RAILS_ENV != 'development'
+
     # Add some stations
     CitytrainAPI.stations
     
@@ -22,6 +24,7 @@ class TestData < ActiveRecord::Migration
   end
 
   def self.down
+  	return if RAILS_ENV != 'development'
     Stop.destroy_all
     Journey.destroy_all
     Station.destroy_all

@@ -1,19 +1,21 @@
-<% @title = @journey.departing.name + " to " + @journey.arriving.name + ": " +  format_time(@journey.departing_at) %>
+<% @title = "#{@journey.departing.name} to #{@journey.arriving.name}" %>
+<% @title += ": #{format_time(@journey.departing_at, :weekday)}" if @journey.departing_at.day != Time.zone.now.day %>
 <% if @journey.changes and @journey.changes.length > 0 %>
 	<% @journey.changes.each do |change| %>
 		<dl class="panel">
 		<% last_stop = nil %>
 		<% change.each do |stop| %>
 			<dt>
-				<%= h stop.station.name  %>
+				<%= h stop.station_name  %>
 			</dt>
 			<dd>
-				<% if stop == @journey.changes.first %>
-					<%= h format_time(stop.departing_at) %>
+				<% if stop == change.first %>
+					departs <%= format_time(stop.departing_at) %>
 				<% else %>
-					<%= h format_time(stop.arriving_at) %>
+					<%= 'arrives ' if stop == change.last %>
+					<%= format_time(stop.arriving_at) %>
 				<% end %>
-				<% if stop.platform %>
+				<% if stop.platform.to_i > 0 and (stop == change.first or stop == change.last) %>
 					<span class="secondary">Platform <%= h stop.platform %></span>
 				<% end %>
 			</dd>
@@ -21,10 +23,10 @@
 		<% end %>
 		</dl>
 		<% if change != @journey.changes.last and last_stop %>
-			<p>Change service at <%= h last_stop.station.name %>.<p>
+			<p>Change service at <%= h last_stop.station_name %><p>
 		<% end %>
 	<% end %>
-	<p>Duration: <%= h distance_of_time_in_words(@journey.departing_at, @journey.arriving_at) %>.</p>
+	<p>Duration: <%= h distance_of_time_in_words(@journey.departing_at, @journey.arriving_at) %></p>
 <% else %>
 	<br />
 	<p>No details available.</p>

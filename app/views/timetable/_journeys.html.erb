@@ -2,8 +2,11 @@
 <ul class="list">
 	<% if @journeys.length > 0 %>
 	  	<% @journeys.each do |journey| %>
-		  	<li>
-				<%= link_to (h format_time(journey.departing_at)), :action => 'journey', :departing => @departing.code, :arriving => @arriving.code, :departing_at => format_time(journey.departing_at, :iso8601) %>
+ 		  	<li>
+				<% link_to(:action => 'journey', :departing => @departing.code, :arriving => @arriving.code, :departing_at => format_time(journey.departing_at, :iso8601)) do %>
+					<%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %>
+					<%= format_time(journey.departing_at) %>
+				<% end %>
 			</li>
 		<% end %>
 	<% else %>

@@ -2,7 +2,7 @@ class CreateStops < ActiveRecord::Migration
   def self.up
     create_table :stops do |t|
       t.references  :journey
-      t.references  :station
+      t.string      :station_name
       t.string      :platform
       t.datetime    :departing_at
       t.datetime    :arriving_at
