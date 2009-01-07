@@ -69,7 +69,7 @@ margin:0;}
 /* mobile list styles */
 .content .list{font-size:1.41667em;/* 17px */
 font-weight:bold;color:black;background-color:white;margin:0;padding:0;height:100%;}
-.content .list li.heading{background:url(../images/list_header_2x23.png) top left repeat-x;height:23px;padding-top:0;padding-bottom:0;}
+.content .list li.heading{background:#9f9f9f url(../images/list_header_2x23.png) top left repeat-x;height:23px;padding-top:0;padding-bottom:0;}
 .content .list li h2{font-size:1em;line-height:1.353em;margin:0;padding:0;color:white;text-shadow:rgb(76,86,108) 0 0.08333em 0;/* 0 1px 0 */
 text-shadow:#333 0 0.08333em 0;/* 0 1px 0 */}
 .content .list li,
