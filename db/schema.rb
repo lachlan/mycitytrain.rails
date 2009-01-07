@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(:version => 20081224220615) do
 
   create_table "stops", :force => true do |t|
     t.integer  "journey_id"
-    t.integer  "station_id"
+    t.string   "station_name"
     t.string   "platform"
     t.datetime "departing_at"
     t.datetime "arriving_at"

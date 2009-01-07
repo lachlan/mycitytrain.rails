@@ -1,5 +1,5 @@
-<% @title = "#{@journey.departing.name} to #{@journey.arriving.name}" %>
-<% @title += ": #{format_time(@journey.departing_at, :weekday)}" if @journey.departing_at.day != Time.zone.now.day %>
+<% @title = "#{h @journey.departing.name} to #{h @journey.arriving.name}" %>
+<% @title += ": #{format_time @journey.departing_at, :weekday}" unless @journey.departing_at.day == Time.zone.now.day %>
 <% if @journey.changes and @journey.changes.length > 0 %>
 	<% @journey.changes.each do |change| %>
 		<dl class="panel">
@@ -22,11 +22,9 @@
 			<% last_stop = stop %>
 		<% end %>
 		</dl>
-		<% if change != @journey.changes.last and last_stop %>
-			<p>Change service at <%= h last_stop.station_name %><p>
-		<% end %>
+		<%= "<p>Change service at #{h last_stop.station_name}.<p>" if change != @journey.changes.last and last_stop %>
 	<% end %>
-	<p>Duration: <%= h distance_of_time_in_words(@journey.departing_at, @journey.arriving_at) %></p>
+	<p><%= h distance_of_time_in_words(@journey.departing_at, @journey.arriving_at).capitalize %>.</p>
 <% else %>
 	<br />
 	<p>No details available.</p>
