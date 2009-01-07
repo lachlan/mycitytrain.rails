@@ -94,15 +94,19 @@ class TimetableController < ApplicationController
   end
   
   def today
-    @refresh = end_of_the_day 
-    expires_in @refresh
-        
   	@departing = Station.find_by_code(params[:departing])
   	@arriving = Station.find_by_code(params[:arriving])
 
     if @departing and @arriving
       @journeys = Journey.today @departing, @arriving
 	
+      if @journeys and @journeys.length > 1
+	      @refresh = end_of_the_day 
+	      expires_in @refresh
+      else
+        expires_now
+      end
+
       respond_to do |format|
         format.html 
         format.xml  { render :xml => @journeys }
@@ -114,15 +118,19 @@ class TimetableController < ApplicationController
   end
   
   def tomorrow
-    @refresh = end_of_the_day
-    expires_in @refresh
-    
   	@departing = Station.find_by_code(params[:departing])
   	@arriving = Station.find_by_code(params[:arriving])
 
     if @departing and @arriving
       @journeys = Journey.tomorrow @departing, @arriving
 	
+      if @journeys and @journeys.length > 1
+	      @refresh = end_of_the_day 
+	      expires_in @refresh
+      else
+        expires_now
+      end
+
       respond_to do |format|
         format.html 
         format.xml  { render :xml => @journeys }
@@ -142,7 +150,7 @@ class TimetableController < ApplicationController
   	
   	if departing and arriving and departing_at  	
     	@journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at, :include => :stops)
-  	
+
       respond_to do |format|
         format.html 
         format.xml  { render :xml => @stops }
