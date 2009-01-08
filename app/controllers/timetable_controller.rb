@@ -14,7 +14,7 @@ class TimetableController < ApplicationController
         
         if d and a
           journey = Journey.upcoming(d, a).first if d and a
-          journey ||= Journey.new(:departing => d, :arriving => a, :departing_at => nil) if d and a
+          journey ||= Journey.new(:departing => d, :arriving => a, :departing_at => nil)
         else
           logger.error("Attempt to access invalid station/s: '#{favourite[0]}', '#{favourite[1]}'")
         end
