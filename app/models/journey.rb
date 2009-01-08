@@ -65,8 +65,7 @@ class Journey < ActiveRecord::Base
   end
   
   def self.fetch_journeys(o)
-  	departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], o[:limit]
-    limit ||= 9999
+  	departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)
 	
   	journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
 
