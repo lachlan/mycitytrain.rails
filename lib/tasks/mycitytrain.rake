@@ -1,6 +1,6 @@
 namespace :mycitytrain do
   namespace :db do
-    desc "Destroys all journeys and stops older than a day"
+    desc "Destroys all journeys and stops older than today"
     task :purge => :environment do
       condition = ["departing_at < ?", Time.zone.now.yesterday.midnight]
       Stop.destroy_all condition
@@ -15,5 +15,6 @@ namespace :mycitytrain do
       # TODO: Load future journeys for any journeys that already exist
       # TODO: Load future stops for any journeys that already exist
     end
+    
   end
 end
