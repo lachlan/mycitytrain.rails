@@ -70,4 +70,18 @@ class Journey < ActiveRecord::Base
 	journeys
   end
   
+  alias base_stops stops
+  def stops
+  	s = base_stops
+	retries = 0
+  	while (retries < 10 and s.empty?)
+  		CitytrainAPI.stops self
+  		reload
+  		s = base_stops
+  	    retries += 1
+	    sleep 3 if retries > 1 #Sleep in between attempts (3 seconds)
+  	end
+  	s
+  end
+  
 end

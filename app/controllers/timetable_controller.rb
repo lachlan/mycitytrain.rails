@@ -1,6 +1,5 @@
 class TimetableController < ApplicationController  
-  # TODO: implement cache sweeping
-  #caches_page :departing, :arriving
+  caches_page :departing, :arriving 
   
   def index
     expires_now
@@ -22,11 +21,6 @@ class TimetableController < ApplicationController
     # refresh the page when the next closest service departs
     min = @journeys.min.departing_at if @journeys.length > 0
     @refresh = (min - Time.zone.now).to_i.seconds if min
-    
-    respond_to do |format|
-      format.html 
-      format.xml  { render :xml => @journeys }
-    end
   end
   
   def favourite
@@ -42,13 +36,7 @@ class TimetableController < ApplicationController
   
   def departing
     expires_in 1.day
-    
     @stations = Station.find_all
-    
-    respond_to do |format|
-      format.html 
-      format.xml  { render :xml => @stations  }
-    end
   end
   
   def arriving
@@ -58,10 +46,6 @@ class TimetableController < ApplicationController
     
     if @departing
       @stations = Station.find_all
-      respond_to do |format|
-        format.html 
-        format.xml  { render :xml => @stations  }
-      end      
     else
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}'") 
       redirect_to :action => 'index'
@@ -81,11 +65,6 @@ class TimetableController < ApplicationController
 	    else
 	      expires_now
 	    end
-	    
-      respond_to do |format|
-        format.html 
-        format.xml  { render :xml => @journeys }
-      end
     else
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
       redirect_to :action => 'index'
@@ -106,10 +85,6 @@ class TimetableController < ApplicationController
         expires_now
       end
 
-      respond_to do |format|
-        format.html 
-        format.xml  { render :xml => @journeys }
-      end
     else
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
       redirect_to :action => 'index'
@@ -130,10 +105,6 @@ class TimetableController < ApplicationController
         expires_now
       end
 
-      respond_to do |format|
-        format.html 
-        format.xml  { render :xml => @journeys }
-      end
     else
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
       redirect_to :action => 'index'
@@ -148,17 +119,7 @@ class TimetableController < ApplicationController
   	departing_at = Time.zone.parse(params[:departing_at])
   	
   	if departing and arriving and departing_at  	
-    	@journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at, :include => :stops)
-
-  		if @journey and (!@journey.stops or @journey.stops.length == 0)
-  		  CitytrainAPI.stops @journey #kkk need to move this
-  		  @journey = Journey.find_by_id(@journey.id, :include => :stops)
-  		end
-  		
-      respond_to do |format|
-        format.html 
-        format.xml  { render :xml => @stops }
-      end
+  	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at, :include => :stops)
     else
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'

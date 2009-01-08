@@ -4,3 +4,6 @@ tmp/**/*
 doc/api
 doc/app
 doc/guides
+public/stylesheets/all.css
+public/timetable.html
+public/timetable/**
