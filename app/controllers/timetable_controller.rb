@@ -5,7 +5,6 @@ class TimetableController < ApplicationController
   def index
     expires_now
         
-    Time.zone = "Brisbane"
     @journeys = []
     favourites.each do |favourite|
       d = Station.find_by_code(favourite[0])
