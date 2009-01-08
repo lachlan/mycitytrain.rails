@@ -85,7 +85,7 @@ class Journey < ActiveRecord::Base
   
   def self.tomorrow(d, a)
     Time.zone = "Brisbane"
-	  tomorrow = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day) + 1.day
+	tomorrow = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day) + 1.day
     api_called = false
     journeys = []
     

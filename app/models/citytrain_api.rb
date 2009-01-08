@@ -44,6 +44,7 @@ class CitytrainAPI
     journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
     if journey_parts and journey_parts['Journey']
       
+      position = 0
       journey_parts['Journey'].each do |jp|
 
         #get the trip patterns for this journey
@@ -55,7 +56,7 @@ class CitytrainAPI
         trips = XmlSimple.xml_in(xml, 'force_array' => ['TripStop'])
         if trips and trips['TripStop']
           
-          part_of_journey, position, base_seconds  = false, 0, 0
+          part_of_journey, base_seconds  = false, 0
           trips['TripStop'].sort! {|a,b| a['sDepartureTime'].to_i <=> b['sDepartureTime'].to_i} #need to order by sDepartureTime
           trips['TripStop'].each do |trip| 
             
