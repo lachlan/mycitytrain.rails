@@ -15,7 +15,7 @@ class CitytrainAPI
     end
   end
   
-  def self.journeys(departing, arriving, departing_on = Time.zone.now)
+  def self.journeys(departing, arriving)
   	logger.debug "self.journeys #{departing_on}"
     xml = self.ws_get_journeys(departing.code, arriving.code, departing_on.midnight )
     journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
