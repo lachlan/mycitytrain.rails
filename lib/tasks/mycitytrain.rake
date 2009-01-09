@@ -28,7 +28,7 @@ namespace :mycitytrain do
 	  # Load stops for the new journeys
 =begin 
 	  #Taking too long to include the population of stops	  
-	  if !journeys.empty?
+	  unless journeys.empty?
 	  	journeys.each do |j|
       	  puts "Loading stops for #{j.departing.name} to #{j.arriving.name} at #{j.departing_at}"
 	  	  j.stops
