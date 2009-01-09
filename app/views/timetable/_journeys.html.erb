@@ -1,7 +1,7 @@
 <% show_headings ||= false %>
 <% if @journeys %>
 <ul class="list">
-	<% if @journeys.length > 0 %>
+	<% unless @journeys.empty? %>
 		<% if show_headings %>
 			<%= "<li>No further services today.</li>" unless Time.zone.now.day == @journeys.first.departing_at.day %>
 		<% end %>
