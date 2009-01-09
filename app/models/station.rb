@@ -11,7 +11,7 @@ class Station < ActiveRecord::Base
     
     def self.find_all
       stations = Station.find(:all, :order => 'name')
-      if !stations or stations.length == 0
+      if stations.empty?
         CitytrainAPI.stations
         stations = Station.find(:all, :order => 'name')
       end

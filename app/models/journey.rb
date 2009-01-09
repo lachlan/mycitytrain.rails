@@ -39,7 +39,7 @@ class Journey < ActiveRecord::Base
         service << stop
         last_stop = stop.station_name
     end
-    changes << service if service and service.length > 0
+    changes << service if service and !service.empty?
   end
   
   def arriving_at
@@ -67,31 +67,48 @@ class Journey < ActiveRecord::Base
   def self.fetch_journeys(o)
   	departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)
 	
-  	journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+	journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+	
+	if journeys.empty?
+	    threads = []
+	    0.upto(1) do |i|
+	    	threads << Thread.new(i) do
+	    		retries = 0
+				begin
+					CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
+				rescue Exception
+			      retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+				  retry if retries < 10
+				  raise
+				end
+			end
+		end
+		threads.each { |thread| thread.join }
 
-    retries = 0
-    while (retries < 10 and (!journeys or journeys.length == 0))
-      0.upto(1) { |i| CitytrainAPI.journeys(departing, arriving, Time.zone.now.midnight + i.day) }
-      journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
-      retries += 1
-      sleep 3 if retries > 1 #Sleep in between attempts (3 seconds)
-    end
-	  		
+  	    journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+	end
+
     journeys
   end
   
   alias base_stops stops
   def stops
     s = base_stops
-    retries = 0
-  	while (retries < 10 and s.empty?)
-  		CitytrainAPI.stops self
-  		reload
+    
+    if s.empty?
+	    retries = 0
+		begin
+  		  CitytrainAPI.stops self
+		rescue Exception
+	      retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+		  retry if retries < 10
+		  raise
+		end
+
   		s = base_stops
-      retries += 1
-	    sleep 3 if retries > 1 #Sleep in between attempts (3 seconds)
-  	end
-  	s
+    end
+    	
+    s
   end
   
 end

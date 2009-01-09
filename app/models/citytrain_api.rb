@@ -16,7 +16,6 @@ class CitytrainAPI
   end
   
   def self.journeys(departing, arriving, departing_on)
-  	logger.debug "self.journeys #{departing_on}"
     xml = self.ws_get_journeys(departing.code, arriving.code, departing_on.midnight )
     journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
     if journey_parts and journey_parts['Journey']
@@ -27,7 +26,6 @@ class CitytrainAPI
         if jp['iJourneyID'] == '0' or jp['iJourneyID'] != last_journey 
           last_journey = jp['iJourneyID']
           departing_at = departing_on.midnight + jp['sDepartureTime'].to_i.seconds
-          logger.debug "adding journey for '#{departing.name}' to '#{arriving.name}' at #{departing_at}"
           journey = Journey.find_or_create_by_departing_id_and_arriving_id_and_departing_at(:departing_id => departing.id, :arriving_id => arriving.id, :departing_at => departing_at) 
         end
       end
