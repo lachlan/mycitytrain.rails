@@ -12,8 +12,29 @@ namespace :mycitytrain do
       # Load stations
       CitytrainAPI.stations
       
-      # TODO: Load future journeys for any journeys that already exist
-      # TODO: Load future stops for any journeys that already exist
+      # Load future journeys for any journeys that already exist
+      from_to = []
+      past_journeys = Journey.departing_when(nil, Time.zone.now.midnight)
+      past_journeys.each do |j|
+      	from_to << [j.departing, j.arriving]
+	  end
+	  
+	  journeys = []
+	  from_to.uniq.each do |j|
+      	puts "Loading journey #{j[0].name} to #{j[1].name}"
+	    journeys += Journey.today(j[0], j[1]) + Journey.tomorrow(j[0], j[1])
+	  end    
+
+	  # Load stops for the new journeys
+=begin 
+	  #Taking too long to include the population of stops	  
+	  if !journeys.empty?
+	  	journeys.each do |j|
+      	  puts "Loading stops for #{j.departing.name} to #{j.arriving.name} at #{j.departing_at}"
+	  	  j.stops
+	  	end  
+	  end    
+=end
     end
     
   end
