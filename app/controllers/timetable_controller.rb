@@ -28,7 +28,7 @@ class TimetableController < ApplicationController
     @journeys.reject! { |j| j.nil? }
     
     # refresh the page when the next closest service departs
-    min = @journeys.min.departing_at if @journeys.length > 0
+    min = @journeys.min.departing_at unless @journeys.empty?
     @refresh = (min - Time.zone.now).to_i.seconds if min
   end
   
