@@ -70,9 +70,9 @@ class Journey < ActiveRecord::Base
 	journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
 	
 	if journeys.empty?
-	    threads = []
+	    #threads = []
 	    0.upto(1) do |i|
-	    	threads << Thread.new(i) do
+	    	#threads << Thread.new(i) do
 	    		retries = 0
 				begin
 					CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
@@ -81,9 +81,9 @@ class Journey < ActiveRecord::Base
 				  retry if retries < 10
 				  raise
 				end
-			end
+			#end
 		end
-		threads.each { |thread| thread.join }
+		#threads.each { |thread| thread.join }
 
   	    journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
 	end
