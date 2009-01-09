@@ -3,33 +3,25 @@ class TimetableController < ApplicationController
   
   def index
     expires_now
-        
-    threads = []
+
+    @journeys = []
     favourites.each do |favourite|
-      # TODO: this is vulnerable to a denial of service attack, need to limit how many threads get spun up
-      # spin up a thread for each favourite to find the next journey, hopefully reducing the response time of the action
-      threads << Thread.new(favourite) do |f| 
-        d, a = Station.find_by_code(f[0]), Station.find_by_code(f[1])
-        journey = nil
-        
-        if d and a
-          journey = Journey.upcoming(d, a).first if d and a
-          journey ||= Journey.new(:departing => d, :arriving => a, :departing_at => nil)
-        else
-          logger.error("Attempt to access invalid station/s: '#{favourite[0]}', '#{favourite[1]}'")
-        end
-        
-        journey
+      d = Station.find_by_code(favourite[0])
+      a = Station.find_by_code(favourite[1])
+      
+      if d and a
+        journey = Journey.upcoming(d, a).first ||= Journey.new(:departing => d, :arriving => a, :departing_at => nil)
+        @journeys << journey if journey
+      else
+        logger.error("Attempt to access invalid station/s: '#{favourite[0]}', '#{favourite[1]}'") 
       end
     end
-    
-    # wait for threads to finish and gather their return values, then throw away nil journeys
-    @journeys = threads.map { |thread| thread.value }
-    @journeys.reject! { |j| j.nil? }
-    
+
     # refresh the page when the next closest service departs
-    min = @journeys.min.departing_at unless @journeys.empty?
+    logger.debug "@journeys #{@journeys.inspect}"
+    min = @journeys.min.departing_at if @journeys.length > 0
     @refresh = (min - Time.zone.now).to_i.seconds if min
+    
   end
   
   def favourite
