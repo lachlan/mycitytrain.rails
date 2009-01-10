@@ -19,21 +19,11 @@ namespace :mycitytrain do
         from_to << [j.departing, j.arriving]
   	  end
 	  
-  	  queue = Queue.new
   	  from_to.uniq.each do |j|
-  	  	queue << j
+  	  	puts "Loading journey #{j[0].name} to #{j[1].name}"
+    		Journey.today(j[0], j[1])
+    		Journey.tomorrow(j[0], j[1])
   	  end    
-
-  		threads = []
-  		5.times do
-  			threads << Thread.new do
-  				j = queue.pop
-	      	puts "Loading journey #{j[0].name} to #{j[1].name}"
-	    		Journey.today(j[0], j[1])
-	    		Journey.tomorrow(j[0], j[1])
-	    	end
-	    end
-	    threads.each { |thread| thread.join }
 
   	  # Load stops for the new journeys
 =begin 
