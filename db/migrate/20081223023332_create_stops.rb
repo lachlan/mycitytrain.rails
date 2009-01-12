@@ -10,6 +10,9 @@ class CreateStops < ActiveRecord::Migration
       
       t.timestamps
     end
+    
+    add_index :stops, [:journey_id, :position]
+
   end
 
   def self.down

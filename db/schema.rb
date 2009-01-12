@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081224220615) do
+ActiveRecord::Schema.define(:version => 20081223023332) do
 
   create_table "journeys", :force => true do |t|
     t.integer  "departing_id"
@@ -19,12 +19,17 @@ ActiveRecord::Schema.define(:version => 20081224220615) do
     t.datetime "updated_at"
   end
 
+  add_index "journeys", ["departing_at", "departing_id", "arriving_id"], :name => "index_journeys_on_departing_at_and_departing_id_and_arriving_id"
+
   create_table "stations", :force => true do |t|
     t.string   "code"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "stations", ["code"], :name => "index_stations_on_code"
+  add_index "stations", ["name"], :name => "index_stations_on_name"
 
   create_table "stops", :force => true do |t|
     t.integer  "journey_id"
@@ -36,5 +41,7 @@ ActiveRecord::Schema.define(:version => 20081224220615) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "stops", ["journey_id", "position"], :name => "index_stops_on_journey_id_and_position"
 
 end
