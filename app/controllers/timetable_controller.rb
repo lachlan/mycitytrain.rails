@@ -98,14 +98,6 @@ class TimetableController < ApplicationController
 
     if @departing and @arriving
       @journeys = Journey.tomorrow @departing, @arriving
-	
-      if @journeys and @journeys.length > 1
-	      @refresh = end_of_the_day 
-	      expires_in @refresh
-      else
-        expires_now
-      end
-
     else
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
       redirect_to :action => 'index'
@@ -113,8 +105,6 @@ class TimetableController < ApplicationController
   end
 
   def journey
-    expires_in 1.year
-    
   	departing = Station.find_by_code(params[:departing])
   	arriving = Station.find_by_code(params[:arriving])
   	departing_at = Time.zone.parse(params[:departing_at])
@@ -122,6 +112,14 @@ class TimetableController < ApplicationController
   	if departing and arriving and departing_at  	
   	  Journey.load_stops(departing, arriving, departing_at)	
   	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at, :include => :stops)
+
+      if @journeys and @journeys.stops.length > 1
+	      @refresh = 1.year
+	      expires_in @refresh
+      else
+        expires_now
+      end
+
     else
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
