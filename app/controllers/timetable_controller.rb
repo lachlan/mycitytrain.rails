@@ -120,7 +120,7 @@ class TimetableController < ApplicationController
   	departing_at = Time.zone.parse(params[:departing_at])
   	
   	if departing and arriving and departing_at  	
-  	 # Journey.load_stops(departing, arriving, departing_at)	
+  	  Journey.load_stops(departing, arriving, departing_at)	
   	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at, :include => :stops)
     else
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
