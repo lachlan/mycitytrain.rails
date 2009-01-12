@@ -10,7 +10,7 @@ class TimetableController < ApplicationController
       a = Station.find_by_code(favourite[1])
       
       if d and a
-        journey = Journey.upcoming(d, a).first ||= Journey.new(:departing => d, :arriving => a, :departing_at => nil)
+        journey = Journey.upcoming(d, a).first || Journey.new(:departing => d, :arriving => a, :departing_at => nil)
         @journeys << journey if journey
       else
         logger.error("Attempt to access invalid station/s: '#{favourite[0]}', '#{favourite[1]}'") 
@@ -120,6 +120,7 @@ class TimetableController < ApplicationController
   	departing_at = Time.zone.parse(params[:departing_at])
   	
   	if departing and arriving and departing_at  	
+  	 # Journey.load_stops(departing, arriving, departing_at)	
   	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at, :include => :stops)
     else
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 

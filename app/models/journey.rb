@@ -91,24 +91,19 @@ class Journey < ActiveRecord::Base
     journeys
   end
   
-  alias base_stops stops
-  def stops
-    s = base_stops
-    
-    if s.empty?
+  #Populate stops if they don't exist in the database
+  def self.load_stops(departing, arriving, departing_at)
+  	journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at)
+    if journey.stops.empty?
 	    retries = 0
 		begin
-  		  CitytrainAPI.stops self
+  		  CitytrainAPI.stops journey
 		rescue Exception
 	      retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
 		  retry if retries < 10
 		  raise
 		end
-
-  		s = base_stops
     end
-    	
-    s
   end
   
 end
