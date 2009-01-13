@@ -19,7 +19,14 @@ namespace :deploy do
    task :after_update_code do
      run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
    end
+   
+   #See http://www.simonecarletti.com/blog/2008/12/capistrano-deploy-recipe-with-passenger-mod_rails-taste/
+   desc <<-DESC
+     Restarts your application. \
+     This works by creating an empty `restart.txt` file in the `tmp` folder
+     as requested by Passenger server.
+   DESC
+   task :restart, :roles => :app, :except => { :no_release => true } do
+     run "touch #{current_path}/tmp/restart.txt"
+   end
 end
-
-
-
