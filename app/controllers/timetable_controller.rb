@@ -126,6 +126,9 @@ class TimetableController < ApplicationController
     end
   end
   
+  def about
+  end
+  
   private
   
   def end_of_the_day(date = Time.zone.now)

@@ -1,17 +1,11 @@
 <ul class='panel'>
 	<li>
-		<%= link_to 'Timetable', :controller => 'timetable', :action => 'departing' %>
+		<% link_to(:controller => 'timetable', :action => 'departing') do %>
+			Timetable <span class='secondary'>Select a journey and add it as a favourite.</span>
+		<% end %>
 	</li>
 </ul>
-<% if @journeys.empty? %>
-	<p>MyCitytrain is about customizing the QR timetable to suit you. Select your journey from the timetable, save it as a favourite, and it will be right here next time you need it!</p>
-<% else %>	
-	<h2>
-		Favourites
-		<% link_to(:controller => 'timetable', :action => 'destroy_favourites', :confirm => 'Remove all favourites?') do %>
-			<%= image_tag '/images/silk/bullet_delete.png', :alt => '' %>
-		<% end %>
-	</h2>
+<% unless @journeys.empty? %>
 	<ul class='panel'>
 		<% @journeys.each do |journey| %>
 			<% if journey %>
@@ -30,3 +24,10 @@
 		<% end %>
 	</ul>
 <% end %>
+<ul class='panel'>
+	<li>
+		<% link_to(:controller => 'timetable', :action => 'about') do %>
+			About
+		<% end %>
+	</li>
+</ul>

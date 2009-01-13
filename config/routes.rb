@@ -1,6 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'timetable'
 
+  map.connect 'about', :controller => 'timetable', :action => 'about'
   map.connect ':controller', :action => 'departing'
   map.connect ':controller/favourites/destroy', :action => 'destroy_favourites'
   map.connect ':controller/:departing', :action => 'arriving'
