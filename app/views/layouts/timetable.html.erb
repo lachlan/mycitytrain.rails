@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" class="<%= @html_class if @html_class %>">
 <head>
-<title>Citytrain<%= ": " + @title if @title %></title>
+<title>MyCitytrain<%= ": " + @title if @title %></title>
 <link rel="apple-touch-icon" href="images/logo_60x60.png" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 <%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/grids', 'yui/3_0_0pr1/base-min', 'base', 'mobile', :cache => true %>
@@ -14,7 +14,7 @@
 	<div class="header <%= @header_class ||= 'yui-g' %>"> 
 		<div class="brand <%= 'yui-u first' if @actions %>"> 
 			<h1 class="name">
-				<% title = @title || "Citytrain" %>
+				<% title = @title || "MyCitytrain" %>
 				<%= link_to title, :controller => "timetable", :action => "index" %>
 			</h1>
 		</div>
