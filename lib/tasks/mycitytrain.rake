@@ -2,6 +2,7 @@ namespace :mycitytrain do
   namespace :db do
     desc "Destroys all journeys and stops older than today"
     task :purge => :environment do
+	  	puts "Purging all journeys/stops before #{Time.zone.now.midnight}"
       condition = ["departing_at < ?", Time.zone.now.midnight]
       Stop.destroy_all condition
       Journey.destroy_all condition
