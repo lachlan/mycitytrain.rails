@@ -1,5 +1,6 @@
 class TimetableController < ApplicationController  
   caches_page :departing, :arriving 
+  before_filter :find_journeys, :only => [:upcoming, :today, :tomorrow, :journey]
   
   def index
     expires_now
@@ -18,21 +19,19 @@ class TimetableController < ApplicationController
     end
 
     # refresh the page when the next closest service departs
-    logger.debug "@journeys #{@journeys.inspect}"
     min = @journeys.min.departing_at if @journeys.length > 0
     @refresh = (min - Time.zone.now).to_i.seconds if min
     
   end
   
-  def favourite
+  def add_favourite
     favourites << [params[:departing], params[:arriving]] unless favourites.find { |f| f[0] == params[:departing] and f[1] == params[:arriving]}        
     redirect_to :action => 'index'
   end
   
-  def destroy_favourites
-    session[:favourites] = []
+  def remove_favourite
+    favourites.delete [params[:departing], params[:arriving]]
     redirect_to :action => 'index'
-    return
   end
   
   def departing
@@ -44,7 +43,6 @@ class TimetableController < ApplicationController
     expires_in 1.day
 
     @departing = Station.find_by_code(params[:departing])
-    
     if @departing
       @stations = Station.find_all
     else
@@ -53,89 +51,49 @@ class TimetableController < ApplicationController
     end
   end
   
+  
   def upcoming
-  	@departing = Station.find_by_code(params[:departing])
-  	@arriving = Station.find_by_code(params[:arriving])
-
-    if @departing and @arriving
-      @journeys = Journey.upcoming @departing, @arriving
-	
-	    if @journeys and @journeys.length > 1
-	      @refresh = (@journeys[1].departing_at - Time.zone.now).to_i.seconds
-	      expires_in @refresh
-	    else
-	      expires_now
-	    end
-    else
-      logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
-      redirect_to :action => 'index'
-    end
+	@journeys = Journey.upcoming @departing, @arriving
+	@refresh = (@journeys[1].departing_at - Time.zone.now).to_i.seconds if @journeys and @journeys.length > 1
   end
   
   def today
-  	@departing = Station.find_by_code(params[:departing])
-  	@arriving = Station.find_by_code(params[:arriving])
-
-    if @departing and @arriving
-      @journeys = Journey.today @departing, @arriving
-	
-      if @journeys and @journeys.length > 1
-	      @refresh = end_of_the_day 
-	      expires_in @refresh
-      else
-        expires_now
-      end
-
-    else
-      logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
-      redirect_to :action => 'index'
-    end
+	@journeys = Journey.today @departing, @arriving
+	@refresh = end_of_the_day if @journeys and @journeys.length > 1
   end
   
   def tomorrow
-  	@departing = Station.find_by_code(params[:departing])
-  	@arriving = Station.find_by_code(params[:arriving])
-
-    if @departing and @arriving
-      @journeys = Journey.tomorrow @departing, @arriving
-    else
-      logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
-      redirect_to :action => 'index'
-    end
+	@journeys = Journey.tomorrow @departing, @arriving
+	@refresh = end_of_the_day if @journeys and @journeys.length > 1
   end
 
   def journey
-  	departing = Station.find_by_code(params[:departing])
-  	arriving = Station.find_by_code(params[:arriving])
-  	departing_at = Time.zone.parse(params[:departing_at])
+  	@departing_at = Time.zone.parse(params[:departing_at])
   	
-  	if departing and arriving and departing_at  	
-  	  Journey.load_stops(departing, arriving, departing_at)	
-  	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at, :include => :stops)
-
-      if @journeys and @journeys.stops.length > 1
-	      @refresh = 1.year
-	      expires_in @refresh
-      else
-        expires_now
-      end
-
+  	if @departing_at  	
+  	  Journey.load_stops(@departing, @arriving, @departing_at)	
+  	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(@departing, @arriving, @departing_at, :include => :stops)
     else
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
     end
   end
   
-  def about
-  end
-  
   private
-  
-  def end_of_the_day(date = Time.zone.now)
-    next_day = date + 1.day
-    next_day = Time.zone.local(next_day.year, next_day.month, next_day.day)
-    
-    (next_day - date).to_i.seconds
+
+  def find_journeys
+  	@departing = Station.find_by_code(params[:departing])
+  	@arriving = Station.find_by_code(params[:arriving])
+  	unless @departing and @arriving
+      logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
+      redirect_to :action => 'index'
+    end
+  	@favourite = favourites.find { |f| f[0] == params[:departing] and f[1] == params[:arriving]}  
+
+  end
+  	
+  def end_of_the_day
+    (Time.zone.now.midnight + 1.day - Time.zone.now).to_i.seconds
   end
   
 end
