@@ -3,7 +3,9 @@
 		<%= link_to 'Timetable', :controller => 'timetable', :action => 'departing' %>
 	</li>
 </ul>
-<% unless @journeys.empty? %>
+<% if @journeys.empty? %>
+	<p>MyCitytrain is about customizing the QR timetable to suit your personal preferences.  Select your journey from the timetable, save it as a favourite and it will be right here next time you need it!</p>
+<% else %>	
 	<h2>
 		Favourites
 		<% link_to(:controller => 'timetable', :action => 'destroy_favourites', :confirm => 'Remove all favourites?') do %>
