@@ -11,7 +11,8 @@ server "ssh.mycitytrain.info", :app, :web, :db, :primary => true
 set :user, "train"
 ssh_options[:port] = 3636
 set :use_sudo, false
-
+default_run_options[:pty] = true 
+ 
 namespace :deploy do
   #See http://toolmantim.com/articles/setting_up_capistrano_on_segpub  
    desc "Link in the production database.yml"
