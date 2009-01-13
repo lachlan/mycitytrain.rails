@@ -24,7 +24,7 @@
 		</dl>
 		<%= "<p>Change service at #{h last_stop.station_name}.<p>" if change != @journey.changes.last and last_stop %>
 	<% end %>
-	<p><%= h distance_of_time_in_words(@journey.departing_at, @journey.arriving_at).capitalize %>.</p>
+	<p><%= h duration_in_words(@journey.departing_at, @journey.arriving_at).capitalize %>.</p>
 <% else %>
 	<br />
 	<p>No details available.</p>
