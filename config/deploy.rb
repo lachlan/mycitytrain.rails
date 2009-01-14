@@ -4,7 +4,7 @@ set :application, "mycitytrain"
 set :scm, :git
 set :branch, "master"
 set :deploy_via, :remote_cache
-set :repository,  "git@github.com/dogeth/mycitytrain.git"
+set :repository,  "git@github.com:dogeth/mycitytrain.git"
 set :deploy_to, "/home/train/site/"
 
 #server
