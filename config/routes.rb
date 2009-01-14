@@ -1,6 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'timetable'
 
+  map.sitemap 'sitemap.xml' , :controller => 'sitemap' , :action => 'sitemap'
+
   map.connect 'about', :controller => 'timetable', :action => 'about'
   map.connect ':controller', :action => 'departing'
   map.connect ':controller/:departing', :action => 'arriving'
@@ -10,4 +12,5 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller/:departing/:arriving/favourite/add', :action => 'add_favourite'
   map.connect ':controller/:departing/:arriving/favourite/remove', :action => 'remove_favourite'
   map.connect ':controller/:departing/:arriving/:departing_at', :action => 'journey'
+  
 end
