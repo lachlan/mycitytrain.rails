@@ -53,20 +53,20 @@ class TimetableController < ApplicationController
   
   
   def upcoming
-	@journeys = Journey.upcoming @departing, @arriving
-	@refresh = (@journeys[1].departing_at - Time.zone.now).to_i.seconds if @journeys and @journeys.length > 1
+    @journeys = Journey.upcoming @departing, @arriving
+    @refresh = (@journeys[1].departing_at - Time.zone.now).to_i.seconds if @journeys and @journeys.length > 1
   end
   
   def today
-	@journeys = Journey.today @departing, @arriving
-	@refresh = end_of_the_day if @journeys and @journeys.length > 1
-	render :template => 'timetable/fullday'
+    @journeys = Journey.today @departing, @arriving
+    @refresh = end_of_the_day if @journeys and @journeys.length > 1
+    render :template => 'timetable/fullday'
   end
   
   def tomorrow
-	@journeys = Journey.tomorrow @departing, @arriving
-	@refresh = end_of_the_day if @journeys and @journeys.length > 1
-	render :template => 'timetable/fullday'
+    @journeys = Journey.tomorrow @departing, @arriving
+    @refresh = end_of_the_day if @journeys and @journeys.length > 1
+    render :template => 'timetable/fullday'
   end
 
   def journey
