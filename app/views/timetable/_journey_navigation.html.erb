@@ -1,0 +1,9 @@
+<% content_for :nav do %>
+<ul class='main'>
+	<% JOURNEY_NAV_LINKS.each do |link| %>
+		<li <%= "class='selected'" if link == controller.action_name %>
+			<%= link_to link.capitalize, :action => link, :departing => @departing.code, :arriving => @arriving.code %>
+		</li>
+	<% end %>
+</ul>    
+<% end %>

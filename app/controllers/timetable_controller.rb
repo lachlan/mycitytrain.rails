@@ -90,8 +90,7 @@ class TimetableController < ApplicationController
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
       redirect_to :action => 'index'
     end
-  	@favourite = favourites.find { |f| f[0] == params[:departing] and f[1] == params[:arriving]}  
-
+  	@favourite_verb = favourites.find { |f| f[0] == params[:departing] and f[1] == params[:arriving]} ? 'remove' : 'add' 
   end
   	
   def end_of_the_day

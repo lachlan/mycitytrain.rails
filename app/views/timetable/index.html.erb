@@ -14,7 +14,7 @@
 						<%= h journey.departing.name %> to <%= h journey.arriving.name %>
 						<% if journey.departing_at %>
 							<span class='secondary'>
-								&nbsp;<%= image_tag '/images/silk/bullet_go.png', :alt => '' %>
+								&nbsp;<%= image_tag '/images/view_journey.png', :alt => '' %>
 		                  		<%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %><%= format_time(journey.departing_at) %>
 							</span>
 						<% end %>

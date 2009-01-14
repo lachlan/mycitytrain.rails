@@ -2,27 +2,6 @@
 <% @html_class = 'list' %>
 <% @header_class = 'yui-gc' %>
 <% @actions = true %>
-<% content_for :actions do %>
-	<div class="yui-u first" >
-		<% link_to({ :controller => 'timetable', :action => params[:action], :departing => @arriving.code, :arriving => @departing.code }, :class => 'button') do %>
-			<%= image_tag '/images/silk/arrow_undo.png', :alt => '' %><br />Return Journey
-		<% end %>
-	</div>
-	<div class="yui-u">
-		<%= render(:partial => "favourite") %>
-	</div>
-<% end %>
-<% content_for :nav do %>
-<ul class='main'>
-	<li class='selected'>
-		<%= link_to 'Upcoming', :action => 'upcoming', :departing => @departing.code, :arriving => @arriving.code %>
-	</li>
-	<li>
- 		<%= link_to 'Today', :action => 'today', :departing => @departing.code, :arriving => @arriving.code %>
-	</li>
-	<li>
-		<%= link_to 'Tomorrow', :action => 'tomorrow', :departing => @departing.code, :arriving => @arriving.code %>
-	</li>
-</ul>    
-<% end %>
-<%= render(:partial => "journeys", :object => @journeys, :locals => { :show_headings => true }) %>
+<%= render(:partial => "journey_actions") %>
+<%= render(:partial => "journey_navigation") %>
+<%= render(:partial => "journeys", :locals => { :show_headings => true }) %>

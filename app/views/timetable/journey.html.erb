@@ -3,11 +3,8 @@
 <% @title += ": #{format_time @journey.departing_at, :weekday} #{format_time @journey.departing_at, :short_html}" unless @journey.departing_at.midnight == Time.zone.now.midnight %>
 <% @header_class = 'yui-gc' %>
 <% @actions = true %>
-<% content_for :actions do %>
-	<div class="yui-u" >
-		<%= render(:partial => "favourite") %>
-	</div>
-<% end %>
+<% @hide_return_journey = true %>
+<%= render(:partial => "journey_actions") %>
 <% if @journey.changes and !@journey.changes.empty? %>
 	<% @journey.changes.each do |change| %>
 		<dl class="panel">
@@ -30,7 +27,7 @@
 			<% last_stop = stop %>
 		<% end %>
 		</dl>
-		<%= "<p>Change service at #{h last_stop.station_name}.<p>" if change != @journey.changes.last and last_stop %>
+		<%= "<p>Change service at #{h last_stop.station_name}.</p>" if change != @journey.changes.last and last_stop %>
 	<% end %>
 	<p><%= h duration_in_words(@journey.departing_at, @journey.arriving_at).capitalize %>.</p>
 <% else %>

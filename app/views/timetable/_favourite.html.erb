@@ -1,9 +1,0 @@
-<% if @favourite %>
-	<% link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => @departing.code, :arriving => @arriving.code }, :class => 'button') do %>
-		<%= image_tag '/images/silk/heart_delete.png', :alt => '' %><br />Remove Favourite
-	<% end %>
-<% else %>
-	<% link_to({ :controller => 'timetable', :action => 'add_favourite', :departing => @departing.code, :arriving => @arriving.code }, :class => 'button') do %>
-		<%= image_tag '/images/silk/heart_add.png', :alt => '' %><br />Add Favourite
-	<% end %>
-<% end %>
