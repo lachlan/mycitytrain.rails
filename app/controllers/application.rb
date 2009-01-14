@@ -20,5 +20,5 @@ class ApplicationController < ActionController::Base
   def favourites=(favs)
     session[:favourites] = favs
   end
-
+  
 end

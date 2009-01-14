@@ -73,4 +73,8 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
+  
+  #Used in the about page and also in the description meta data for each page
+  ABOUT_BLURB = "MyCitytrain is about taking the QR Citytrain timetable with you on the go. Optimised for mobile devices like the iPhone, it's now easy to check when your next train departs wherever you are!"
+
 end
