@@ -77,4 +77,5 @@ Rails::Initializer.run do |config|
   #Used in the about page and also in the description meta data for each page
   ABOUT_BLURB = "MyCitytrain is about taking the QR Citytrain timetable with you on the go. Optimised for mobile devices like the iPhone, it's now easy to check when your next train departs wherever you are!"
 
+  SITE_NAME = "MyCitytrain"
 end

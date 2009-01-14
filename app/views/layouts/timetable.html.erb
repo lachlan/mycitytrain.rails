@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" class="<%= @html_class if @html_class %>">
 <head>
-<title>MyCitytrain<%= ": " + @title if @title %></title>
-<meta name="title" content="MyCitytrain<%= ": " + @title if @title %>" />
+<title><%="#{SITE_NAME}" %><%= ": " + @title if @title %></title>
+<meta name="title" content="<%="#{SITE_NAME}" %><%= ": " + @title if @title %>" />
 <meta name="description" content="<%= h ABOUT_BLURB %>" />
 <meta name="keywords" content="QR Citytrain train timetable station journey rail railway iPhone mobile" />
 <link rel="apple-touch-icon" href="images/logo_60x60.png" />
@@ -17,7 +17,7 @@
 	<div class="header <%= @header_class ||= 'yui-g' %>"> 
 		<div class="brand <%= 'yui-u first' if @actions %>"> 
 			<h1 class="name">
-				<% title = @title || "MyCitytrain" %>
+				<% title = @brand_title || @title || "#{SITE_NAME}" %>
 				<%= link_to title, :controller => "timetable", :action => "index" %>
 			</h1>
 		</div>

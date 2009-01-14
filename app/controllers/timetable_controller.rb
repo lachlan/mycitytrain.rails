@@ -73,7 +73,9 @@ class TimetableController < ApplicationController
   	if @departing_at  	
   	  Journey.load_stops(@departing, @arriving, @departing_at)	
   	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(@departing, @arriving, @departing_at, :include => :stops)
-    else
+    end
+    
+	unless @journey
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
     end
