@@ -60,11 +60,13 @@ class TimetableController < ApplicationController
   def today
 	@journeys = Journey.today @departing, @arriving
 	@refresh = end_of_the_day if @journeys and @journeys.length > 1
+	render :template => 'timetable/fullday'
   end
   
   def tomorrow
 	@journeys = Journey.tomorrow @departing, @arriving
 	@refresh = end_of_the_day if @journeys and @journeys.length > 1
+	render :template => 'timetable/fullday'
   end
 
   def journey
