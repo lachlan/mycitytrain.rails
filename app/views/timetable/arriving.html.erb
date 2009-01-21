@@ -3,9 +3,9 @@
 <ul class="list">
 	<% @stations.each do |station| %>
 		<% if station.id == @departing.id %>
-			<li class="disabled"><%= h station.name %></li>		
+			<li class='disabled'><div><%= h station.name %></div></li>
 		<% else %>
-			<li><%= link_to (h station.name), :action => 'upcoming', :departing => @departing.code, :arriving => station.code  %></li>
+			<li><%= link_to (h station.name), :action => 'upcoming', :departing => @departing.code, :arriving => station.code %></li>
 		<% end %>
 	<% end %>
 </ul>

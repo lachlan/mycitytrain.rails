@@ -1,0 +1,9 @@
+/** 
+IE Styles - fixes for IE's crappiness.
+2009-01-21:Created by Lachlan.
+**/
+.header .brand .name a{background-image:url(../images/logo_30x18.gif);}
+.content .panel .next-journey li {background-image: url(../images/view_journey_16x16.gif);}
+.return-journey{background-image:url(../images/return_journey_16x16.gif);}
+.add-favourite{background-image:url(../images/add_favourite_16x16.gif);}
+.remove-favourite{background-image:url(../images/remove_favourite_16x16.gif);}

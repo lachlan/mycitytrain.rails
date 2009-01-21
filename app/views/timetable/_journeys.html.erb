@@ -1,6 +1,6 @@
 <% show_headings ||= false %>
 <% if @journeys %>
-<ul class="list">
+<ol class="list">
 	<% unless @journeys.empty? %>
 		<% if show_headings %>
 			<%= "<li>No further services today.</li>" unless Time.zone.now.day == @journeys.first.departing_at.day %>
@@ -8,7 +8,7 @@
 		<% day = Time.zone.now.day %>
 	  	<% @journeys.each do |journey| %>
 			<% if show_headings %>
-				<%= "<li class='heading'><h2>#{format_time(journey.departing_at, :weekday)}</h2></li>" unless day == journey.departing_at.day %>
+				<%= "<li class='heading'><h3>#{format_time(journey.departing_at, :weekday)}</h3></li>" unless day == journey.departing_at.day %>
 			<% end %>
  		  	<li>
 				<% link_to(:action => 'journey', :departing => @departing.code, :arriving => @arriving.code, :departing_at => format_time(journey.departing_at, :iso8601)) do %>
@@ -20,5 +20,5 @@
 	<% else %>
 		<li>No services available.</li>
 	<% end %>
-</ul>
+</ol>
 <% end %>

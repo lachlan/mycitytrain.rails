@@ -7,7 +7,15 @@
 <meta name="keywords" content="QR Brisbane Citytrain train timetable station journey rail railway iPhone mobile Queensland Australia" />
 <link rel="apple-touch-icon" href="images/logo_60x60.png" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/grids', 'yui/3_0_0pr1/base-min', 'base', 'mobile', :cache => true %>
+<%# Bare minimum styles for downlevel devices %>
+<%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/base-min', 'handheld', :media => 'screen, handheld', :cache => "cached-base" %>
+<%# Styles for sophisticated devices like iPhone or Android %>
+<%= stylesheet_link_tag 'yui/3_0_0pr1/grids', 'screen', :media => 'only screen and (min-device-width:320px)', :cache => "cached-screen" %>
+<%# Styles for dumb ol' IE %>
+<!--[if lt IE 8]>
+<%= stylesheet_link_tag 'iesucks' %>
+<script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js" type="text/javascript"></script>
+<![endif]-->
 <% if @refresh %>
 <meta http-equiv="refresh" content="<%= h @refresh.to_s %>" />
 <% end %>
@@ -15,21 +23,15 @@
 <body>
 <div class="container">
 	<div class="header <%= @header_class ||= 'yui-g' %>"> 
-		<div class="brand <%= 'yui-u first' if @actions %>"> 
+		<div class="brand yui-u first"> 
 			<h1 class="name">
 				<% title = @brand_title || @title || "#{SITE_NAME}" %>
 				<%= link_to title, :controller => "timetable", :action => "index" %>
 			</h1>
 		</div>
-		<% if @actions %>
-		<div class="yui-g">
-			<%= yield :actions %>
-		</div>
-		<% end %>
+		<%= yield :actions %>
 	</div>
-	<div class="nav yui-g">
-		<%= yield :nav %>
-	</div>
+	<%= yield :nav %>
 	<div class="content yui-g">
 		<%= yield %>
 	</div>
