@@ -1,14 +1,16 @@
 <% content_for :actions do %>
-	<% unless @hide_return_journey%>
-		<div class="yui-u first" >
-			<% link_to({ :controller => 'timetable', :action => params[:action], :departing => @arriving.code, :arriving => @departing.code }, :class => 'button') do %>
-				<%= image_tag '/images/return_journey.png', :alt => '' %><br />Return Journey
+	<div class="yui-g">
+		<% unless @hide_return_journey%>
+			<div class="yui-u first" >
+				<% link_to({ :controller => 'timetable', :action => params[:action], :departing => @arriving.code, :arriving => @departing.code }, :class => 'button return-journey') do %>
+					Return Journey
+				<% end %>
+			</div>
+		<% end %>
+		<div class="yui-u">
+			<% link_to({ :controller => 'timetable', :action => "#{@favourite_verb}_favourite", :departing => @departing.code, :arriving => @arriving.code }, :class => "button #{@favourite_verb}-favourite") do %>
+				<%="#{@favourite_verb.capitalize} Favourite"%>
 			<% end %>
 		</div>
-	<% end %>
-	<div class="yui-u">
-		<% link_to({ :controller => 'timetable', :action => "#{@favourite_verb}_favourite", :departing => @departing.code, :arriving => @arriving.code }, :class => 'button') do %>
-			<%= image_tag "/images/#{@favourite_verb}_favourite.png", :alt => '' %><br /><%="#{@favourite_verb.capitalize} Favourite"%>
-		<% end %>
 	</div>
 <% end %>
