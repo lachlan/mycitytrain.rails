@@ -1,35 +1,35 @@
-<% @title = "#{h @journey.departing.name} to #{h @journey.arriving.name}" %>
-<% @title += ": #{format_time @journey.departing_at, :short_html}" if @journey.departing_at.midnight == Time.zone.now.midnight %>
-<% @title += ": #{format_time @journey.departing_at, :weekday} #{format_time @journey.departing_at, :short_html}" unless @journey.departing_at.midnight == Time.zone.now.midnight %>
-<% @header_class = 'yui-gc' %>
-<% @hide_return_journey = true %>
-<%= render(:partial => "journey_actions") %>
-<% if @journey.changes and !@journey.changes.empty? %>
-	<% @journey.changes.each do |change| %>
+<%- @title = "#{h @journey.departing.name} to #{h @journey.arriving.name}" -%>
+<%- @title += ": #{format_time @journey.departing_at, :short_html}" if @journey.departing_at.midnight == Time.zone.now.midnight -%>
+<%- @title += ": #{format_time @journey.departing_at, :weekday} #{format_time @journey.departing_at, :short_html}" unless @journey.departing_at.midnight == Time.zone.now.midnight -%>
+<%- @header_class = 'yui-gc' -%>
+<%- @hide_return_journey = true -%>
+<%= render(:partial => "journey_actions") -%>
+<%- if @journey.changes and !@journey.changes.empty? -%>
+	<%- @journey.changes.each do |change| -%>
 		<dl class="panel">
-		<% last_stop = nil %>
-		<% change.each do |stop| %>
+		<%- last_stop = nil -%>
+		<%- change.each do |stop| -%>
 			<dt>
-				<span><%= h stop.station_name  %></span>
+				<span><%= h stop.station_name -%></span>
 			</dt>
 			<dd>
-				<% if stop == change.first %>
-					departs <%= format_time(stop.departing_at) %>
-				<% else %>
-					<%= 'arrives ' if stop == change.last %>
-					<%= format_time(stop.arriving_at) %>
-				<% end %>
+				<%- if stop == change.first -%>
+					departs <%= format_time(stop.departing_at) -%>
+				<%- else -%>
+					<%= 'arrives ' if stop == change.last -%>
+					<%= format_time(stop.arriving_at) -%>
+				<%- end -%>
 			</dd>
-			<% if stop.platform.to_i > 0 and (stop == change.first or stop == change.last) %>
-				<dd>platform <%= h stop.platform %></dd>
-			<% end %>
-			<% last_stop = stop %>
-		<% end %>
+			<%- if stop.platform.to_i > 0 and (stop == change.first or stop == change.last) -%>
+				<dd>platform <%= h stop.platform -%></dd>
+			<%- end -%>
+			<%- last_stop = stop -%>
+		<%- end -%>
 		</dl>
-		<%= "<p>Change service at #{h last_stop.station_name}.</p>" if change != @journey.changes.last and last_stop %>
-	<% end %>
+		<%= "<p>Change service at #{h last_stop.station_name}.</p>" if change != @journey.changes.last and last_stop -%>
+	<%- end -%>
 	<p><%= h duration_in_words(@journey.departing_at, @journey.arriving_at).capitalize %> duration.</p>
-<% else %>
+<%- else -%>
 	<br />
 	<p>No details available.</p>
-<% end %>
+<%- end -%>
