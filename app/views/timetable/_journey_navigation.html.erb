@@ -1,11 +1,11 @@
-<% content_for :nav do %>
+<%- content_for :nav do -%>
 <div class="nav yui-g">
 	<ul class='main'>
-		<% JOURNEY_NAV_LINKS.each do |link| %>
+		<%- JOURNEY_NAV_LINKS.each do |link| -%>
 			<li<%= " class='selected'" if link == controller.action_name %>>
 				<%= link_to link.capitalize, :action => link, :departing => @departing.code, :arriving => @arriving.code %>
 			</li>
-		<% end %>
+		<%- end -%>
 	</ul>
 </div>
-<% end %>
+<%- end -%>

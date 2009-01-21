@@ -1,33 +1,33 @@
 <div class='panel'>
-	<% link_to(:controller => 'timetable', :action => 'departing') do %>
+	<%- link_to(:controller => 'timetable', :action => 'departing') do -%>
 		<h2>Timetable</h2>
 		<p>Select a journey and add it as a favourite.</p>
-	<% end %>
+	<%- end -%>
 </div>
-<% unless @journeys.empty? %>
+<%- unless @journeys.empty? -%>
 	<h2 class='hide'>Favourites</h2>
 	<ul class='panel'>
-		<% @journeys.each do |journey| %>
-			<% if journey %>
+		<%- @journeys.each do |journey| -%>
+			<%- if journey -%>
 				<li>
-					<% link_to(:controller => 'timetable', :action => 'upcoming', :departing => journey.departing.code, :arriving => journey.arriving.code) do %>
-						<%= h journey.departing.name %> to <%= h journey.arriving.name %>
-						<% if journey.departing_at %>
+					<%- link_to(:controller => 'timetable', :action => 'upcoming', :departing => journey.departing.code, :arriving => journey.arriving.code) do -%>
+						<%= h journey.departing.name %> to <%= h journey.arriving.name -%>
+						<%- if journey.departing_at -%>
 							<ol class='next-journey'>
 								<li>
-		                  			<%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %><%= format_time(journey.departing_at) %>
+		                  			<%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %><%= format_time(journey.departing_at) -%>
 								</li>
 							</ol>
-						<% end %>
-					<% end %>
+						<%- end -%>
+					<%- end -%>
 				</li>
-			<% end %>
-		<% end %>
+			<%- end -%>
+		<%- end -%>
 	</ul>
-<% end %>
+<%- end -%>
 <div class='panel'>
-	<% link_to(:controller => 'timetable', :action => 'about') do %>
+	<%- link_to(:controller => 'timetable', :action => 'about') do -%>
 		<h2>About</h2>
-	<% end %>
+	<%- end -%>
 </div>
 
