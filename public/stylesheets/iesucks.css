@@ -8,3 +8,4 @@ IE Styles - fixes for IE's crappiness.
 .remove-favourite{background:transparent url(../images/remove_favourite_16x16.gif) no-repeat top center;}
 .content .list > li > *,
 .button{zoom:1;}
+.container{display:none;}
