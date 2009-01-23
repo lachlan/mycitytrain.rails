@@ -6,4 +6,5 @@ IE Styles - fixes for IE's crappiness.
 .return-journey{background:transparent url(../images/return_journey_16x16.gif) no-repeat top center;}
 .add-favourite{background:transparent url(../images/add_favourite_16x16.gif) no-repeat top center;}
 .remove-favourite{background:transparent url(../images/remove_favourite_16x16.gif) no-repeat top center;}
-.content .list > li > *{zoom:1;}
+.content .list > li > *,
+.button{zoom:1;}
