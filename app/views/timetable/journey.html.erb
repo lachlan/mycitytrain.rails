@@ -9,10 +9,10 @@
 		<dl class="panel">
 		<%- last_stop = nil -%>
 		<%- change.each do |stop| -%>
-			<dt>
-				<span><%= h stop.station_name -%></span>
+			<dt class="item">
+				<%= h stop.station_name -%>
 			</dt>
-			<dd>
+			<dd class="item">
 				<%- if stop == change.first -%>
 					departs <%= format_time(stop.departing_at) -%>
 				<%- else -%>

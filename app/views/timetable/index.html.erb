@@ -1,33 +1,30 @@
-<div class='panel'>
-	<%- link_to(:controller => 'timetable', :action => 'departing') do -%>
-		<h2>Timetable</h2>
-		<p>Select a journey and add it as a favourite.</p>
+<h2 class='panel'>
+	<%- link_to({:controller => 'timetable', :action => 'departing'}, :class => 'item') do -%>
+		<span class='title'>Timetable</span><br />
+		<span>Select a journey and add it as a favourite.</span>
 	<%- end -%>
-</div>
+</h2>
 <%- unless @journeys.empty? -%>
 	<h2 class='hide'>Favourites</h2>
-	<ul class='panel'>
+	<dl class='panel'>
 		<%- @journeys.each do |journey| -%>
 			<%- if journey -%>
-				<li>
-					<%- link_to(:controller => 'timetable', :action => 'upcoming', :departing => journey.departing.code, :arriving => journey.arriving.code) do -%>
+				<dt>
+					<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing.code, :arriving => journey.arriving.code}, :class => 'item') do -%>
 						<%= h journey.departing.name %> to <%= h journey.arriving.name -%>
+					<%- end -%>
+				</dt>
+				<dd>
+					<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing.code, :arriving => journey.arriving.code}, :class => 'item') do -%>
 						<%- if journey.departing_at -%>
-							<ol class='next-journey'>
-								<li>
-		                  			<%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %><%= format_time(journey.departing_at) -%>
-								</li>
-							</ol>
+							<%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %><%= format_time(journey.departing_at) -%>
+						<%- else -%>
+							&mdash;
 						<%- end -%>
 					<%- end -%>
-				</li>
+				</dd>
 			<%- end -%>
 		<%- end -%>
-	</ul>
+	</dl>
 <%- end -%>
-<div class='panel'>
-	<%- link_to(:controller => 'timetable', :action => 'about') do -%>
-		<h2>About</h2>
-	<%- end -%>
-</div>
-
+<h2 class='panel'><%= link_to 'About', {:controller => 'timetable', :action => 'about'}, :class => 'item' -%></h2>
