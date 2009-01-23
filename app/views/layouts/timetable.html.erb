@@ -1,40 +1,42 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <%= "class='#{@html_class}'" if @html_class %> >
+<html xmlns="http://www.w3.org/1999/xhtml" <%= "class='#{@html_class}'" if @html_class -%> >
 <head>
-<title><%="#{SITE_NAME}" %><%= ": " + @title if @title %></title>
+<title><%="#{SITE_NAME}" %><%= ": " + @title if @title -%></title>
 <meta name="title" content="<%="#{SITE_NAME}" %><%= ": " + @title if @title %>" />
 <meta name="description" content="<%= h ABOUT_BLURB %>" />
 <meta name="keywords" content="QR Brisbane Citytrain train timetable station journey rail railway iPhone mobile Queensland Australia" />
 <link rel="apple-touch-icon" href="images/logo_60x60.png" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<!--[if lt IE 8]>
+<%= javascript_include_tag 'http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js' -%>
+<![endif]-->
 <%#- Bare minimum styles for downlevel devices -%>
-<%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/base-min', 'handheld', :media => 'screen, handheld', :cache => "cached-base" %>
+<%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/base-min', 'handheld', :media => 'screen, handheld', :cache => "cached-base" -%>
 <%#- Styles for sophisticated devices like iPhone or Android -%>
-<%= stylesheet_link_tag 'yui/3_0_0pr1/grids', 'screen', :media => 'screen and (min-device-width:320px)', :cache => "cached-screen" %>
+<%= stylesheet_link_tag 'yui/3_0_0pr1/grids', 'screen', :media => 'screen and (min-device-width:320px)', :cache => "cached-screen" -%>
 <%#- Styles for dumb ol' IE -%>
 <!--[if lt IE 8]>
-<%= stylesheet_link_tag 'iesucks' %>
-<%= javascript_include_tag 'http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js' %>
+<%= stylesheet_link_tag 'iesucks' -%>
 <![endif]-->
 <%- if @refresh -%>
-<meta http-equiv="refresh" content="<%= h @refresh.to_s %>" />
+<meta http-equiv="refresh" content="<%= h @refresh.to_s -%>" />
 <%- end -%>
 </head>
 <body>
 <div class="container">
-	<div class="header <%= @header_class ||= 'yui-g' %>"> 
-		<div class="brand yui-u first"> 
-			<h1 class="name">
-				<%- title = @brand_title || @title || "#{SITE_NAME}" -%>
-				<%= link_to title, :controller => "timetable", :action => "index" %>
-			</h1>
-		</div>
-		<%= yield :actions %>
-	</div>
-	<%= yield :nav %>
-	<div class="content yui-g">
-		<%= yield %>
-	</div>
+<div class="header <%= @header_class ||= 'yui-g' -%>"> 
+<div class="brand yui-u first"> 
+<h1 class="name">
+<%- title = @brand_title || @title || "#{SITE_NAME}" -%>
+<%= link_to title, :controller => "timetable", :action => "index" -%>
+</h1>
+</div>
+<%= yield :actions -%>
+</div>
+<%= yield :nav -%>
+<div class="content yui-g">
+<%= yield -%>
+</div>
 </div>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
