@@ -70,7 +70,7 @@ Useful classes defined in this stylesheet:.panel :displays a ul/ol/dl as a round
 .list :displays a ul/ol/dl as a full-bleed iPhone-like list
 2008-12-29:Created by Lachlan.
 **/
-html,body{background:rgb(197,204,211) url(../images/background_42x42.png) top left repeat;margin:0;padding:0;}
+html,body{background:rgb(197,204,211) url(../images/background_42x42.png) top left repeat;margin:0;padding:0;-webkit-text-size-adjust:none;}
 html.list,html.list body{background:white;}
 body{font-family:Helvetica,Arial,sans-serif;text-align:left;color:black;margin:0;padding:0;}
 a:link,a:visited,a:hover{display:block;text-decoration:none;color:black;}
