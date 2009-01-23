@@ -3,7 +3,7 @@
 <ol class="list">
 	<%- unless @journeys.empty? -%>
 		<%- if show_headings -%>
-			<%= "<li>No further services today.</li>" unless Time.zone.now.day == @journeys.first.departing_at.day -%>
+			<%= "<li><span>No further services today.</span></li>" unless Time.zone.now.day == @journeys.first.departing_at.day -%>
 		<%- end -%>
 		<%- day = Time.zone.now.day -%>
 	  	<%- @journeys.each do |journey| -%>
@@ -14,7 +14,7 @@
 			<%- day = journey.departing_at.day -%>
 		<%- end -%>
 	<%- else -%>
-		<li>No services available.</li>
+		<li><span>No services available.</span></li>
 	<%- end -%>
 </ol>
 <%- end -%>
