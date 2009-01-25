@@ -144,7 +144,7 @@ h2 a:link,h2 a:visited,h2 a:hover{display:inline;}
 .content .list > li h3,
 .content .list > li h4,
 .content .list > li h5,
-.content .list > li h6{font-size:1em;line-height:1.353em;margin:0;padding:0;color:white;text-shadow:rgb(76,86,108) 0 0.08333em 0;text-shadow:#333 0 0.08333em 0;}
+.content .list > li h6{font-size:1em;line-height:1.353em;margin:0;padding:0 0.58823em;color:white;text-shadow:rgb(76,86,108) 0 0.08333em 0;text-shadow:#333 0 0.08333em 0;}
 .content .list > li{list-style-type:none;border-bottom:0.05882em solid rgb(217,217,217);}
 .content .list > li > *{padding:0.58823em;display:block;}
 .disabled{background-color:#efefef;color:#666;}
