@@ -139,6 +139,7 @@ h2 a:link,h2 a:visited,h2 a:hover{display:inline;}
 .content .list > li > a:first-child{background:transparent url(../images/chevron_18x13.png) center right no-repeat;}
 .content .list{font-size:1.41667em;font-weight:bold;color:black;background-color:white;margin:0;padding:0;height:100%;}
 .content .list > li.heading{background:#9f9f9f url(../images/list_header_2x23.png) top left repeat-x;height:23px;padding-top:0;padding-bottom:0;}
+.content .list > li.heading > h3 {font-weight:bold;} 
 .content .list > li h1,
 .content .list > li h2,
 .content .list > li h3,
