@@ -1,6 +1,6 @@
 class TimetableController < ApplicationController  
   caches_page :departing, :arriving 
-  before_filter :find_journeys, :only => [:upcoming, :today, :tomorrow, :journey]
+  before_filter :find_stations, :only => [:add_favourite, :remove_favourite, :upcoming, :today, :tomorrow, :journey]
   
   def index
     expires_now
@@ -25,12 +25,12 @@ class TimetableController < ApplicationController
   end
   
   def add_favourite
-    favourites << [params[:departing], params[:arriving]] unless favourites.find { |f| f[0] == params[:departing] and f[1] == params[:arriving]}        
+    favourites << [@departing.code, @arriving.code] unless favourites.find { |f| f[0] == @departing.code and f[1] == @arriving.code }        
     redirect_to :action => 'index'
   end
   
   def remove_favourite
-    favourites.delete [params[:departing], params[:arriving]]
+    favourites.delete [@departing.code, @arriving.code]
     redirect_to :action => 'index'
   end
   
@@ -42,7 +42,7 @@ class TimetableController < ApplicationController
   def arriving
     expires_in 1.day
 
-    @departing = Station.find_by_code(params[:departing])
+    @departing = Station.find params[:departing]
     if @departing
       @stations = Station.find_all
     else
@@ -50,8 +50,7 @@ class TimetableController < ApplicationController
       redirect_to :action => 'index'
     end
   end
-  
-  
+
   def upcoming
     @journeys = Journey.upcoming @departing, @arriving
     @refresh = (@journeys[1].departing_at - Time.zone.now).to_i.seconds if @journeys and @journeys.length > 1
@@ -85,14 +84,15 @@ class TimetableController < ApplicationController
   
   private
 
-  def find_journeys
-  	@departing = Station.find_by_code(params[:departing])
-  	@arriving = Station.find_by_code(params[:arriving])
-  	unless @departing and @arriving
+  def find_stations
+  	@departing = Station.find params[:departing]
+  	@arriving = Station.find params[:arriving]  	
+  	if @departing and @arriving
+      @favourite_verb = favourites.find { |f| f[0] == @departing.code and f[1] == @arriving.code } ? 'remove' : 'add' 
+  	else
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
       redirect_to :action => 'index'
     end
-  	@favourite_verb = favourites.find { |f| f[0] == params[:departing] and f[1] == params[:arriving]} ? 'remove' : 'add' 
   end
   	
   def end_of_the_day

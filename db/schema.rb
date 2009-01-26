@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081223023332) do
+ActiveRecord::Schema.define(:version => 20090126081817) do
 
   create_table "journeys", :force => true do |t|
     t.integer  "departing_id"
@@ -20,6 +20,18 @@ ActiveRecord::Schema.define(:version => 20081223023332) do
   end
 
   add_index "journeys", ["departing_at", "departing_id", "arriving_id"], :name => "index_journeys_on_departing_at_and_departing_id_and_arriving_id"
+
+  create_table "slugs", :force => true do |t|
+    t.string   "name"
+    t.integer  "sluggable_id"
+    t.integer  "sequence",                     :default => 1, :null => false
+    t.string   "sluggable_type", :limit => 40
+    t.string   "scope",          :limit => 40
+    t.datetime "created_at"
+  end
+
+  add_index "slugs", ["name", "sluggable_type", "scope", "sequence"], :name => "index_slugs_on_name_and_sluggable_type_and_scope_and_sequence", :unique => true
+  add_index "slugs", ["sluggable_id"], :name => "index_slugs_on_sluggable_id"
 
   create_table "stations", :force => true do |t|
     t.string   "code"
