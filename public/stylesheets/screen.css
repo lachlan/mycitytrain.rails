@@ -138,13 +138,13 @@ h2 a:link,h2 a:visited,h2 a:hover{display:inline;}
 .content dl.panel > dd > a:first-child,
 .content .list > li > a:first-child{background:transparent url(../images/chevron_18x13.png) center right no-repeat;}
 .content .list{font-size:1.41667em;font-weight:bold;color:black;background-color:white;margin:0;padding:0;height:100%;}
-.content .list > li.heading{background:#9f9f9f url(../images/list_header_2x23.png) top left repeat-x;height:23px;padding-top:0;padding-bottom:0;}
+.content .list > li.heading{background:#9f9f9f url(../images/list_header_2x23.png) top left repeat-x;height:23px;padding-top:0;padding-bottom:0;border:none;}
 .content .list > li h1,
 .content .list > li h2,
 .content .list > li h3,
 .content .list > li h4,
 .content .list > li h5,
-.content .list > li h6{font-weight:bold;font-size:1em;line-height:1.353em;margin:0;padding:0 0.58823em;color:white;text-shadow:rgb(76,86,108) 0 0.08333em 0;text-shadow:#333 0 0.08333em 0;}
+.content .list > li h6{font-size:1em;line-height:1.3529em;margin:0;padding:0 0.58823em;color:white;text-shadow:#333 0 0.08333em 0;}
 .content .list > li{list-style-type:none;border-bottom:0.05882em solid rgb(217,217,217);}
 .content .list > li > *{padding:0.58823em;display:block;}
 .disabled{background-color:#efefef;color:#666;}
