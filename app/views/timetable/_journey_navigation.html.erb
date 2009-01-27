@@ -3,7 +3,7 @@
 	<ul class='main'>
 		<%- JOURNEY_NAV_LINKS.each do |link| -%>
 			<li<%= " class='selected'" if link == controller.action_name -%>>
-				<%= link_to link.capitalize, :action => link, :departing => @departing.code, :arriving => @arriving.code -%>
+				<%= link_to link.capitalize, :action => link, :departing => @departing, :arriving => @arriving -%>
 			</li>
 		<%- end -%>
 	</ul>

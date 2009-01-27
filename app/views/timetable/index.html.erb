@@ -10,12 +10,12 @@
 		<%- @journeys.each do |journey| -%>
 			<%- if journey -%>
 				<dt>
-					<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing.code, :arriving => journey.arriving.code}, :class => 'item') do -%>
+					<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'item') do -%>
 						<%= h journey.departing.name %> to <%= h journey.arriving.name -%>
 					<%- end -%>
 				</dt>
 				<dd>
-					<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing.code, :arriving => journey.arriving.code}, :class => 'item') do -%>
+					<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'item') do -%>
 						<%- if journey.departing_at -%>
 							<%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %><%= format_time(journey.departing_at) -%>
 						<%- else -%>
