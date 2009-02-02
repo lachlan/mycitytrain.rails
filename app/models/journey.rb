@@ -56,13 +56,18 @@ class Journey < ActiveRecord::Base
   
   def self.today(d, a)
   	today = Time.zone.now.midnight 
-    self.fetch_journeys(:departing => d, :arriving => a, :from => today, :to => today + 1.day)
+    fetch_date(d, a, today)
   end
   
   def self.tomorrow(d, a)
   	tomorrow = Time.zone.now.tomorrow.midnight
-    self.fetch_journeys(:departing => d, :arriving => a, :from => tomorrow, :to => tomorrow + 1.day)
+    fetch_date(d, a, tomorrow)
   end
+  
+  def self.fetch_date(d, a, w)
+    self.fetch_journeys(:departing => d, :arriving => a, :from => w, :to => w + 1.day)
+  end
+  	
   
   def self.fetch_journeys(o)
   	departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)
