@@ -40,7 +40,7 @@ class TimetableController < ApplicationController
   
   def arriving
     expires_in 1.day
-    @departing, @stations = Station.find params[:departing], Station.find_all
+    @departing, @stations = Station.find(params[:departing]), Station.find_all
     unless @departing
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}'") 
       redirect_to :action => 'index'
