@@ -6,7 +6,7 @@ class TimetableController < ApplicationController
     expires_now
 
     @journeys = []
-    favourites.each do |favourite|
+    session[:favourites].each do |favourite|
       d, a = Station.find_by_code(favourite[0]), Station.find_by_code(favourite[1])
       
       if d and a
@@ -24,12 +24,12 @@ class TimetableController < ApplicationController
   end
   
   def add_favourite
-    favourites |= [[@departing.code, @arriving.code]]
+    session[:favourites] |= [[@departing.code, @arriving.code]]
     redirect_to :action => 'index'
   end
   
   def remove_favourite
-    favourites -= [[@departing.code, @arriving.code]]
+    session[:favourites] -= [[@departing.code, @arriving.code]]
     redirect_to :action => 'index'
   end
   
@@ -84,7 +84,7 @@ class TimetableController < ApplicationController
   	@departing = Station.find params[:departing]
   	@arriving = Station.find params[:arriving]  	
   	if @departing and @arriving
-      @favourite_verb = favourites.find { |f| f[0] == @departing.code and f[1] == @arriving.code } ? 'remove' : 'add' 
+      @favourite_verb = session[:favourites].include?([@departing.code, @arriving.code]) ? 'remove' : 'add' 
   	else
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
       redirect_to :action => 'index'
