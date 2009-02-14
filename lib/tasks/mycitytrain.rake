@@ -19,14 +19,15 @@ namespace :mycitytrain do
       past_journeys.each do |j|
         from_to << [j.departing, j.arriving]
   	  end
+      from_to.uniq!
 
 	    starting_time = Time.zone.now
 	    puts "Start populate at #{starting_time}"
 
-      from_to.uniq.sort {|a, b| a[0].name + a[1].name <=> b[0].name + b[1].name}.each do |j|
+      from_to.sort {|a, b| a[0].name + a[1].name <=> b[0].name + b[1].name}.each do |j|
 	  	  print "Loading journey #{j[0].name} to #{j[1].name} "
-	  	  print '(today '; Journey.today(j[0], j[1])
-	  	  print 'tomorrow '; Journey.tomorrow(j[0], j[1])
+	  	  print '(today'; Journey.today(j[0], j[1])
+	  	  print ' tomorrow'; Journey.tomorrow(j[0], j[1])
 	  	  if Time.zone.now.hour >=12
 	  	    #we are running populate after midday, also load for the day after tomorrow
    	  	  print ' and the next day'
@@ -36,7 +37,7 @@ namespace :mycitytrain do
    	    
 	    end
 	  
-	    puts "Complete populate at #{Time.zone.now}, a duration of #{(Time.zone.now - starting_time).round} seconds."
+	    puts "Complete populate at #{Time.zone.now}, a duration of #{(Time.zone.now - starting_time).round} seconds, #{from_to.length} journeys loaded."
 
   	  # Load stops for the new journeys
 =begin 
