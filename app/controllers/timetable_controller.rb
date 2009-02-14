@@ -7,8 +7,7 @@ class TimetableController < ApplicationController
 
     @journeys = []
     favourites.each do |favourite|
-      d = Station.find_by_code(favourite[0])
-      a = Station.find_by_code(favourite[1])
+      d, a = Station.find_by_code(favourite[0]), Station.find_by_code(favourite[1])
       
       if d and a
         journey = Journey.upcoming(d, a).first || Journey.new(:departing => d, :arriving => a, :departing_at => nil)
@@ -25,12 +24,12 @@ class TimetableController < ApplicationController
   end
   
   def add_favourite
-    favourites << [@departing.code, @arriving.code] unless favourites.find { |f| f[0] == @departing.code and f[1] == @arriving.code }        
+    favourites |= [[@departing.code, @arriving.code]]
     redirect_to :action => 'index'
   end
   
   def remove_favourite
-    favourites.delete [@departing.code, @arriving.code]
+    favourites -= [[@departing.code, @arriving.code]]
     redirect_to :action => 'index'
   end
   
@@ -41,11 +40,8 @@ class TimetableController < ApplicationController
   
   def arriving
     expires_in 1.day
-
-    @departing = Station.find params[:departing]
-    if @departing
-      @stations = Station.find_all
-    else
+    @departing, @stations = Station.find params[:departing], Station.find_all
+    unless @departing
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}'") 
       redirect_to :action => 'index'
     end
@@ -58,13 +54,13 @@ class TimetableController < ApplicationController
   
   def today
     @journeys = Journey.today @departing, @arriving
-    @refresh = end_of_the_day if @journeys and @journeys.length > 1
+    @refresh = end_of_the_day
     render :template => 'timetable/fullday'
   end
   
   def tomorrow
     @journeys = Journey.tomorrow @departing, @arriving
-    @refresh = end_of_the_day if @journeys and @journeys.length > 1
+    @refresh = end_of_the_day
     render :template => 'timetable/fullday'
   end
 
@@ -76,7 +72,7 @@ class TimetableController < ApplicationController
   	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(@departing, @arriving, @departing_at, :include => :stops)
     end
     
-	unless @journey
+	  unless @journey
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
     end
