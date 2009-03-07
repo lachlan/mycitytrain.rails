@@ -45,6 +45,7 @@ pre,code{margin:1.5em 0;white-space:pre;}
 pre,code,tt,kbd,samp{font:1em 'Andale Mono','Lucida Console',monospace;line-height:1.5;}
 li ul,li ol{margin:0 1.5em;}
 ul,ol{margin:0 1.5em 1.5em 1.5em;}
+ul.yui-g{margin:0;}
 ul li{list-style:disc outside;}
 ol li{list-style:decimal outside;}
 dl{margin:0 0 1.5em 0;}
@@ -152,3 +153,5 @@ h2 a:link,h2 a:visited,h2 a:hover{display:inline;}
 .add-favourite{background-image:url(../images/add_favourite_16x16.png);}
 .remove-favourite{background-image:url(../images/remove_favourite_16x16.png);}
 .hide{display:none;}
+.block{display:block;}
+li.yui-u{list-style-type:none;}

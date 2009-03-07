@@ -1,12 +1,12 @@
 <%- content_for :actions do -%>
-	<div class="yui-g">
+	<ul class="yui-g">
 		<%- unless @hide_return_journey -%>
-			<div class="yui-u first" >
+			<li class="yui-u first" >
 				<%= link_to 'Return Journey', { :controller => 'timetable', :action => params[:action], :departing => @arriving, :arriving => @departing }, :class => 'button return-journey' %>
-			</div>
+			</li>
 		<%- end -%>
-		<div class="yui-u">
+		<li class="yui-u">
 			<%= link_to "#{@favourite_verb.capitalize} Favourite", { :controller => 'timetable', :action => "#{@favourite_verb}_favourite", :departing => @departing, :arriving => @arriving }, :class => "button #{@favourite_verb}-favourite" %>
-		</div>
-	</div>
+		</li>
+	</ul>
 <%- end -%>

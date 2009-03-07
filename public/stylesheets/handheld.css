@@ -1,3 +1,12 @@
-html{margin:0 1em;}
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,
+p,blockquote,pre,a,abbr,acronym,address,code,del,dfn,
+em,img,q,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,
+table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;}
+body{background-color:white;color:#222;line-height:1.5;font-size:75%;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;margin:0.83333em;text-align:left;}
+h1,h2,h3,h4,h5,h6{font-weight:bold;color:#111;}
+h1{font-size:1.25em;line-height:1;margin-bottom:0.66667em;}
+h2,h3,h4,h5,h6{font-size:1em;margin-bottom:0.83333em;}
+p,ul,ol,dl{margin:0 0 0.83333em 0;}
 dt{font-weight:bold;}
-ol,ol li{list-style:decimal outside;}
+ul,ul li,ol,ol li{list-style:none;}
+li h3{margin:0.5em 0;}
