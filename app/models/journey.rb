@@ -51,6 +51,9 @@ class Journey < ActiveRecord::Base
   end
   
   def self.upcoming(d, a)
+    #Record when upcoming journeys are being requested.  Only put it in the upcoming, as today/tommorrow are used during rake populate task
+    HistoricJourney.create :departing => d, :arriving =>a
+    
     self.fetch_journeys(:departing => d, :arriving => a, :from => Time.zone.now, :limit => 10)
   end
   
