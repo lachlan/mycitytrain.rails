@@ -24,4 +24,7 @@
 	<%- end -%>
 	</dl>
 <%- end -%>
-<h2 class='panel'><%= link_to 'About', {:controller => 'timetable', :action => 'about'}, :class => 'item' -%></h2>
+<div class='panel'>
+	<h2><%= link_to 'Feedback', {:controller => 'timetable', :action => 'feedback'}, :class => 'item' -%></h2>
+	<h2><%= link_to 'About', {:controller => 'timetable', :action => 'about'}, :class => 'item' -%></h2>
+</div>

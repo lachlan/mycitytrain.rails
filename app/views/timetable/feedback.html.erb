@@ -1,0 +1,17 @@
+<%- @title = 'Feedback' -%>
+<%- @html_class = 'list' -%>
+<form action="/feedback" method="post" id="feedback_form">
+	<fieldset class="aligned">
+		<fieldset>
+			<ul class='list'>
+				<% if flash[:notice] -%>
+				<li class='heading'><h3 id="notice"><%= flash[:notice] %></h3></li>
+				<% end -%>				
+				<li><span><label for='feedback_name'>Name</label> <%= text_field 'feedback', 'name' %></span></li>
+				<li><span><label for='feedback_email'>Email Address</label> <%= text_field 'feedback', 'email' %></span></li>
+				<li><span><label for='feedback_comment'>Comments</label> <%= text_area 'feedback', 'comment', :cols => 30, :rows => 9  %></span></li>
+				<li><span><%= submit_tag 'Send Feedback', :type => 'submit' %></span></li>
+			</ul>
+		</fieldset>
+	</fieldset>
+</form>

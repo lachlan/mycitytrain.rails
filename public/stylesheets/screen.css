@@ -106,7 +106,8 @@ h2 a:link,h2 a:visited,h2 a:hover{display:inline;}
 .content > h5.panel,
 .content > h6.panel{color:black;}
 .content > p{margin:0 0.83333em 0 0.83333em;padding:0;font-family:inherit;font-size:1.41667em;font-weight:normal;text-shadow:white 0 0.08333em 0;color:rgb(76,86,108);text-align:center;background-color:transparent;border:none;}
-.content input{margin:0;border:none;background:none;font-size:1em;font-weight:normal;width:10em;}
+.content input{margin:0;background-color:white;padding:4px 0;font-size:1em;font-weight:normal;width:10em;}
+.content textarea{width:100%;}
 .content .panel{font-size:1.41667em;background-color:white;display:block;margin:0.52941em 0;padding:0;border:0.05882em solid rgb(171,171,171);-webkit-border-radius:0.47058em;-moz-border-radius:0.47058em;border-radius:0.47058em;}
 .content .panel > *,
 .content .panel *{font-size:1em;margin:0;padding:0;text-align:left;color:black;text-shadow:none;font-weight:normal;}
@@ -146,12 +147,36 @@ h2 a:link,h2 a:visited,h2 a:hover{display:inline;}
 .content .list > li h4,
 .content .list > li h5,
 .content .list > li h6{font-size:1em;line-height:1.3529em;margin:0;padding:0 0.58823em;color:white;text-shadow:#333 0 0.08333em 0;}
-.content .list > li{list-style-type:none;border-bottom:0.05882em solid rgb(217,217,217);}
+.content .list > li{list-style-type:none;border-bottom:0.05882em solid rgb(217,217,217);background-image:-webkit-gradient(linear,left top,left bottom,from(#fff),to(#efefef),color-stop(0.5,#fff));}
 .content .list > li > *{padding:0.58823em;display:block;}
-.disabled{background-color:#efefef;color:#666;}
+.content .list > li.disabled{background-color:#ddd;color:#666;background-image:-webkit-gradient(linear,left top,left bottom,from(#efefef),to(#ddd),color-stop(0.5,#efefef));}
 .return-journey{background-image:url(../images/return_journey_16x16.png);}
 .add-favourite{background-image:url(../images/add_favourite_16x16.png);}
 .remove-favourite{background-image:url(../images/remove_favourite_16x16.png);}
 .hide{display:none;}
 .block{display:block;}
 li.yui-u{list-style-type:none;}
+/** 
+Form Styles
+Defines the mobile device styling for forms.
+2009-05-18:Created by Lachlan.
+**/
+form fieldset.aligned{border:none;margin:0 0 1.5em 0;padding:0;}
+form fieldset.aligned p,
+form fieldset.aligned p *{vertical-align:middle;}
+form fieldset.aligned label{font-weight:bold;display:inline-block;vertical-align:top;width:6em;margin:0;}
+form fieldset.aligned fieldset fieldset label{font-weight:normal;display:block;width:auto;margin-left:6.25em;}
+form fieldset.aligned fieldset{border:none;padding:0 0 1.5em 0;margin:0;}
+form fieldset.aligned fieldset fieldset{border:none;background:transparent;padding-bottom:0;}
+form fieldset.aligned fieldset legend{display:block;margin:0;padding:0;font-weight:bold;}
+form fieldset.aligned fieldset fieldset legend{padding:0;font-weight:normal;}
+form fieldset.aligned fieldset ol,
+form fieldset.aligned fieldset ul{margin:0;padding:0;}
+form fieldset.aligned fieldset ol li,
+form fieldset.aligned fieldset ul li{list-style:none;list-style-position:outside;padding:0;margin:0;}
+form fieldset.aligned fieldset ol li:last-child,
+form fieldset.aligned fieldset ul li:last-child{padding-bottom:0;}
+form fieldset.aligned fieldset dl{margin:0;padding:0;}
+form fieldset.aligned fieldset dl dt{margin-top:0.75em;padding:0.75em 0 0 0;font-weight:normal;}
+form fieldset.aligned fieldset dl dd{padding-left:2em;}
+form fieldset.aligned em{font-weight:bold;font-style:normal;color:#ff0000;}

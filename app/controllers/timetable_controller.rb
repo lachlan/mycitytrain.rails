@@ -1,6 +1,7 @@
 class TimetableController < ApplicationController  
   caches_page :departing, :arriving 
   before_filter :find_stations, :only => [:add_favourite, :remove_favourite, :upcoming, :today, :tomorrow, :journey]
+  protect_from_forgery :only => [:create, :update, :destroy] 
   
   def index
     expires_now
@@ -76,6 +77,14 @@ class TimetableController < ApplicationController
 	  unless @journey
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
+    end
+  end
+  
+  def feedback
+    if request.post?
+      Notifier.deliver_feedback(params[:feedback][:name], params[:feedback][:email], params[:feedback][:comment])
+      flash[:notice] = 'We appreciate your feedback.'
+      redirect_to :action => 'feedback'
     end
   end
   
