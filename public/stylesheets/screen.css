@@ -147,7 +147,7 @@ h2 a:link,h2 a:visited,h2 a:hover{display:inline;}
 .content .list > li h4,
 .content .list > li h5,
 .content .list > li h6{font-size:1em;line-height:1.3529em;margin:0;padding:0 0.58823em;color:white;text-shadow:#333 0 0.08333em 0;}
-.content .list > li{list-style-type:none;border-bottom:0.05882em solid rgb(217,217,217);background-image:-webkit-gradient(linear,left top,left bottom,from(#fff),to(#efefef),color-stop(0.5,#fff));}
+.content .list > li{list-style-type:none;border-bottom:0.05882em solid rgb(217,217,217);/*background-image:-webkit-gradient(linear,left top,left bottom,from(#fff),to(#efefef),color-stop(0.5,#fff));*/}
 .content .list > li > *{padding:0.58823em;display:block;}
 .content .list > li.disabled{background-color:#ddd;color:#666;background-image:-webkit-gradient(linear,left top,left bottom,from(#efefef),to(#ddd),color-stop(0.5,#efefef));}
 .return-journey{background-image:url(../images/return_journey_16x16.png);}
