@@ -4,7 +4,7 @@ ActionController::Routing::Routes.draw do |map|
   map.sitemap 'sitemap.xml' , :controller => 'sitemap' , :action => 'sitemap'
 
   map.connect 'about', :controller => 'timetable', :action => 'about'
-  #map.connect 'feedback', :controller => 'timetable', :action => 'feedback'
+  map.connect 'feedback', :controller => 'timetable', :action => 'feedback'
   map.connect ':controller', :action => 'departing'
   map.connect ':controller/:departing', :action => 'arriving'
   map.connect ':controller/:departing/:arriving/upcoming', :action => 'upcoming'
