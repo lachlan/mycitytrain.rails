@@ -1,5 +1,6 @@
 require 'soap/wsdlDriver'
 require 'soap/rpc/driver'
+require 'xmlsimple'
 
 class CitytrainAPI
   @@service = SOAP::WSDLDriverFactory.new('http://www.citytrain.com.au/soaplisten/CityTrain.WSDL').create_rpc_driver
