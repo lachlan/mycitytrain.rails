@@ -26,12 +26,22 @@
 </head>
 <body>
 <div class="container">
-<div class="header <%= @header_class ||= 'yui-g' -%>"> 
-<div class="brand yui-u first"> 
+<div class="header group <%= @header_class ||= '' -%>">
+<div class="brand"> 
 <h1 class="name">
 <%- title = @brand_title || @title || "#{SITE_NAME}" -%>
 <%= link_to title, :controller => "timetable", :action => "index" -%>
 </h1>
+</div>
+<div class="about">
+<%- link_to({:controller => 'timetable', :action => 'about'}) do -%>
+  <%= image_tag 'info_icon_17x17.png', :alt => 'About this site' %>
+<%- end -%>
+</div>
+<div class="timetable">
+<%- link_to({:controller => 'timetable', :action => 'departing'}, :class => 'item') do -%>
+	<%= image_tag 'plus_icon_17x17.png', :alt => 'Add favourite journey' %>
+<%- end -%>
 </div>
 <%= yield :actions -%>
 </div>

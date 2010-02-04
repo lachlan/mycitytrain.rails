@@ -5,7 +5,7 @@
 		<%- if station.id == @departing.id -%>
 			<li class='disabled'><div><%= h station.name -%></div></li>
 		<%- else -%>
-			<li><%= link_to (h station.name), :action => 'upcoming', :departing => @departing, :arriving => station -%></li>
+			<li><%= link_to (h station.name), { :controller => 'timetable', :action => 'add_favourite', :departing => @departing, :arriving => station } %></li>
 		<%- end -%>
 	<%- end -%>
 </ul>

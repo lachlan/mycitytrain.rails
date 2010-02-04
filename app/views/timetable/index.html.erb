@@ -1,15 +1,18 @@
-<h2 class='panel'>
-<%- link_to({:controller => 'timetable', :action => 'departing'}, :class => 'item') do -%>
-	<span class='title'>Timetable</span><span class='hide'>: </span><span class='block'>Choose a journey then add it as a favourite</span>
+<%- if @favourites.empty? -%>
+<div class="panel">
+  <div class="item">
+    <h2>Welcome</h2>
+    <p>To get started press the plus button to add a new trip.</p>
+  </div>
+</div>
 <%- end -%>
-</h2>
 <%- unless @journeys.empty? -%>
 	<h2 class='hide'>Favourites</h2>
 	<dl class='panel'>
 	<%- @journeys.each do |journey| -%>
 		<dt>
 			<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'item') do -%>
-				<%= h journey.departing.name %> to <%= h journey.arriving.name -%>
+				<%= h journey.departing.name %> &rarr; <%= h journey.arriving.name -%>
 			<%- end -%>
 		</dt>
 		<dd>
@@ -21,9 +24,13 @@
 				<%- end -%>
 			<%- end -%>
 		</dd>
+		<!--
+		<dd>
+		  <%- link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'delete-favourite') do -%>
+        <%= image_tag 'delete_16x16.png', :alt => 'Delete favourite' %>
+      <%- end -%>
+    </dd>
+    -->
 	<%- end -%>
 	</dl>
 <%- end -%>
-<div class='panel'>
-	<h2><%= link_to 'About', {:controller => 'timetable', :action => 'about'}, :class => 'item' -%></h2>
-</div>

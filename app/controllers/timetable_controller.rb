@@ -6,6 +6,7 @@ class TimetableController < ApplicationController
   def index
     expires_now
 
+    @favourites = session[:favourites]
     @journeys = []
     
     session[:favourites].each do |favourite|

@@ -1,12 +1,14 @@
 <%- content_for :actions do -%>
-	<ul class="yui-g">
 		<%- unless @hide_return_journey -%>
-			<li class="yui-u first" >
-				<%= link_to 'Return Journey', { :controller => 'timetable', :action => params[:action], :departing => @arriving, :arriving => @departing }, :class => 'button return-journey' %>
-			</li>
+			<div class="action">
+				<%- link_to({ :controller => 'timetable', :action => params[:action], :departing => @arriving, :arriving => @departing }) do -%>
+          <%= image_tag 'return_icon_25x17.png', :alt => 'Return journey' %>
+				<%- end -%>
+			</div>
 		<%- end -%>
-		<li class="yui-u">
-			<%= link_to "#{@favourite_verb.capitalize} Favourite", { :controller => 'timetable', :action => "#{@favourite_verb}_favourite", :departing => @departing, :arriving => @arriving }, :class => "button #{@favourite_verb}-favourite" %>
-		</li>
-	</ul>
+		
+		<div class="action">
+      <%= link_to "#{@favourite_verb.capitalize} Favourite", { :controller => 'timetable', :action => "#{@favourite_verb}_favourite", :departing => @departing, :arriving => @arriving }, :class => "button #{@favourite_verb}-favourite" %>
+		</div>
+		
 <%- end -%>

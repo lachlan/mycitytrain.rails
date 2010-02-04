@@ -1,6 +1,6 @@
 <%- content_for :nav do -%>
 <div class="nav yui-g">
-	<ul class='main'>
+	<ul class='main group'>
 		<%- JOURNEY_NAV_LINKS.each do |link| -%>
 			<li<%= " class='selected'" if link == controller.action_name -%>>
 				<%= link_to link.capitalize, :action => link, :departing => @departing, :arriving => @arriving -%>
