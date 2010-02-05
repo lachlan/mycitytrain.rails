@@ -1,9 +1,10 @@
-<%- @title = "#{h @journey.departing.name} to #{h @journey.arriving.name}" -%>
-<%- @title += ": #{format_time @journey.departing_at, :short_html}" if @journey.departing_at.midnight == Time.zone.now.midnight -%>
-<%- @title += ": #{format_time @journey.departing_at, :weekday} #{format_time @journey.departing_at, :short_html}" unless @journey.departing_at.midnight == Time.zone.now.midnight -%>
-<%- @header_class = 'yui-gc' -%>
+<%- title = "#{h @journey.departing.name} &rarr; #{h @journey.arriving.name}" -%>
+<%- title += ": #{format_time @journey.departing_at, :short_html}" if @journey.departing_at.midnight == Time.zone.now.midnight -%>
+<%- title += ": #{format_time @journey.departing_at, :weekday} #{format_time @journey.departing_at, :short_html}" unless @journey.departing_at.midnight == Time.zone.now.midnight -%>
 <%- @hide_return_journey = true -%>
+<%= render(:partial => 'home') -%>
 <%= render(:partial => "journey_actions") -%>
+<h2><%= title -%></h2>
 <%- if @journey.changes and !@journey.changes.empty? -%>
 	<%- @journey.changes.each do |change| -%>
 		<dl class="panel">

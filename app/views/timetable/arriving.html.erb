@@ -1,5 +1,5 @@
 <%- @title = "Arriving" -%>
-<%- @html_class = 'list' -%>
+<%= render(:partial => 'home') -%>
 <ul class="list">
 	<%- @stations.each do |station| -%>
 		<%- if station.id == @departing.id -%>

@@ -33,11 +33,6 @@
 <%= link_to title, :controller => "timetable", :action => "index" -%>
 </h1>
 </div>
-<div class="about">
-<%- link_to({:controller => 'timetable', :action => 'about'}) do -%>
-  <%= image_tag 'info_icon_17x17.png', :alt => 'About this site' %>
-<%- end -%>
-</div>
 <div class="timetable">
 <%- link_to({:controller => 'timetable', :action => 'departing'}, :class => 'item') do -%>
 	<%= image_tag 'plus_icon_17x17.png', :alt => 'Add favourite journey' %>
@@ -46,9 +41,13 @@
 <%= yield :actions -%>
 </div>
 <%= yield :nav -%>
-<div class="content yui-g">
+<div class="content yui-g group">
 <%= yield -%>
 </div>
+<div class="push"></div>
+</div>
+<div class="footer">
+<%= yield :footer -%>
 </div>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

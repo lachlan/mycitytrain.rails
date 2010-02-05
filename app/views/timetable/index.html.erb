@@ -1,3 +1,8 @@
+<%- content_for :footer do -%>
+  <%- link_to({:controller => 'timetable', :action => 'about'}) do -%>
+    <%= image_tag 'info_icon_17x17.png', :alt => 'About this site' %>
+  <%- end -%>
+<%- end -%>
 <%- if @favourites.empty? -%>
 <div class="panel">
   <div class="item">
@@ -8,6 +13,31 @@
 <%- end -%>
 <%- unless @journeys.empty? -%>
 	<h2 class='hide'>Favourites</h2>
+	
+	<ol class='list'>
+	<%- @journeys.each do |journey| -%>
+    <li>
+    <!--
+    <%- link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'delete') do -%>
+      <%= image_tag 'delete_16x16.png', :alt => 'Delete favourite' %>
+    <%- end -%>
+    -->
+    <%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'group journey') do -%>
+      <span class='t-minus nowrap'><%= distance_of_time_in_words_to_now journey.departing_at -%></span>
+      <span class='departing'>
+        <span class='station nowrap'><%= h journey.departing.name %></span>
+        <span class='time nowrap'><%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %><%= format_time(journey.departing_at) -%></span>
+      </span>
+      <span class='arriving'>
+        <span class='station nowrap'><%= h journey.arriving.name -%></span>
+        <span class='time nowrap'><%= "#{format_time(journey.arriving_at, :weekday)}&nbsp;" if journey.arriving_at.day != Time.zone.now.day %><%= format_time(journey.arriving_at) -%></span>
+      </span>
+    <%- end -%>
+    </li>
+	<%- end -%>
+	</ol>
+	
+	<!--
 	<dl class='panel'>
 	<%- @journeys.each do |journey| -%>
 		<dt>
@@ -24,13 +54,7 @@
 				<%- end -%>
 			<%- end -%>
 		</dd>
-		<!--
-		<dd>
-		  <%- link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'delete-favourite') do -%>
-        <%= image_tag 'delete_16x16.png', :alt => 'Delete favourite' %>
-      <%- end -%>
-    </dd>
-    -->
 	<%- end -%>
 	</dl>
+	-->
 <%- end -%>

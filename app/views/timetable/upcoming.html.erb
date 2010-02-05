@@ -1,6 +1,5 @@
-<%- @title = "#{@departing.name} &rarr; #{@arriving.name}" -%>
-<%- @html_class = 'list' -%>
 <%- @header_class = 'yui-gc' -%>
+<%= render(:partial => 'home') -%>
 <%= render(:partial => "journey_actions") -%>
 <%= render(:partial => "journey_navigation") -%>
 <h2 class='hide'>Upcoming Journeys</h2>
