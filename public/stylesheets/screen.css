@@ -110,7 +110,7 @@ h2 a:link,h2 a:visited,h2 a:hover{display:inline;}
 .content .list{font-size:1.41667em;font-weight:bold;color:black;background-color:transparent;margin:0;padding:0;height:100%;margin:0 -0.5294em;padding-bottom:10px;background:transparent url(../images/drop_shadow_1x10.png) bottom left repeat-x;}
 .delete-favourite{float:left;}
 .journey > *{display:block;float:left;padding:0;margin:0 9px 0 0;text-align:center;vertical-align:middle;}
-.t-minus{width:55px;text-shadow:-1px -1px 0 rgba(0,0,0,0.5);font-size:0.7647em;color:white;background-color:rgb(55,175,55);-webkit-border-radius:20px;-moz-border-radius:20px;border-radius:20px;padding:5px;font-weight:normal;text-align:center;}
+.t-minus{width:55px;text-shadow:-1px -1px 0 rgba(0,0,0,0.5);font-size:0.7647em;color:white;background-color:rgb(55,175,55);-webkit-border-radius:14px;-moz-border-radius:14px;border-radius:14px;padding:5px;font-weight:normal;text-align:center;}
 .t-minus.negative{background-color:rgb(175,75,55);}
 .departing,.arriving{width:101px;text-align:left;text-shadow:1px 1px 0 rgba(255,255,255,0.75);font-weight:bold;}
 .favourite .departing,.favourite .arriving{width:88px;}
