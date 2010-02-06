@@ -58,8 +58,7 @@ Rails::Initializer.run do |config|
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
     :session_key     => '_mycitytrain_session',
-    :secret          => '296835085ba78206ede6b257f50912e06955d99069da769078803d0245734e5b02dc3b43efb4b63dddcfd7accc8ce4cdcacbaeeb347c969be84a50f2dd673e08',
-    :session_expires => Time.local(Time.now.year + 25, Time.now.month, Time.now.day)
+    :secret          => '296835085ba78206ede6b257f50912e06955d99069da769078803d0245734e5b02dc3b43efb4b63dddcfd7accc8ce4cdcacbaeeb347c969be84a50f2dd673e08'
   }
 
   # Use the database for sessions instead of the cookie-based default,
