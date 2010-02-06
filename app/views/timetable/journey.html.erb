@@ -1,6 +1,3 @@
-<%- title = "#{h @journey.departing.name} &rarr; #{h @journey.arriving.name}" -%>
-<%- title += ": #{format_time @journey.departing_at, :short_html}" if @journey.departing_at.midnight == Time.zone.now.midnight -%>
-<%- title += ": #{format_time @journey.departing_at, :weekday} #{format_time @journey.departing_at, :short_html}" unless @journey.departing_at.midnight == Time.zone.now.midnight -%>
 <%= render(:partial => 'home') -%>
 <%- if @journey.changes and !@journey.changes.empty? -%>
 	<ol class="list">
