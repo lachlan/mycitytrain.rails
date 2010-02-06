@@ -26,7 +26,7 @@ class TimetableController < ApplicationController
   end
   
   def add_favourite
-    session[:favourites] |= [[@departing.code, @arriving.code]]
+    session[:favourites] |= [[@departing.code, @arriving.code], [@arriving.code, @departing.code]]
     redirect_to :action => 'index'
   end
   
