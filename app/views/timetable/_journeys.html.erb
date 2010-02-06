@@ -31,7 +31,7 @@
 						<span class='t-minus nowrap'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
 					<%- end -%>
 				<%- else -%>
-				<span class='t-minus negative'>&mdash;</span>
+					<span class='t-minus negative'>&mdash;</span>
 				<%- end -%>
 				<span class='departing'>
 					<span class='station nowrap'><%= h journey.departing.name %></span>
@@ -57,18 +57,35 @@
 		<%- else -%>
 			<li>
         	<%- link_to({:controller => 'timetable', :action => 'journey', :departing => journey.departing, :arriving => journey.arriving, :departing_at => format_time(journey.departing_at, :iso8601)}, :class => 'group journey') do -%>
-			<%- if Time.now > journey.departing_at -%>
-				<span class='t-minus nowrap negative'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+			<%- if journey.departing_at -%>
+				<%- if Time.now > journey.departing_at -%>
+					<span class='t-minus nowrap negative'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+				<%- else -%>
+					<span class='t-minus nowrap'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+				<%- end -%>
 			<%- else -%>
-				<span class='t-minus nowrap'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+				<span class='t-minus negative'>&mdash;</span>
 			<%- end -%>
+
 			<span class='departing'>
 				<span class='station nowrap'><%= h journey.departing.name %></span>
-				<span class='time nowrap'><%= format_time(journey.departing_at) -%></span>
+				<span class='time nowrap'>
+					<%- if journey.departing_at -%>
+						<%= format_time(journey.departing_at) -%>
+					<%- else -%>
+						&mdash;
+					<%- end -%>
+				</span>
 			</span>
 			<span class='arriving'>
 				<span class='station nowrap'><%= h journey.arriving.name -%></span>
-				<span class='time nowrap'><%= format_time(journey.arriving_at) -%></span>
+				<span class='time nowrap'>
+					<%- if journey.arriving_at -%>
+						<%= format_time(journey.arriving_at) -%>
+					<%- else -%>
+						&mdash;
+					<%- end -%>
+				</span>
 			</span>
 			<%- end -%>
 
