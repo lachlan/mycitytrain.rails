@@ -27,7 +27,8 @@ class CitytrainAPI
         if jp['iJourneyID'] == '0' or jp['iJourneyID'] != last_journey 
           last_journey = jp['iJourneyID']
           departing_at = departing_on.midnight + jp['sDepartureTime'].to_i.seconds
-          journey = Journey.find_or_create_by_departing_id_and_arriving_id_and_departing_at(:departing_id => departing.id, :arriving_id => arriving.id, :departing_at => departing_at) 
+          arriving_at = departing_on.midnight + jp['sArrivalTime'].to_i.seconds
+          journey = Journey.find_or_create_by_departing_id_and_arriving_id_and_departing_at_and_arriving_at(:departing_id => departing.id, :arriving_id => arriving.id, :departing_at => departing_at, :arriving_at => arriving_at) 
         end
       end
     end

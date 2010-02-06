@@ -42,14 +42,6 @@ class Journey < ActiveRecord::Base
     changes << service if service and !service.empty?
   end
   
-  def arriving_at
-    if stops and stops.last
-      stops.last.arriving_at
-    else
-      departing_at
-    end
-  end
-  
   def self.upcoming(d, a)
     #Record when upcoming journeys are being requested.  Only put it in the upcoming, as today/tommorrow are used during rake populate task
     HistoricJourney.create :departing => d, :arriving =>a
@@ -102,15 +94,19 @@ class Journey < ActiveRecord::Base
   #Populate stops if they don't exist in the database
   def self.load_stops(departing, arriving, departing_at)
   	journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at)
-    if journey and journey.stops and journey.stops.empty?
+    journey.load_stops if journey
+  end
+  
+  def load_stops
+    if stops and stops.empty?
 	    retries = 0
-		begin
-			CitytrainAPI.stops journey
-		rescue Exception
-			retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-			retry if retries < 10
-			raise
-		end
+	    begin
+    		CitytrainAPI.stops self
+    	rescue Exception
+    		retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+    		retry if retries < 10
+    		raise
+    	end
     end
   end
   

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090409232334) do
+ActiveRecord::Schema.define(:version => 20100206040706) do
 
   create_table "historic_journeys", :force => true do |t|
     t.integer  "departing_id"
@@ -20,12 +20,22 @@ ActiveRecord::Schema.define(:version => 20090409232334) do
 
   add_index "historic_journeys", ["departing_id", "arriving_id"], :name => "index_historic_journeys_on_departing_id_and_arriving_id"
 
+  create_table "journey_history", :force => true do |t|
+    t.integer  "departing_id"
+    t.integer  "arriving_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "journey_history", ["departing_id", "arriving_id"], :name => "index_journey_history_on_departing_id_and_arriving_id"
+
   create_table "journeys", :force => true do |t|
     t.integer  "departing_id"
     t.datetime "departing_at"
     t.integer  "arriving_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "arriving_at"
   end
 
   add_index "journeys", ["departing_at", "departing_id", "arriving_id"], :name => "index_journeys_on_departing_at_and_departing_id_and_arriving_id"
