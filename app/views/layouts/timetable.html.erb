@@ -13,9 +13,9 @@
 <%= javascript_include_tag 'iesucks' -%>
 <![endif]-->
 <%#- Bare minimum styles for downlevel devices -%>
-<%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/base-min', 'handheld', :media => 'screen, handheld', :cache => "cached-base" -%>
+<%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/base-min', 'handheld', :media => 'screen, handheld' -%>
 <%#- Styles for sophisticated devices like iPhone or Android -%>
-<%= stylesheet_link_tag 'yui/3_0_0pr1/grids', 'screen', :media => 'screen and (min-device-width:320px)', :cache => "cached-screen" -%>
+<%= stylesheet_link_tag 'yui/3_0_0pr1/grids', 'screen', :media => 'screen and (min-device-width:320px)' -%>
 <%#- Styles for dumb ol' IE -%>
 <!--[if lt IE 8]>
 <%= stylesheet_link_tag 'iesucks' -%>

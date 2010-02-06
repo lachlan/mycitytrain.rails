@@ -1,5 +1,4 @@
 class TimetableController < ApplicationController  
-  caches_page :departing, :arriving 
   before_filter :find_stations, :only => [:add_favourite, :remove_favourite, :upcoming, :today, :tomorrow, :journey]
   protect_from_forgery :only => [:create, :update, :destroy] 
   

@@ -8,3 +8,4 @@ public/stylesheets/all.css
 public/timetable.html
 public/timetable/**
 Thumbs.db
+vendor/bundler_gems
