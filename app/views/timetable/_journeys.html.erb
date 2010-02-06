@@ -1,4 +1,6 @@
 <%- show_headings ||= false -%>
+<%- link_to_upcoming ||= false -%>
+
 <%- if @journeys -%>
 
 <ol class="list">
@@ -11,31 +13,69 @@
     
     <%- @journeys.each do |journey| -%>
 		
-			<%- if show_headings -%>
-				<%= "<li class='heading'><h3>#{format_time(journey.departing_at, :weekday)}</h3></li>" unless day == journey.departing_at.day -%>
-			<%- end -%>
+		<%- if show_headings -%>
+			<%= "<li class='heading'><h3>#{format_time(journey.departing_at, :weekday)}</h3></li>" unless day == journey.departing_at.day -%>
+		<%- end -%>
 		
+				
+		<%- if link_to_upcoming -%>
+			<li class='favourite'>				
+			<%- link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'delete-favourite', :confirm => 'Remove journey?') do -%>
+				<%= image_tag 'delete_17x17.png', :alt => 'Remove journey' %>
+			<%- end -%>
+			<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'group journey') do -%>
+				<%- if journey.departing_at -%>
+					<%- if Time.now > journey.departing_at -%>
+						<span class='t-minus nowrap negative'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+					<%- else -%>
+						<span class='t-minus nowrap'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+					<%- end -%>
+				<%- else -%>
+				<span class='t-minus negative'>&mdash;</span>
+				<%- end -%>
+				<span class='departing'>
+					<span class='station nowrap'><%= h journey.departing.name %></span>
+					<span class='time nowrap'>
+						<%- if journey.departing_at -%>
+							<%= format_time(journey.departing_at) -%>
+						<%- else -%>
+							&mdash;
+						<%- end -%>
+					</span>
+				</span>
+				<span class='arriving'>
+					<span class='station nowrap'><%= h journey.arriving.name -%></span>
+					<span class='time nowrap'>
+						<%- if journey.arriving_at -%>
+							<%= format_time(journey.arriving_at) -%>
+						<%- else -%>
+							&mdash;
+						<%- end -%>	
+					</span>
+				</span>
+			<%- end -%>	
+		<%- else -%>
 			<li>
-        <%- link_to({:controller => 'timetable', :action => 'journey', :departing => journey.departing, :arriving => journey.arriving, :departing_at => format_time(journey.departing_at, :iso8601)}, :class => 'group journey') do -%>
-          <span class='t-minus nowrap'><%= distance_of_time_in_words_to_now journey.departing_at -%></span>
-          <span class='departing'>
-            <span class='station nowrap'><%= h journey.departing.name %></span>
-            <span class='time nowrap'><%= "#{format_time(journey.departing_at, :weekday)}&nbsp;" if journey.departing_at.day != Time.zone.now.day %><%= format_time(journey.departing_at) -%></span>
-          </span>
-          <span class='arriving'>
-            <span class='station nowrap'><%= h journey.arriving.name -%></span>
-            <span class='time nowrap'><%= "#{format_time(journey.arriving_at, :weekday)}&nbsp;" if journey.arriving_at.day != Time.zone.now.day %><%= format_time(journey.arriving_at) -%></span>
-          </span>
+        	<%- link_to({:controller => 'timetable', :action => 'journey', :departing => journey.departing, :arriving => journey.arriving, :departing_at => format_time(journey.departing_at, :iso8601)}, :class => 'group journey') do -%>
+			<%- if Time.now > journey.departing_at -%>
+				<span class='t-minus nowrap negative'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+			<%- else -%>
+				<span class='t-minus nowrap'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+			<%- end -%>
+			<span class='departing'>
+				<span class='station nowrap'><%= h journey.departing.name %></span>
+				<span class='time nowrap'><%= format_time(journey.departing_at) -%></span>
+			</span>
+			<span class='arriving'>
+				<span class='station nowrap'><%= h journey.arriving.name -%></span>
+				<span class='time nowrap'><%= format_time(journey.arriving_at) -%></span>
+			</span>
+			<%- end -%>
+
         <%- end -%>
       </li>
-    
-      <%- day = journey.departing_at.day -%>
-    
+  		<%- day = journey.departing_at.day if journey.departing_at -%>
     <%- end -%>
-		
-		
-		
-		
 	<%- else -%>
 		<li><span>No services available.</span></li>
 	<%- end -%>

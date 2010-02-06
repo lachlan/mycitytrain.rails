@@ -33,9 +33,9 @@
 <%= link_to title, :controller => "timetable", :action => "index" -%>
 </h1>
 </div>
-<div class="timetable">
+<div class="action">
 <%- link_to({:controller => 'timetable', :action => 'departing'}, :class => 'item') do -%>
-	<%= image_tag 'plus_icon_17x17.png', :alt => 'Add favourite journey' %>
+	<%= image_tag 'plus_17x17.png', :alt => 'Add favourite journey' %>
 <%- end -%>
 </div>
 <%= yield :actions -%>
