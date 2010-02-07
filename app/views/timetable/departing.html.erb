@@ -1,7 +1,0 @@
-<%- @title = "Departing" -%>
-<%= render(:partial => 'home') -%>
-<ul class="list">
-	<%- @stations.each do |station| -%>
-		<li><%= link_to (h station.name), :action => 'arriving', :departing => station -%></li>
-	<%- end -%>
-</ul>

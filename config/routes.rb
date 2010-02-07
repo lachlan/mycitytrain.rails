@@ -3,6 +3,10 @@ ActionController::Routing::Routes.draw do |map|
 
   map.sitemap 'sitemap.xml' , :controller => 'sitemap' , :action => 'sitemap'
 
+  map.connect 'favourite', :controller => 'timetable', :action => 'favourite'
+  map.connect 'favourites', :controller => 'timetable', :action => 'add_favourite'
+  
+
   map.connect 'about', :controller => 'timetable', :action => 'about'
   map.connect 'feedback', :controller => 'timetable', :action => 'feedback'
   map.connect ':controller', :action => 'departing'

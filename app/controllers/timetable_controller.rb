@@ -34,19 +34,10 @@ class TimetableController < ApplicationController
     session[:favourites] -= [[@departing.code, @arriving.code]]
     redirect_to :action => 'index'
   end
-  
-  def departing
-    expires_in 1.day
-    @stations = Station.find_all
-  end
-  
-  def arriving
-    expires_in 1.day
-    @departing, @stations = Station.find(params[:departing]), Station.find_all
-    unless @departing
-      logger.error("Attempt to access invalid station/s: '#{params[:departing]}'") 
-      redirect_to :action => 'index'
-    end
+   
+  def favourite
+      expires_in 1.day
+      @stations = Station.find_all
   end
 
   def upcoming
