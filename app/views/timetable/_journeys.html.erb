@@ -21,7 +21,7 @@
 		<%- if link_to_upcoming -%>
 			<li class='favourite'>				
 			<%- link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'delete-favourite', :confirm => 'Remove journey?') do -%>
-				<%= image_tag 'delete_17x17.png', :alt => 'Remove journey' %>
+				<%= image_tag 'delete_21x21.png', :alt => 'Remove journey' %>
 			<%- end -%>
 			<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'group journey') do -%>
 				<%- if journey.departing_at -%>
