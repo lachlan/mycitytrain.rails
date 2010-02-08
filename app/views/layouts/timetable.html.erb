@@ -34,8 +34,8 @@
 </h1>
 </div>
 <div class="action">
-<%- link_to({:controller => 'timetable', :action => 'favourite'}, :class => 'item') do -%>
-	<%= image_tag 'plus_21x21.png', :alt => 'Add favourite journey' %>
+<%- link_to({:controller => 'timetable', :action => 'favourite'}, :class => 'item add-favourite') do -%>
+	<span>Add Favourite</span>
 <%- end -%>
 </div>
 <%= yield :actions -%>

@@ -1,5 +1,5 @@
 <%- content_for :footer do -%>
-  <%- link_to({:controller => 'timetable', :action => 'index'}) do -%>
-    <%= image_tag 'home_icon_17x17.png', :alt => 'Home' %>
+  <%- link_to({:controller => 'timetable', :action => 'index'}, :class => 'home') do -%>
+    <span>Home</span>
   <%- end -%>
 <%- end -%>

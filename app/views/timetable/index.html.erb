@@ -1,6 +1,6 @@
 <%- content_for :footer do -%>
-  <%- link_to({:controller => 'timetable', :action => 'about'}) do -%>
-    <%= image_tag 'info_icon_17x17.png', :alt => 'About this site' %>
+  <%- link_to({:controller => 'timetable', :action => 'about'}, :class => 'about') do -%>
+    <span>About</span>
   <%- end -%>
 <%- end -%>
 <%- if @favourites.empty? -%>
