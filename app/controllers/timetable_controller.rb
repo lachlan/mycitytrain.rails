@@ -71,14 +71,6 @@ class TimetableController < ApplicationController
     end
   end
   
-  def feedback
-    if request.post?
-      Notifier.deliver_feedback(params[:feedback][:name], params[:feedback][:email], params[:feedback][:comment])
-      flash[:notice] = 'We appreciate your feedback.'
-      redirect_to :action => 'feedback'
-    end
-  end
-  
   private
 
   def find_stations

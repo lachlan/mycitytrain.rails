@@ -19,11 +19,11 @@
 				
 		<%- if link_to_upcoming -%>
 			<li class='favourite group'>				
-			<%- link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'remove-favourite', :confirm => 'Remove journey?') do -%>
+			<%- link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'remove', :confirm => 'Remove journey?') do -%>
 				<span>(Remove favourite)<br /></span>
 			<%- end -%>
 			<%- link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'group journey') do -%>
-				<span class='t-minus nowrap <%= classify_duration_to_now journey.departing_at -%>'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
+				<span class='countdown nowrap <%= classify_duration_to_now journey.departing_at -%>'><%= duration_in_concise_words_to_now journey.departing_at -%></span>
 				<span class='hide'><br /></span>
 				<span class='departing'>
           <span class='hide'>Departing </span>
@@ -51,7 +51,7 @@
 		<%- else -%>
 			<li class="group">
         	<%- link_to({:controller => 'timetable', :action => 'journey', :departing => journey.departing, :arriving => journey.arriving, :departing_at => format_time(journey.departing_at, :iso8601)}, :class => 'group journey') do -%>
-			<span class='t-minus nowrap <%= classify_duration_to_now journey.departing_at -%>'><%= duration_in_concise_words_to_now journey.departing_at -%></span>	
+			<span class='countdown nowrap <%= classify_duration_to_now journey.departing_at -%>'><%= duration_in_concise_words_to_now journey.departing_at -%></span>	
 			<span class='hide'><br /></span>
 			<span class='departing'>
         <span class='hide'>Departing </span>

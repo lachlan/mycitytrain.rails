@@ -5,43 +5,23 @@
 <meta name="title" content="<%="#{SITE_NAME}" %><%= ": " + @title if @title %>" />
 <meta name="description" content="<%= h ABOUT_BLURB %>" />
 <meta name="keywords" content="QR Brisbane Citytrain train timetable station journey rail railway iPhone mobile Queensland Australia" />
-<link rel="apple-touch-icon" href="images/logo_60x60.png" />
+<link rel="icon" type="image/png" href="/images/logo_32x32.png">
+<link rel="apple-touch-icon" href="/images/logo_60x60.png" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<%= stylesheet_link_tag 'screen' %>
 <!--[if lt IE 8]>
-<%= javascript_include_tag 'http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js' -%>
-<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.min.js' -%>
-<%= javascript_include_tag 'iesucks' -%>
+<%= stylesheet_link_tag 'iesucks' %>
 <![endif]-->
-<%#- Bare minimum styles for downlevel devices -%>
-<%= stylesheet_link_tag 'yui/3_0_0pr1/reset-min', 'yui/3_0_0pr1/fonts-min', 'yui/3_0_0pr1/base-min', 'handheld', :media => 'screen, handheld' -%>
-<%#- Styles for sophisticated devices like iPhone or Android -%>
-<%= stylesheet_link_tag 'yui/3_0_0pr1/grids', 'screen', :media => 'screen and (min-device-width:320px)' -%>
-<%#- Styles for dumb ol' IE -%>
-<!--[if lt IE 8]>
-<%= stylesheet_link_tag 'iesucks' -%>
-<![endif]-->
-<%- if @refresh -%>
-<meta http-equiv="refresh" content="<%= h @refresh.to_s -%>" />
-<%- end -%>
+<%- if @refresh -%><meta http-equiv="refresh" content="<%= h @refresh.to_s -%>" /><%- end -%>
 </head>
 <body>
 <div class="container">
-<div class="header group <%= @header_class ||= '' -%>">
-<div class="brand"> 
-<h1 class="name">
-<%- title = @brand_title || @title || "#{SITE_NAME}" -%>
-<%= link_to title, :controller => "timetable", :action => "index" -%>
-</h1>
-</div>
-<div class="action">
-<%- link_to({:controller => 'timetable', :action => 'favourite'}, :class => 'item add-favourite') do -%>
-	<span>Add Favourite</span>
-<%- end -%>
-</div>
-<%= yield :actions -%>
+<div class="header group">
+  <div class="brand"><h1 class="name"><%- title = @brand_title || @title || "#{SITE_NAME}" -%><%= link_to title, :controller => "timetable", :action => "index" -%></h1></div>
+  <div class="action favourite"><%- link_to({:controller => 'timetable', :action => 'favourite'}, :class => 'add') do -%><span>Add Favourite</span><%- end -%></div><%= yield :actions -%>
 </div>
 <%= yield :nav -%>
-<div class="content yui-g group">
+<div class="content group">
 <%= yield -%>
 </div>
 <div class="push"></div>
