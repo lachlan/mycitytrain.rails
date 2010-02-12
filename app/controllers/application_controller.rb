@@ -3,7 +3,7 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
-  before_filter :init
+  before_filter :init, :www_redirect
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
@@ -18,6 +18,10 @@ class ApplicationController < ActionController::Base
   def init
     #ensure the the session favourites array has been initialised before use
     session[:favourites] ||= []
+  end
+
+  def www_redirect
+    head :moved_permanently, :location => "http://mycitytrain.info/" if request.env['HTTP_HOST'] =~ /^www\./i
   end
   
 end
