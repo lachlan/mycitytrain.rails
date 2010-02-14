@@ -4,8 +4,5 @@ tmp/**/*
 doc/api
 doc/app
 doc/guides
-public/stylesheets/all.css
-public/timetable.html
-public/timetable/**
+public/stylesheets/screen.css
 Thumbs.db
-vendor/bundler_gems
