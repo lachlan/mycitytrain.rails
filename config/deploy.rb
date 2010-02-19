@@ -16,16 +16,14 @@ default_run_options[:pty] = true
  
 namespace :deploy do
   
-   task :copy_production_database_configuration do
-     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-   end
-   after "deploy:update_code", :copy_production_database_configuration
+  desc <<-DESC
+    [internal] Updates the symlink for database.yml file to the just deployed release.
+  DESC
+  task :symlink, :except => { :no_release => true } do
+    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+  end
+  after "deploy:update_code", "deploy:symlink"
   
-   #See http://toolmantim.com/articles/setting_up_capistrano_on_segpub  
-   desc "Link in the production database.yml"
-   task :link_db do
-   end
-   
    #See http://www.simonecarletti.com/blog/2008/12/capistrano-deploy-recipe-with-passenger-mod_rails-taste/
    desc <<-DESC
      Restarts your application. \
