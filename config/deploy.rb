@@ -15,9 +15,12 @@ set :use_sudo, false
 default_run_options[:pty] = true 
  
 namespace :deploy do
-  #See http://toolmantim.com/articles/setting_up_capistrano_on_segpub  
+  
+  after "deploy:update_code", :link_db
+  
+   #See http://toolmantim.com/articles/setting_up_capistrano_on_segpub  
    desc "Link in the production database.yml"
-   task :after_update_code do
+   task :link_db do
      run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
    end
    
