@@ -85,8 +85,8 @@ body > .container{height:auto;min-height:100%;}
 .favourite .journey{margin-left:30px !important;height:46px;padding-left:0 !important;}
 .departing,.arriving,.countdown{display:block;float:left;margin:0 9px 0 0;}
 .countdown{width:51px;margin-top:12px;margin-bottom:12px;text-shadow:-1px -1px 0 rgba(0,0,0,0.5);font-size:0.7059em;color:white;background-color:#37af37;-moz-border-radius:10px;-webkit-border-radius:10px;border-radius:10px;line-height:1em;padding:5px;font-weight:normal;text-align:center;}
-.less_than_five_minutes{background-color:#bebb00;}
-.less_than_a_minute,.unknown{background-color:#af4b37;}
+.less_than_ten_minutes{background-color:#bebb00;}
+.less_than_five_minutes,.unknown{background-color:#af4b37;}
 .departing,.arriving{width:101px;text-shadow:1px 1px 0 rgba(255,255,255,0.5);font-weight:bold;margin:5px 9px 5px 0;}
 .favourite .departing{width:88px;}
 .favourite .arriving{width:88px;}
