@@ -6,6 +6,10 @@ class CreateTlStations < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :tl_stations, :code
+    add_index :tl_stations, :name
+    
   end
 
   def self.down
