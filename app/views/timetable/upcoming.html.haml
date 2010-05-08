@@ -1,0 +1,4 @@
+= render(:partial => 'home')
+= render(:partial => 'navigation')
+%h2.hide Upcoming Journeys
+= render(:partial => "journeys", :locals => { :show_headings => true })

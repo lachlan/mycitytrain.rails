@@ -1,0 +1,11 @@
+- content_for :footer do
+  - link_to({:controller => 'timetable', :action => 'about'}, :class => 'about') do
+    %span About
+- if @favourites.empty?
+  .panel
+    .item
+      %h2 Welcome&hellip;
+      %p To get started press the plus button above to add a new journey.
+- else
+  %h2.hide Favourites
+  = render(:partial => "journeys", :locals => { :link_to_upcoming => true })

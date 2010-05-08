@@ -1,0 +1,19 @@
+= render(:partial => 'home')
+%form#favourite_form{:action => "/favourites", :method => "post"}
+  %fieldset.aligned
+    %fieldset
+      %ul.list
+        %li
+          %span
+            %label{:for => 'departing'} Departing
+            %select{:name => 'departing'}
+              - @stations.each do |station|
+                %option{:value => station.id}= station.name
+        %li
+          %span
+            %label{:for => 'arriving'} Arriving
+            %select{:name => 'arriving'}
+              - @stations.each do |station|
+                %option{:value => station.id}= station.name
+        %li
+          %span= submit_tag 'Add Favourite', :type => 'submit'

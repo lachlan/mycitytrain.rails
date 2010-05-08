@@ -1,0 +1,28 @@
+- show_headings ||= false
+- link_to_upcoming ||= false
+%ol.list
+  - if @journeys.nil? or @journeys.empty?
+    %li
+      %span No services available.
+  - else
+    - if show_headings and Time.zone.now.day != @journeys.first.departing_at.day
+      %li
+        %span No further services today. 
+    - day = Time.zone.now.day
+    - @journeys.each do |journey|
+      - if show_headings and day != journey.departing_at.day
+        %li.heading
+          %h3= format_time(journey.departing_at, :weekday) 
+      - if link_to_upcoming
+        %li.favourite.group
+          - link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'remove', :confirm => 'Remove journey?') do
+            %span (Remove favourite)
+            %span.hide
+              %br
+          - link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'group journey') do
+            = render(:partial => "journey",:locals => { :journey => journey })
+      - else
+        %li.group
+          - link_to({:controller => 'timetable', :action => 'journey', :departing => journey.departing, :arriving => journey.arriving, :departing_at => format_time(journey.departing_at, :iso8601)}, :class => 'group journey') do
+            = render(:partial => "journey",:locals => { :journey => journey })
+      - day = journey.departing_at.day if journey.departing_at

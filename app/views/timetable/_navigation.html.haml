@@ -1,0 +1,6 @@
+- content_for :nav do
+  .nav
+    %ul.group
+      - JOURNEY_NAV_LINKS.each do |link|
+        - hclass = 'selected' if link == controller.action_name
+        %li{ :class=> hclass }= link_to(link.capitalize, :action => link, :departing => @departing, :arriving => @arriving)

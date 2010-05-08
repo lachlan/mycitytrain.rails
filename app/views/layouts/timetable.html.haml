@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+%html
+  %head
+    - pagetitle = #{SITE_NAME}
+    - pagetitle = pagetitle + ": " + @title if @title
+    %title=  pagetitle
+    %meta{:name => "title", :content => pagetitle}
+    %meta{:name => "description", :content => ABOUT_BLURB}
+    %meta{:name => "keywords", :content => "QR Brisbane Citytrain train timetable station journey rail railway iPhone mobile Queensland Australia translink"}
+    %meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"}
+    %meta{:name => "apple-mobile-web-app-capable", :content => "yes"}
+    %link{:rel => "icon", :type => "image/png", :href => "/images/logo_32x32.png"}
+    %link{:rel => "apple-touch-icon", :href => "/images/logo_60x60.png"}
+    = stylesheet_link_tag('screen')
+    /[if lt IE 8]
+      = stylesheet_link_tag('iesucks')
+    - if @refresh
+      %meta{"http-equiv" => "refresh", :content => @refresh.to_s}
+  %body
+    .container
+      .header.group
+        .brand
+          - title = @brand_title || @title || "#{SITE_NAME}"
+          %h1.name= link_to(title, :controller => "timetable", :action => "index")
+        .action.favourite
+          -link_to({:controller => 'timetable', :action => 'favourite'}, :class => 'add') do
+            %span Add Favourite
+        = yield :actions
+      = yield :nav
+      .content.group= yield
+      .push
+    .footer= yield :footer
+    %script{:type => "text/javascript"}="var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-6816538-2']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);})();"
