@@ -1,5 +1,4 @@
 rack --version '1.0.1'
 friendly_id --version '>= 2.3.0'
 xml-simple --version '>= 1.0.12'
-less --version '>= 1.2.21'
 haml --version '>= 2.2.24'
