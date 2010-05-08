@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 %html
   %head
-    - pagetitle = #{SITE_NAME}
-    - pagetitle = pagetitle + ": " + @title if @title
+    - pagetitle = SITE_NAME
+    - pagetitle += ": " + @title if @title
     %title=  pagetitle
-    %meta{:name => "title", :content => pagetitle}
     %meta{:name => "description", :content => ABOUT_BLURB}
     %meta{:name => "keywords", :content => "QR Brisbane Citytrain train timetable station journey rail railway iPhone mobile Queensland Australia translink"}
     %meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"}
@@ -20,7 +19,7 @@
     .container
       .header.group
         .brand
-          - title = @brand_title || @title || "#{SITE_NAME}"
+          - title = @brand_title || @title || SITE_NAME
           %h1.name= link_to(title, :controller => "timetable", :action => "index")
         .action.favourite
           -link_to({:controller => 'timetable', :action => 'favourite'}, :class => 'add') do

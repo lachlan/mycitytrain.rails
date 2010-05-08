@@ -17,8 +17,7 @@
         %li.favourite.group
           - link_to({ :controller => 'timetable', :action => 'remove_favourite', :departing => journey.departing, :arriving => journey.arriving }, :class => 'remove', :confirm => 'Remove journey?') do
             %span (Remove favourite)
-            %span.hide
-              %br
+            %br.hide
           - link_to({:controller => 'timetable', :action => 'upcoming', :departing => journey.departing, :arriving => journey.arriving}, :class => 'group journey') do
             = render(:partial => "journey",:locals => { :journey => journey })
       - else
