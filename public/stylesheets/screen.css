@@ -7,7 +7,7 @@ a:link{display:block;text-decoration:none;color:black;}
 a:visited{display:block;text-decoration:none;color:black;}
 a:hover{display:block;text-decoration:none;color:black;}
 li{list-style:none;}
-input{background-color:white;padding:4px 0;font-size:1em;width:10em;}
+input{padding:4px 0;font-size:1em;width:10em;}
 input[type='submit']{text-align:center;}
 textarea{width:100%;}
 form fieldset.aligned{border:none;margin:0 0 1.5em 0;padding:0;}
