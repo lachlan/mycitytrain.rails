@@ -42,11 +42,11 @@ class Journey < ActiveRecord::Base
     changes << service if service and !service.empty?
   end
   
-  def self.upcoming(d, a)
+  def self.upcoming(d, a, limit = 10)
     #Record when upcoming journeys are being requested.  Only put it in the upcoming, as today/tommorrow are used during rake populate task
     HistoricJourney.create :departing => d, :arriving =>a
     
-    self.fetch_journeys(:departing => d, :arriving => a, :from => Time.zone.now, :limit => 10)
+    self.fetch_journeys(:departing => d, :arriving => a, :from => Time.zone.now, :limit => limit)
   end
   
   def self.today(d, a)
@@ -63,31 +63,23 @@ class Journey < ActiveRecord::Base
     self.fetch_journeys(:departing => d, :arriving => a, :from => w, :to => w + 1.day)
   end
   	
-  
   def self.fetch_journeys(o)
-  	departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)
+    departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)	
+  	journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
 	
-	journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
-	
-	if journeys.empty?
-	    #threads = []
-	    0.upto(1) do |i|
-	    	#threads << Thread.new(i) do
-	    		retries = 0
-				begin
-					CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
-				rescue Exception
-			      retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-				  retry if retries < 10
-				  raise
-				end
-			#end
-		end
-		#threads.each { |thread| thread.join }
-
-  	    journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
-	end
-
+  	if journeys.empty?
+  	  0.upto(1) do |i|
+    	  retries = 0
+  			begin
+  			  CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
+  			rescue Exception
+  			  retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+  				retry if retries < 10
+  				raise
+  			end
+  		end
+      journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+  	end
     journeys
   end
   

@@ -1,0 +1,43 @@
+- if favourite[:journeys]
+  %div{:id => "fav#{favourite_counter}", :class => "fav original", :title => "fav#{favourite_counter}"}
+    .toolbar
+      %h1.title
+        %a{:href => '/'}= SITE_NAME
+      /%h2.hide= "#{favourite[:departing].name} &rarr; #{favourite[:arriving].name}"
+      %a.button.flip{:href => "#favret#{favourite_counter}", :style => "right: auto; left: 5px;"}Return
+      %a.button.slideup{:href => "#favset#{favourite_counter}"}Settings
+    = render :partial => 'journeys', :object => favourite[:journeys]
+- if favourite[:return_journeys]
+  %div{:id => "favret#{favourite_counter}", :class => "fav return", :title => "fav#{favourite_counter}"}
+    .toolbar
+      %h1.title
+        %a{:href => '/'}= SITE_NAME
+      %a.back{:href => "#fav#{favourite_counter}"}Back   
+    = render :partial => 'journeys', :object => favourite[:return_journeys]
+%div{:id => "favset#{favourite_counter}", :class => "fav settings", :title => "fav#{favourite_counter}"}
+  .toolbar
+    %h1.title
+      %a{:href => '/'}= SITE_NAME
+    %a.button.flip{:href => "#about", :style => "right: auto; left: 5px;"}About
+    %a.button.submit{:href => "#fav#{favourite_counter}"}Done
+        
+  %form{:action => "/favourite", :method => "post" }
+    %input{:type => "hidden", :value => favourite_counter, :name => 'idx'}
+    %ul
+      %li
+        %span
+          %select{:name => 'departing'}
+            %option{:value => ''}Departing
+            - @stations.each do |station|
+              - if favourite[:departing].id == station.id
+                %option{:value => station.id, :selected => 'selected'}= station.name
+              -else
+                %option{:value => station.id}= station.name
+          to 
+          %select{:name => 'arriving'}
+            %option{:value => ''}Arriving
+            - @stations.each do |station|
+              - if favourite[:arriving].id == station.id
+                %option{:value => station.id, :selected => 'selected'}= station.name
+              -else
+                %option{:value => station.id}= station.name

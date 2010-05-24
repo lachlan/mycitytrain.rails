@@ -80,36 +80,37 @@ module ApplicationHelper
       case duration_in_seconds
         # between 0 seconds and 1 minute
         when 0..59 then 
-          'now'
+          duration = 'now &nbsp;'
 
         # between 1 minute and 1 hour
         when 60..3599 then
           duration_in_minutes = (duration_in_seconds / 60.0).ceil
-          pluralize(duration_in_minutes, 'min')
+          duration = pluralize(duration_in_minutes, 'min')
 
         # between 1 hour and 1 day
         when 3600..86399 then
           duration_in_hours = (duration_in_seconds / 3600.0).ceil
-          pluralize(duration_in_hours, 'hr')
+          duration = pluralize(duration_in_hours, 'hr')
       
         # between 1 day and 1 month
         when 86400..2591999
           duration_in_days = (duration_in_seconds / 86400.0).ceil
-          pluralize(duration_in_days, 'day')
+          duration = pluralize(duration_in_days, 'day')
         
         # between 1 month and 1 year
         when 2592000..31535999
           duration_in_months = (duration_in_seconds / 2592000.0).ceil
-          pluralize(duration_in_months, 'mth')
+          duration = pluralize(duration_in_months, 'mth')
         
         # greater than 1 year
         else
           duration_in_years = (duration_in_seconds/31536000.0).ceil
-          pluralize(duration_in_years, 'yr')
+          duration = pluralize(duration_in_years, 'yr')
       end
     else
-      "&mdash;"
+      duration = "&mdash;"
     end
+    duration.gsub(/ /, '<br/>')
   end
   
 	def duration_in_concise_words_to_now(from_time)

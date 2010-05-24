@@ -1,60 +1,39 @@
 class TimetableController < ApplicationController  
-  before_filter :find_stations, :only => [:add_favourite, :remove_favourite, :upcoming, :today, :tomorrow, :journey]
+  before_filter :find_stations, :only => [:favourite, :upcoming, :journey]
   protect_from_forgery :only => [:create, :update, :destroy] 
   
   def index
     expires_now
-
-    @favourites = session[:favourites]
-    @journeys = []
-    
+    @favourites = []
     session[:favourites].each do |favourite|
-      d, a = Station.find_by_code(favourite[0]), Station.find_by_code(favourite[1])
-      
-      if d and a
-        journey = Journey.upcoming(d, a).first || Journey.new(:departing => d, :arriving => a, :departing_at => nil)
-        @journeys << journey if journey
-      else
-        logger.error("Attempt to access invalid station/s: '#{favourite[0]}', '#{favourite[1]}'") 
-      end
+      @favourites << {:departing => Station.find_by_code(favourite[0]), 
+                      :arriving => Station.find_by_code(favourite[1]), 
+                      :journeys => Journey.upcoming(Station.find_by_code(favourite[0]), Station.find_by_code(favourite[1]), 5),
+                      :return_journeys => Journey.upcoming(Station.find_by_code(favourite[1]), Station.find_by_code(favourite[0]), 5)}
     end
-
-    # refresh the page when the next closest service departs
-    min = @journeys.min.departing_at if @journeys.length > 0
-    @refresh = (min - Time.zone.now).to_i.seconds if min
+    @favourites = [{}] unless @favourites.length > 0
+    @stations = Station.find_all
     
+    # refresh the page when the next closest service departs
+    #min = @journeys.min.departing_at if @journeys.length > 0
+    #@refresh = (min - Time.zone.now).to_i.seconds if min
   end
   
-  def add_favourite
-    session[:favourites] |= [[@departing.code, @arriving.code], [@arriving.code, @departing.code]]
-    redirect_to :action => 'index'
-  end
-  
-  def remove_favourite
-    session[:favourites] -= [[@departing.code, @arriving.code]]
-    redirect_to :action => 'index'
-  end
-   
   def favourite
-      expires_in 1.day
-      @stations = Station.find_all
+    @idx = params[:idx].to_i
+    @stations = Station.find_all
+    session[:favourites][@idx] = [@departing.code, @arriving.code]
+    @favourite = {:departing => @departing,
+                  :arriving => @arriving,
+                  :journeys => Journey.upcoming(@departing, @arriving, 5),
+                  :return_journeys => Journey.upcoming(@departing, @arriving, 5)}
+
+    render :layout => false
   end
 
   def upcoming
     @journeys = Journey.upcoming @departing, @arriving
     @refresh = (@journeys[1].departing_at - Time.zone.now).to_i.seconds if @journeys and @journeys.length > 1
-  end
-  
-  def today
-    @journeys = Journey.today @departing, @arriving
-    @refresh = end_of_the_day
-    render :template => 'timetable/fullday'
-  end
-  
-  def tomorrow
-    @journeys = Journey.tomorrow @departing, @arriving
-    @refresh = end_of_the_day
-    render :template => 'timetable/fullday'
   end
 
   def journey
@@ -69,6 +48,7 @@ class TimetableController < ApplicationController
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
     end
+    render :layout => false
   end
   
   private
