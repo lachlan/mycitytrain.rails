@@ -18,18 +18,26 @@ class CitytrainAPI
   
   def self.journeys(departing, arriving, departing_on)
     xml = self.ws_get_journeys(departing.code, arriving.code, departing_on.midnight )
+      
     journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
     if journey_parts and journey_parts['Journey']
-      
-      last_journey = nil 
+      journeys = []
       journey_parts['Journey'].each do |jp|
-        #add any new journey
-        if jp['iJourneyID'] == '0' or jp['iJourneyID'] != last_journey 
-          last_journey = jp['iJourneyID']
-          departing_at = departing_on.midnight + jp['sDepartureTime'].to_i.seconds
-          arriving_at = departing_on.midnight + jp['sArrivalTime'].to_i.seconds
-          journey = Journey.find_or_create_by_departing_id_and_arriving_id_and_departing_at_and_arriving_at(:departing_id => departing.id, :arriving_id => arriving.id, :departing_at => departing_at, :arriving_at => arriving_at) 
+        if jp['iJourneyID'] == '0'
+          journeys << [jp]
+        else
+          if journeys.empty? || journeys.last.first['iJourneyID'] != jp['iJourneyID']
+            journeys << [jp]
+          else
+            journeys.last << jp
+          end
         end
+      end
+      
+      journeys.each do |j|
+        departing_at = departing_on.midnight + j.first['sDepartureTime'].to_i.seconds
+        arriving_at = departing_on.midnight + j.last['sArrivalTime'].to_i.seconds
+        Journey.find_or_create_by_departing_id_and_arriving_id_and_departing_at_and_arriving_at(:departing_id => departing.id, :arriving_id => arriving.id, :departing_at => departing_at, :arriving_at => arriving_at) 
       end
     end
   end

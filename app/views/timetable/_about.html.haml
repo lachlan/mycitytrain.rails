@@ -1,12 +1,13 @@
-#about
-  .toolbar
+%section#about.page
+  %header
+    %a.reverse.flip.transition{:href => "#"}Back
     %h1.title
       %a{:href => '/'}= SITE_NAME
-    %a.button.back{:href => "#"}Back
-  %ul.panel
-    %li.item
-      %h2.title About
-      %p= ABOUT_BLURB
-    %li.item
-      %h2.title Credits
-      %p Design and development by Kevin Read and Lachlan Dowding. Served from #{h Socket.gethostname}.
+  %section
+    %ul
+      %li
+        %h2 About
+        %p= ABOUT_BLURB
+      %li
+        %h2 Credits
+        %p Design and development by Kevin Read and Lachlan Dowding. Served from #{h Socket.gethostname}.
