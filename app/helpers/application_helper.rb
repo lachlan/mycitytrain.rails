@@ -89,22 +89,32 @@ module ApplicationHelper
 
         # between 1 hour and 1 day
         when 3600..86399 then
-          duration_in_hours = (duration_in_seconds / 3600.0).ceil
-          pluralize(duration_in_hours, 'hr')
-      
+          duration_in_hours = duration_in_seconds / 3600
+          remainder_in_mins = (duration_in_seconds % 3600) / 60
+          if remainder_in_mins < 30
+            pluralize(duration_in_hours, 'hr')
+          else
+            pluralize(duration_in_hours + 0.5, 'hr')
+          end
+          
         # between 1 day and 1 month
-        when 86400..2591999
-          duration_in_days = (duration_in_seconds / 86400.0).ceil
-          pluralize(duration_in_days, 'day')
+        when 86400..2591999 then
+          duration_in_days = duration_in_seconds / 86400
+          remainder_in_hours = (duration_in_seconds % 86400) / 3600
+          if remainder_in_hours < 12
+            pluralize(duration_in_days, 'day')
+          else
+            pluralize(duration_in_days + 0.5 , 'day')
+          end
         
         # between 1 month and 1 year
-        when 2592000..31535999
-          duration_in_months = (duration_in_seconds / 2592000.0).ceil
+        when 2592000..31535999 then
+          duration_in_months = (duration_in_seconds / 2592000.0).floor
           pluralize(duration_in_months, 'mth')
         
         # greater than 1 year
         else
-          duration_in_years = (duration_in_seconds/31536000.0).ceil
+          duration_in_years = (duration_in_seconds/31536000.0).floor
           pluralize(duration_in_years, 'yr')
       end
     else
