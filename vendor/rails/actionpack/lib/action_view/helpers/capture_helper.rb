@@ -59,8 +59,8 @@ module ActionView
       #   <%# This is the layout %>
       #   <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
       #   <head>
-      #	    <title>My Website</title>
-      #	    <%= yield :script %>
+      #      <title>My Website</title>
+      #      <%= yield :script %>
       #   </head>
       #   <body>
       #     <%= yield %>

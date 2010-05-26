@@ -3,18 +3,18 @@ Return-Path: <xxxx@xxxx.com>
 X-Original-To: xxxx@xxxx.com
 Delivered-To: xxxx@xxxx.com
 Received: from localhost (localhost [127.0.0.1])
-	by xxx.xxxxx.com (Postfix) with ESMTP id 50FD3A96F
-	for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:50 +0000 (GMT)
+  by xxx.xxxxx.com (Postfix) with ESMTP id 50FD3A96F
+  for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:50 +0000 (GMT)
 Received: from xxx.xxxxx.com ([127.0.0.1])
  by localhost (xxx.xxxxx.com [127.0.0.1]) (amavisd-new, port 10024)
  with LMTP id 70060-03 for <xxxx@xxxx.com>;
  Tue, 10 May 2005 17:26:49 +0000 (GMT)
 Received: from xxx.xxxxx.com (xxx.xxxxx.com [69.36.39.150])
-	by xxx.xxxxx.com (Postfix) with ESMTP id 8B957A94B
-	for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:48 +0000 (GMT)
+  by xxx.xxxxx.com (Postfix) with ESMTP id 8B957A94B
+  for <xxxx@xxxx.com>; Tue, 10 May 2005 17:26:48 +0000 (GMT)
 Received: from xxx.xxxxx.com (xxx.xxxxx.com [64.233.184.203])
-	by xxx.xxxxx.com (Postfix) with ESMTP id 9972514824C
-	for <xxxx@xxxx.com>; Tue, 10 May 2005 12:26:40 -0500 (CDT)
+  by xxx.xxxxx.com (Postfix) with ESMTP id 9972514824C
+  for <xxxx@xxxx.com>; Tue, 10 May 2005 12:26:40 -0500 (CDT)
 Received: by xxx.xxxxx.com with SMTP id 68so1694448wri
         for <xxxx@xxxx.com>; Tue, 10 May 2005 10:26:40 -0700 (PDT)
 DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
@@ -32,7 +32,7 @@ To: xxxx@xxxx.com, xxxx@xxxx.com
 Subject: Another PDF
 Mime-Version: 1.0
 Content-Type: multipart/mixed; 
-	boundary="----=_Part_2192_32400445.1115745999735"
+  boundary="----=_Part_2192_32400445.1115745999735"
 X-Virus-Scanned: amavisd-new at textdrive.com
 
 ------=_Part_2192_32400445.1115745999735

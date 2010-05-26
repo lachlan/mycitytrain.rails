@@ -563,8 +563,8 @@ The good news is that if you find yourself using this level of complexity, you c
 
 <ruby>
 map.namespace(:admin) do |admin|
-	admin.resources :photos,
-	  :has_many => { :tags, :ratings}
+  admin.resources :photos,
+    :has_many => { :tags, :ratings}
 end
 </ruby>
 

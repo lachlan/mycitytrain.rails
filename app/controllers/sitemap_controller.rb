@@ -1,7 +1,7 @@
 class SitemapController < ApplicationController  
-	
-	def sitemap
-		render :layout => false
-	end
+  
+  def sitemap
+    render :layout => false
+  end
 
 end

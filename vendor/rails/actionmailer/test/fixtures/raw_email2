@@ -3,18 +3,18 @@ Return-Path: <xxxxxxxxx.xxxxxxx@gmail.com>
 X-Original-To: xxxxx@xxxxx.xxxxxxxxx.com
 Delivered-To: xxxxx@xxxxx.xxxxxxxxx.com
 Received: from localhost (localhost [127.0.0.1])
-	by xxxxx.xxxxxxxxx.com (Postfix) with ESMTP id 06C9DA98D
-	for <xxxxx@xxxxx.xxxxxxxxx.com>; Sun,  8 May 2005 19:09:13 +0000 (GMT)
+  by xxxxx.xxxxxxxxx.com (Postfix) with ESMTP id 06C9DA98D
+  for <xxxxx@xxxxx.xxxxxxxxx.com>; Sun,  8 May 2005 19:09:13 +0000 (GMT)
 Received: from xxxxx.xxxxxxxxx.com ([127.0.0.1])
  by localhost (xxxxx.xxxxxxxxx.com [127.0.0.1]) (amavisd-new, port 10024)
  with LMTP id 88783-08 for <xxxxx@xxxxx.xxxxxxxxx.com>;
  Sun,  8 May 2005 19:09:12 +0000 (GMT)
 Received: from xxxxxxx.xxxxxxxxx.com (xxxxxxx.xxxxxxxxx.com [69.36.39.150])
-	by xxxxx.xxxxxxxxx.com (Postfix) with ESMTP id 10D8BA960
-	for <xxxxx@xxxxxxxxx.org>; Sun,  8 May 2005 19:09:12 +0000 (GMT)
+  by xxxxx.xxxxxxxxx.com (Postfix) with ESMTP id 10D8BA960
+  for <xxxxx@xxxxxxxxx.org>; Sun,  8 May 2005 19:09:12 +0000 (GMT)
 Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.199])
-	by xxxxxxx.xxxxxxxxx.com (Postfix) with ESMTP id 9EBC4148EAB
-	for <xxxxx@xxxxxxxxx.com>; Sun,  8 May 2005 14:09:11 -0500 (CDT)
+  by xxxxxxx.xxxxxxxxx.com (Postfix) with ESMTP id 9EBC4148EAB
+  for <xxxxx@xxxxxxxxx.com>; Sun,  8 May 2005 14:09:11 -0500 (CDT)
 Received: by zproxy.gmail.com with SMTP id 13so1233405nzp
         for <xxxxx@xxxxxxxxx.com>; Sun, 08 May 2005 12:09:11 -0700 (PDT)
 DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws;
@@ -33,7 +33,7 @@ Subject: Fwd: Signed email causes file attachments
 In-Reply-To: <F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@mac.com>
 Mime-Version: 1.0
 Content-Type: multipart/mixed; 
-	boundary="----=_Part_5028_7368284.1115579351471"
+  boundary="----=_Part_5028_7368284.1115579351471"
 References: <F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@mac.com>
 
 ------=_Part_5028_7368284.1115579351471

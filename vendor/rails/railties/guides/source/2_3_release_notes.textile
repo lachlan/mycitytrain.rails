@@ -449,7 +449,7 @@ returns
 <option>joke</option>
 <option>poem</option>
 <option disabled=“disabled“>private</option>
-</select>	
+</select>  
 </ruby>
 
 You can also use an anonymous function to determine at runtime which options from collections will be selected and/or disabled:

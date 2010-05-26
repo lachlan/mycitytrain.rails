@@ -58,14 +58,14 @@ class TimetableController < ApplicationController
   end
 
   def journey
-  	@departing_at = Time.zone.parse(params[:departing_at])
-  	
-  	if @departing_at  	
-  	  Journey.load_stops(@departing, @arriving, @departing_at)	
-  	  @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(@departing, @arriving, @departing_at, :include => :stops)
+    @departing_at = Time.zone.parse(params[:departing_at])
+    
+    if @departing_at    
+      Journey.load_stops(@departing, @arriving, @departing_at)  
+      @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(@departing, @arriving, @departing_at, :include => :stops)
     end
     
-	  unless @journey
+    unless @journey
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
     end
@@ -74,16 +74,16 @@ class TimetableController < ApplicationController
   private
 
   def find_stations
-  	@departing = Station.find params[:departing]
-  	@arriving = Station.find params[:arriving]  	
-  	if @departing and @arriving
+    @departing = Station.find params[:departing]
+    @arriving = Station.find params[:arriving]    
+    if @departing and @arriving
       @favourite_verb = session[:favourites].include?([@departing.code, @arriving.code]) ? 'remove' : 'add' 
-  	else
+    else
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 
       redirect_to :action => 'index'
     end
   end
-  	
+    
   def end_of_the_day
     (Time.zone.now.midnight + 1.day - Time.zone.now).to_i.seconds
   end

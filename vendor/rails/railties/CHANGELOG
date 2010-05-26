@@ -400,13 +400,13 @@ databases on localhost.  #9753 [Trevor Wennblom]
 
 * Use attribute pairs instead of the migration name to create add and remove column migrations.  Closes #9166 [Pratik Naik]
 
-	For example:
+  For example:
 
-	ruby script/generation migration AddSomeStuffToCustomers first_name:string last_name:string
-	
-	or
-	
-	ruby script/generation migration RemoveSomeStuffFromCustomers first_name:string last_name:string
+  ruby script/generation migration AddSomeStuffToCustomers first_name:string last_name:string
+  
+  or
+  
+  ruby script/generation migration RemoveSomeStuffFromCustomers first_name:string last_name:string
 
 * Add ActiveResource to Rails::Info.  Closes #8741 [Chris Kampmeier]
 

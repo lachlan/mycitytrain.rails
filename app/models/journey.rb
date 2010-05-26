@@ -50,63 +50,63 @@ class Journey < ActiveRecord::Base
   end
   
   def self.today(d, a)
-  	today = Time.zone.now.midnight 
+    today = Time.zone.now.midnight 
     fetch_date(d, a, today)
   end
   
   def self.tomorrow(d, a)
-  	tomorrow = Time.zone.now.tomorrow.midnight
+    tomorrow = Time.zone.now.tomorrow.midnight
     fetch_date(d, a, tomorrow)
   end
   
   def self.fetch_date(d, a, w)
     self.fetch_journeys(:departing => d, :arriving => a, :from => w, :to => w + 1.day)
   end
-  	
+    
   
   def self.fetch_journeys(o)
-  	departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)
-	
-	journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
-	
-	if journeys.empty?
-	    #threads = []
-	    0.upto(1) do |i|
-	    	#threads << Thread.new(i) do
-	    		retries = 0
-				begin
-					CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
-				rescue Exception
-			      retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-				  retry if retries < 10
-				  raise
-				end
-			#end
-		end
-		#threads.each { |thread| thread.join }
+    departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)
+  
+  journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+  
+  if journeys.empty?
+      #threads = []
+      0.upto(1) do |i|
+        #threads << Thread.new(i) do
+          retries = 0
+        begin
+          CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
+        rescue Exception
+            retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+          retry if retries < 10
+          raise
+        end
+      #end
+    end
+    #threads.each { |thread| thread.join }
 
-  	    journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
-	end
+        journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+  end
 
     journeys
   end
   
   #Populate stops if they don't exist in the database
   def self.load_stops(departing, arriving, departing_at)
-  	journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at)
+    journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at)
     journey.load_stops if journey
   end
   
   def load_stops
     if stops and stops.empty?
-	    retries = 0
-	    begin
-    		CitytrainAPI.stops self
-    	rescue Exception
-    		retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-    		retry if retries < 10
-    		raise
-    	end
+      retries = 0
+      begin
+        CitytrainAPI.stops self
+      rescue Exception
+        retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+        retry if retries < 10
+        raise
+      end
     end
   end
   

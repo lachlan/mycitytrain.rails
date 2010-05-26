@@ -1,187 +1,187 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!-- Generated 08/06/07 by Microsoft SOAP Toolkit WSDL File Generator, Version 3.00.1325.0 --> 
 <definitions
-	name='CityTrain'
-	targetNamespace='http://www.qr.com.au/passenger_services/CityTrain/wsdl/'
-	xmlns:wsdlns='http://www.qr.com.au/passenger_services/CityTrain/wsdl/'
-	xmlns:typens='http://www.qr.com.au/passenger_services/CityTrain/type/'
-	xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
-	xmlns:xsd='http://www.w3.org/2001/XMLSchema'
-	xmlns:stk='http://schemas.microsoft.com/soap-toolkit/wsdl-extension'
-	xmlns:dime='http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/'
-	xmlns:ref='http://schemas.xmlsoap.org/ws/2002/04/reference/'
-	xmlns:content='http://schemas.xmlsoap.org/ws/2002/04/content-type/'
-	xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
-	xmlns='http://schemas.xmlsoap.org/wsdl/'>
+  name='CityTrain'
+  targetNamespace='http://www.qr.com.au/passenger_services/CityTrain/wsdl/'
+  xmlns:wsdlns='http://www.qr.com.au/passenger_services/CityTrain/wsdl/'
+  xmlns:typens='http://www.qr.com.au/passenger_services/CityTrain/type/'
+  xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
+  xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+  xmlns:stk='http://schemas.microsoft.com/soap-toolkit/wsdl-extension'
+  xmlns:dime='http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/'
+  xmlns:ref='http://schemas.xmlsoap.org/ws/2002/04/reference/'
+  xmlns:content='http://schemas.xmlsoap.org/ws/2002/04/content-type/'
+  xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+  xmlns='http://schemas.xmlsoap.org/wsdl/'>
 
-	<types>
-		<schema
-			targetNamespace='http://www.qr.com.au/passenger_services/CityTrain/type/'
-			xmlns='http://www.w3.org/2001/XMLSchema'
-			xmlns:SOAP-ENC='http://schemas.xmlsoap.org/soap/encoding/'
-			xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
-			elementFormDefault='qualified'>
+  <types>
+    <schema
+      targetNamespace='http://www.qr.com.au/passenger_services/CityTrain/type/'
+      xmlns='http://www.w3.org/2001/XMLSchema'
+      xmlns:SOAP-ENC='http://schemas.xmlsoap.org/soap/encoding/'
+      xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+      elementFormDefault='qualified'>
 
-			<import namespace='http://schemas.xmlsoap.org/soap/encoding/'/>
-			<import namespace='http://schemas.xmlsoap.org/wsdl/'/>
-			<import namespace='http://schemas.xmlsoap.org/ws/2002/04/reference/'/>
-			<import namespace='http://schemas.xmlsoap.org/ws/2002/04/content-type/'/>
+      <import namespace='http://schemas.xmlsoap.org/soap/encoding/'/>
+      <import namespace='http://schemas.xmlsoap.org/wsdl/'/>
+      <import namespace='http://schemas.xmlsoap.org/ws/2002/04/reference/'/>
+      <import namespace='http://schemas.xmlsoap.org/ws/2002/04/content-type/'/>
 
-		</schema>
-	</types>
+    </schema>
+  </types>
 
-	<message name='Timetable.WSGetStations'>
-		<part name='targetSchema' type='xsd:string'/>
-	</message>
+  <message name='Timetable.WSGetStations'>
+    <part name='targetSchema' type='xsd:string'/>
+  </message>
 
-	<message name='Timetable.WSGetStationsResponse'>
-		<part name='Result' type='xsd:string'/>
-	</message>
+  <message name='Timetable.WSGetStationsResponse'>
+    <part name='Result' type='xsd:string'/>
+  </message>
 
-	<message name='Timetable.WSGetJourneys'>
-		<part name='fromStation' type='xsd:string'/>
-		<part name='toStation' type='xsd:string'/>
-		<part name='fromTime' type='xsd:int'/>
-		<part name='toTime' type='xsd:int'/>
-		<part name='tripType' type='xsd:string'/>
-		<part name='searchDate' type='xsd:dateTime'/>
-		<part name='dateEntry' type='xsd:boolean'/>
-		<part name='displayNumberOfTrips' type='xsd:short'/>
-		<part name='targetSchema' type='xsd:string'/>
-	</message>
+  <message name='Timetable.WSGetJourneys'>
+    <part name='fromStation' type='xsd:string'/>
+    <part name='toStation' type='xsd:string'/>
+    <part name='fromTime' type='xsd:int'/>
+    <part name='toTime' type='xsd:int'/>
+    <part name='tripType' type='xsd:string'/>
+    <part name='searchDate' type='xsd:dateTime'/>
+    <part name='dateEntry' type='xsd:boolean'/>
+    <part name='displayNumberOfTrips' type='xsd:short'/>
+    <part name='targetSchema' type='xsd:string'/>
+  </message>
 
-	<message name='Timetable.WSGetJourneysResponse'>
-		<part name='Result' type='xsd:string'/>
-	</message>
+  <message name='Timetable.WSGetJourneysResponse'>
+    <part name='Result' type='xsd:string'/>
+  </message>
 
-	<message name='Timetable.WSGetFares'>
-		<part name='fromStation' type='xsd:string'/>
-		<part name='toStation' type='xsd:string'/>
-		<part name='targetSchema' type='xsd:string'/>
-	</message>
+  <message name='Timetable.WSGetFares'>
+    <part name='fromStation' type='xsd:string'/>
+    <part name='toStation' type='xsd:string'/>
+    <part name='targetSchema' type='xsd:string'/>
+  </message>
 
-	<message name='Timetable.WSGetFaresResponse'>
-		<part name='Result' type='xsd:string'/>
-	</message>
+  <message name='Timetable.WSGetFaresResponse'>
+    <part name='Result' type='xsd:string'/>
+  </message>
 
-	<message name='Timetable.WSGetTripPatterns'>
-		<part name='searchDate' type='xsd:dateTime'/>
-		<part name='Trip' type='xsd:string'/>
-		<part name='DaysOp' type='xsd:short'/>
-		<part name='targetSchema' type='xsd:string'/>
-	</message>
+  <message name='Timetable.WSGetTripPatterns'>
+    <part name='searchDate' type='xsd:dateTime'/>
+    <part name='Trip' type='xsd:string'/>
+    <part name='DaysOp' type='xsd:short'/>
+    <part name='targetSchema' type='xsd:string'/>
+  </message>
 
-	<message name='Timetable.WSGetTripPatternsResponse'>
-		<part name='Result' type='xsd:string'/>
-	</message>
+  <message name='Timetable.WSGetTripPatternsResponse'>
+    <part name='Result' type='xsd:string'/>
+  </message>
 
-	<portType name='TimetableSoapPort'>
+  <portType name='TimetableSoapPort'>
 
-		<operation name='WSGetStations' parameterOrder='targetSchema'>
-			<input message='wsdlns:Timetable.WSGetStations'/>
-			<output message='wsdlns:Timetable.WSGetStationsResponse'/>
-		</operation>
+    <operation name='WSGetStations' parameterOrder='targetSchema'>
+      <input message='wsdlns:Timetable.WSGetStations'/>
+      <output message='wsdlns:Timetable.WSGetStationsResponse'/>
+    </operation>
 
-		<operation name='WSGetJourneys' parameterOrder='fromStation toStation fromTime toTime tripType searchDate dateEntry displayNumberOfTrips targetSchema'>
-			<input message='wsdlns:Timetable.WSGetJourneys'/>
-			<output message='wsdlns:Timetable.WSGetJourneysResponse'/>
-		</operation>
+    <operation name='WSGetJourneys' parameterOrder='fromStation toStation fromTime toTime tripType searchDate dateEntry displayNumberOfTrips targetSchema'>
+      <input message='wsdlns:Timetable.WSGetJourneys'/>
+      <output message='wsdlns:Timetable.WSGetJourneysResponse'/>
+    </operation>
 
-		<operation name='WSGetFares' parameterOrder='fromStation toStation targetSchema'>
-			<input message='wsdlns:Timetable.WSGetFares'/>
-			<output message='wsdlns:Timetable.WSGetFaresResponse'/>
-		</operation>
+    <operation name='WSGetFares' parameterOrder='fromStation toStation targetSchema'>
+      <input message='wsdlns:Timetable.WSGetFares'/>
+      <output message='wsdlns:Timetable.WSGetFaresResponse'/>
+    </operation>
 
-		<operation name='WSGetTripPatterns' parameterOrder='searchDate Trip DaysOp targetSchema'>
-			<input message='wsdlns:Timetable.WSGetTripPatterns'/>
-			<output message='wsdlns:Timetable.WSGetTripPatternsResponse'/>
-		</operation>
+    <operation name='WSGetTripPatterns' parameterOrder='searchDate Trip DaysOp targetSchema'>
+      <input message='wsdlns:Timetable.WSGetTripPatterns'/>
+      <output message='wsdlns:Timetable.WSGetTripPatternsResponse'/>
+    </operation>
 
-	</portType>
+  </portType>
 
-	<binding name='TimetableSoapBinding' type='wsdlns:TimetableSoapPort' >
+  <binding name='TimetableSoapBinding' type='wsdlns:TimetableSoapPort' >
 
-		<stk:binding preferredEncoding='UTF-8'/>
-		<soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
+    <stk:binding preferredEncoding='UTF-8'/>
+    <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
 
-		<operation name='WSGetStations'>
-			<soap:operation soapAction='http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetStations'/>
-			<input>
-				<soap:body
-					use='encoded'
-					namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
-					encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
-					parts='targetSchema'/>
-			</input>
-			<output>
-				<soap:body
-					use='encoded'
-					namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
-					encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
-					parts='Result'/>
-			</output>
-		</operation>
+    <operation name='WSGetStations'>
+      <soap:operation soapAction='http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetStations'/>
+      <input>
+        <soap:body
+          use='encoded'
+          namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
+          encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
+          parts='targetSchema'/>
+      </input>
+      <output>
+        <soap:body
+          use='encoded'
+          namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
+          encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
+          parts='Result'/>
+      </output>
+    </operation>
 
-		<operation name='WSGetJourneys'>
-			<soap:operation soapAction='http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetJourneys'/>
-			<input>
-				<soap:body
-					use='encoded'
-					namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
-					encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
-					parts='fromStation toStation fromTime toTime tripType searchDate dateEntry displayNumberOfTrips targetSchema'/>
-			</input>
-			<output>
-				<soap:body
-					use='encoded'
-					namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
-					encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
-					parts='Result'/>
-			</output>
-		</operation>
+    <operation name='WSGetJourneys'>
+      <soap:operation soapAction='http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetJourneys'/>
+      <input>
+        <soap:body
+          use='encoded'
+          namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
+          encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
+          parts='fromStation toStation fromTime toTime tripType searchDate dateEntry displayNumberOfTrips targetSchema'/>
+      </input>
+      <output>
+        <soap:body
+          use='encoded'
+          namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
+          encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
+          parts='Result'/>
+      </output>
+    </operation>
 
-		<operation name='WSGetFares'>
-			<soap:operation soapAction='http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetFares'/>
-			<input>
-				<soap:body
-					use='encoded'
-					namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
-					encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
-					parts='fromStation toStation targetSchema'/>
-			</input>
-			<output>
-				<soap:body
-					use='encoded'
-					namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
-					encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
-					parts='Result'/>
-			</output>
-		</operation>
+    <operation name='WSGetFares'>
+      <soap:operation soapAction='http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetFares'/>
+      <input>
+        <soap:body
+          use='encoded'
+          namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
+          encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
+          parts='fromStation toStation targetSchema'/>
+      </input>
+      <output>
+        <soap:body
+          use='encoded'
+          namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
+          encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
+          parts='Result'/>
+      </output>
+    </operation>
 
-		<operation name='WSGetTripPatterns'>
-			<soap:operation soapAction='http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetTripPatterns'/>
-			<input>
-				<soap:body
-					use='encoded'
-					namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
-					encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
-					parts='searchDate Trip DaysOp targetSchema'/>
-			</input>
-			<output>
-				<soap:body
-					use='encoded'
-					namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
-					encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
-					parts='Result'/>
-			</output>
-		</operation>
+    <operation name='WSGetTripPatterns'>
+      <soap:operation soapAction='http://www.qr.com.au/passenger_services/CityTrain/action/Timetable.WSGetTripPatterns'/>
+      <input>
+        <soap:body
+          use='encoded'
+          namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
+          encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
+          parts='searchDate Trip DaysOp targetSchema'/>
+      </input>
+      <output>
+        <soap:body
+          use='encoded'
+          namespace='http://www.qr.com.au/passenger_services/CityTrain/message/'
+          encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'
+          parts='Result'/>
+      </output>
+    </operation>
 
-	</binding>
+  </binding>
 
-	<service name='CityTrain' >
-		<port name='TimetableSoapPort' binding='wsdlns:TimetableSoapBinding' >
-			<soap:address location='http://www.citytrain.com.au/soaplisten/CityTrain.WSDL'/>
-		</port>
-	</service>
+  <service name='CityTrain' >
+    <port name='TimetableSoapPort' binding='wsdlns:TimetableSoapBinding' >
+      <soap:address location='http://www.citytrain.com.au/soaplisten/CityTrain.WSDL'/>
+    </port>
+  </service>
 
 </definitions>

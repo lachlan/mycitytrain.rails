@@ -98,8 +98,8 @@ class CitytrainAPI
   
   def self.ws_get_trip_patterns(trip_name, daysop, search_dt)
     #Guarding against incompatbilities between rails and soap.  TimeWithZone can't be used, use Time instead
-	search_dt = search_dt.utc if search_dt.class.name == "ActiveSupport::TimeWithZone"
-	
+  search_dt = search_dt.utc if search_dt.class.name == "ActiveSupport::TimeWithZone"
+  
     # create SOAP driver and add trip patterns method by hand because the auto WSDL parse seems to screw it up
     service = SOAP::RPC::Driver.new("http://www.citytrain.com.au/soaplisten/CityTrain.WSDL",                                  # endpoint uri
                                     "http://www.qr.com.au/passenger_services/CityTrain/message/",                             # namespace

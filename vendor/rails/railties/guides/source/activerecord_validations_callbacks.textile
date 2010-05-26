@@ -784,7 +784,7 @@ class User < ActiveRecord::Base
   validates_presence_of :login, :email
 
   before_create {|user| user.name = user.login.capitalize 
-	if user.name.blank?}
+  if user.name.blank?}
 end
 </ruby>
 
