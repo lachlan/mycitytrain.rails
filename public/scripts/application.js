@@ -52,6 +52,18 @@ $(document).ready(function() {
     return false; 
   });
   
+  
+  $('body').swipe({
+    swipeLeft: function() { 
+      var target = $('.page.active footer li.active').next();
+      if (target) target.children('a').click();
+    },
+    swipeRight: function() { 
+      var target = $('.page.active footer li.active').prev();
+      if (target) target.children('a').click();
+    }
+  });
+  
   // hide address bar
   window.scrollTo(0, 1);
 });

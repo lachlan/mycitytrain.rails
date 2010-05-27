@@ -1,7 +1,7 @@
 %ul
   - count.times do |i|
     - if i == idx
-      %li!= "&#9679;"
+      %li.active!= "&#9679;"
     - elsif i < idx
       %li
         %a.reverse.slide.transition{:href => "##{id_prefix}#{i}"}!= "&#9675;"
