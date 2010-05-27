@@ -1,12 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
-  map.root :controller => 'timetable'
+  map.root :controller => 'journeys'
+  map.resources :favourites
+  map.resources :journeys
+  map.sitemap 'sitemap.xml' , :controller => 'sitemap'
   
-  map.sitemap 'sitemap.xml' , :controller => 'sitemap' , :action => 'sitemap'
-  
-  map.with_options :controller => 'timetable' do |t|
-    t.connect 'favourite', :action => 'favourite'
-    t.connect 'about', :action => 'about'
-    t.connect 'timetable/:departing/:arriving/upcoming', :action => 'upcoming'
-    t.connect 'timetable/:departing/:arriving/:departing_at', :action => 'journey'
+  map.with_options :controller => 'journeys' do |t|
+    t.connect '/about', :action => 'about'
+    t.connect '/:departing/:arriving/:departing_at', :action => 'show'
+    t.connect '/:departing/:arriving/:departing_at/after', :action => 'departing_after'
   end
 end

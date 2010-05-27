@@ -1,0 +1,13 @@
+%section#about.page
+  %header
+    %h1.title
+      %a{:href => '/'}= SITE_NAME
+    %a.back.reverse.slideup.transition{:href => "#"}Done
+  %section
+    %ul.panel
+      %li
+        %h2 About
+        %p= ABOUT_BLURB
+      %li
+        %h2 Credits
+        %p Design and development by Kevin Read and Lachlan Dowding. Served from #{h Socket.gethostname}.

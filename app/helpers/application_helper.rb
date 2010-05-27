@@ -71,16 +71,16 @@ module ApplicationHelper
   end
 
 	def duration_in_concise_words(from_time, to_time)
-	  
 	  if from_time and to_time
       from_time = from_time.to_time if from_time.respond_to?(:to_time)
       to_time = to_time.to_time if to_time.respond_to?(:to_time)
-      duration_in_seconds = ((to_time - from_time).abs).round
+      duration_in_seconds = (to_time - from_time).round
+      unsigned_duration_in_seconds = duration_in_seconds.abs
     
-      case duration_in_seconds
+      case unsigned_duration_in_seconds
         # between 0 seconds and 1 minute
         when 0..59 then 
-          duration = 'now &nbsp;'
+          duration = 'now'
 
         # between 1 minute and 1 hour
         when 60..3599 then
@@ -92,9 +92,9 @@ module ApplicationHelper
           duration_in_hours = duration_in_seconds / 3600
           remainder_in_mins = (duration_in_seconds % 3600) / 60
           if remainder_in_mins < 30
-            pluralize(duration_in_hours, 'hr')
+            duration = pluralize(duration_in_hours, 'hour')
           else
-            pluralize(duration_in_hours + 0.5, 'hr')
+            duration = pluralize(duration_in_hours + 0.5, 'hour')
           end
           
         # between 1 day and 1 month
@@ -102,29 +102,29 @@ module ApplicationHelper
           duration_in_days = duration_in_seconds / 86400
           remainder_in_hours = (duration_in_seconds % 86400) / 3600
           if remainder_in_hours < 12
-            pluralize(duration_in_days, 'day')
+            duration = pluralize(duration_in_days, 'day')
           else
-            pluralize(duration_in_days + 0.5 , 'day')
+            duration = pluralize(duration_in_days + 0.5 , 'day')
           end
         
         # between 1 month and 1 year
         when 2592000..31535999 then
           duration_in_months = (duration_in_seconds / 2592000.0).floor
-          pluralize(duration_in_months, 'mth')
+          duration = pluralize(duration_in_months, 'mth')
         
         # greater than 1 year
         else
           duration_in_years = (duration_in_seconds/31536000.0).floor
-          pluralize(duration_in_years, 'yr')
+          duration = pluralize(duration_in_years, 'yr')
       end
     else
       duration = "&mdash;"
     end
-    duration.gsub(/ /, '<br/>')
+    duration
   end
   
-	def duration_in_concise_words_to_now(from_time)
-	  duration_in_concise_words(from_time, Time.now)
+	def duration_in_concise_words_from_now(to_time)
+	  duration_in_concise_words(Time.now, to_time)
 	end
 
   

@@ -1,0 +1,28 @@
+%section#journey
+  %header
+    %a.back{:href => "#"}Back   
+    %h1
+      %a{:href => '/'}= SITE_NAME
+  %section
+    - if @journey.changes.nil? or @journey.changes.empty?
+      %ol
+        %li No details available.
+    - else
+      %ol
+        - @journey.changes.each do |change|
+          - change.each do |stop|
+            %li
+              %span.stops.group
+                - if stop == change.first
+                  %span.eta{:class => classify_duration_to_now(stop.departing_at)}= duration_in_concise_words_from_now(stop.departing_at)
+                  %span.station= stop.station_name
+                  %span.time= format_time(stop.departing_at)
+                - else
+                  %span.eta{:class => classify_duration_to_now(stop.arriving_at)}= duration_in_concise_words_from_now(stop.arriving_at)
+                  %span.station= stop.station_name
+                  %span.time= format_time(stop.arriving_at)
+                  - if stop.platform.to_i > 0 and (stop == change.first or stop == change.last)
+                    %span.platform platform #{h stop.platform}
+                  - if change != @journey.changes.last and stop == change.last
+                    %span.change change service
+        %li #{h duration_in_words(@journey.departing_at, @journey.arriving_at).capitalize} duration.

@@ -41,12 +41,15 @@ class Journey < ActiveRecord::Base
     end
     changes << service if service and !service.empty?
   end
-  
-  def self.upcoming(d, a, limit = 10)
+
+  def self.departing_after(departing_station, arriving_station, departing_at, limit = 10)
     #Record when upcoming journeys are being requested.  Only put it in the upcoming, as today/tommorrow are used during rake populate task
-    HistoricJourney.create :departing => d, :arriving =>a
-    
-    self.fetch_journeys(:departing => d, :arriving => a, :from => Time.zone.now, :limit => limit)
+    HistoricJourney.create :departing => departing_station, :arriving => arriving_station
+    self.fetch_journeys(:departing => departing_station, :arriving => arriving_station, :from => departing_at, :limit => limit)
+  end
+
+  def self.upcoming(departing_station, arriving_station, limit = 10)
+    departing_after(departing_station, arriving_station, Time.zone.now, limit)
   end
   
   def self.today(d, a)

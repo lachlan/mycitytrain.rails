@@ -1,0 +1,3 @@
+%ol
+  = render :partial => 'journey', :collection => journeys
+  = render :partial => 'load_more_journeys', :locals => {:journeys => journeys}

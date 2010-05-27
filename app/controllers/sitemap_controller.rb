@@ -1,6 +1,6 @@
 class SitemapController < ApplicationController  
 	
-	def sitemap
+	def index
 		render :layout => false
 	end
 

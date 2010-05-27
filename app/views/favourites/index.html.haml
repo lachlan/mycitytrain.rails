@@ -1,0 +1,28 @@
+%section#settings.page
+  %header
+    %a.flip.transition{:href => "#"}+
+    %h1
+      %a{:href => '/'}= SITE_NAME
+    %a.back{:href => "#settings"}Done
+  %form{:action => "/favourite", :method => "post" }
+    %ol
+      - @favourites.each do |favourite|
+        %li
+          %span
+            %img{:src => '/images/minus_27x27.png'}
+            %select{:name => 'departing'}
+              %optgroup{:label => 'Departing'}
+                - @stations.each do |station|
+                  - if favourite.departing.id == station.id
+                    %option{:value => station.id, :selected => 'selected'}= station.name
+                  -else
+                    %option{:value => station.id}= station.name
+            to 
+            %select{:name => 'arriving'}
+              %optgroup{:label => 'Arriving'}
+                %option{:value => ''}Arriving
+                - @stations.each do |station|
+                  - if favourite.arriving.id == station.id
+                    %option{:value => station.id, :selected => 'selected'}= station.name
+                  -else
+                    %option{:value => station.id}= station.name

@@ -1,0 +1,2 @@
+%li
+  = link_to "Load More Services&hellip;", {:controller => 'journeys', :action => 'departing_after', :departing => journeys.last.departing, :arriving => journeys.last.arriving, :departing_at => format_time(journeys.last.departing_at, :iso8601)}, {:class => 'replace parent'}
