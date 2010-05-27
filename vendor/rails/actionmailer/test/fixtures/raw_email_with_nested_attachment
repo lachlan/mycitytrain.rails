@@ -2,9 +2,9 @@ From jamis@37signals.com Thu Feb 22 11:20:31 2007
 Mime-Version: 1.0 (Apple Message framework v752.3)
 Message-Id: <2CCE0408-10C7-4045-9B16-A1C11C31469B@37signals.com>
 Content-Type: multipart/signed;
-	micalg=sha1;
-	boundary=Apple-Mail-42-587703407;
-	protocol="application/pkcs7-signature"
+  micalg=sha1;
+  boundary=Apple-Mail-42-587703407;
+  protocol="application/pkcs7-signature"
 To: Jamis Buck <jamis@jamisbuck.org>
 Subject: Testing attachments
 From: Jamis Buck <jamis@37signals.com>
@@ -13,14 +13,14 @@ Date: Thu, 22 Feb 2007 11:20:31 -0700
 
 --Apple-Mail-42-587703407
 Content-Type: multipart/mixed;
-	boundary=Apple-Mail-41-587703287
+  boundary=Apple-Mail-41-587703287
 
 
 --Apple-Mail-41-587703287
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain;
-	charset=US-ASCII;
-	format=flowed
+  charset=US-ASCII;
+  format=flowed
 
 Here is a test of an attachment via email.
 
@@ -30,10 +30,10 @@ Here is a test of an attachment via email.
 --Apple-Mail-41-587703287
 Content-Transfer-Encoding: base64
 Content-Type: image/png;
-	x-unix-mode=0644;
-	name=byo-ror-cover.png
+  x-unix-mode=0644;
+  name=byo-ror-cover.png
 Content-Disposition: inline;
-	filename=truncated.png
+  filename=truncated.png
 
 iVBORw0KGgoAAAANSUhEUgAAAKUAAADXCAYAAAB7wZEQAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAABd0RVh0Q3JlYXRpb24gVGltZQAxLzI1LzIwMDeD9CJVAAAAGHRFWHRT
@@ -75,9 +75,9 @@ Pwc7L68GxvVDAAAAAElFTkSuQmCC
 --Apple-Mail-42-587703407
 Content-Transfer-Encoding: base64
 Content-Type: application/pkcs7-signature;
-	name=smime.p7s
+  name=smime.p7s
 Content-Disposition: attachment;
-	filename=smime.p7s
+  filename=smime.p7s
 
 MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIGJzCCAuAw
 ggJJoAMCAQICEFjnFNYXwDEZRWY5EkfzopUwDQYJKoZIhvcNAQEFBQAwYjELMAkGA1UEBhMCWkEx

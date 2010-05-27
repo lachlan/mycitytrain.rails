@@ -8,7 +8,7 @@ class CreateJourneys < ActiveRecord::Migration
       t.timestamps
     end
 
-	add_index :journeys, [:departing_at, :departing_id, :arriving_id]
+  add_index :journeys, [:departing_at, :departing_id, :arriving_id]
   end
 
   def self.down

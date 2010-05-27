@@ -7,8 +7,8 @@ class CreateStations < ActiveRecord::Migration
       t.timestamps
     end
  
-	add_index :stations, :code
-	add_index :stations, :name
+  add_index :stations, :code
+  add_index :stations, :name
     
   end
 

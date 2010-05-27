@@ -16,7 +16,7 @@ class ModelGenerator < Rails::Generator::NamedBase
       m.template 'unit_test.rb',  File.join('test/unit', class_path, "#{file_name}_test.rb")
 
       unless options[:skip_fixture] 
-       	m.template 'fixtures.yml',  File.join('test/fixtures', "#{table_name}.yml")
+         m.template 'fixtures.yml',  File.join('test/fixtures', "#{table_name}.yml")
       end
 
       migration_file_path = file_path.gsub(/\//, '_')

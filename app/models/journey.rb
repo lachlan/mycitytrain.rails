@@ -53,12 +53,12 @@ class Journey < ActiveRecord::Base
   end
   
   def self.today(d, a)
-  	today = Time.zone.now.midnight 
+    today = Time.zone.now.midnight 
     fetch_date(d, a, today)
   end
   
   def self.tomorrow(d, a)
-  	tomorrow = Time.zone.now.tomorrow.midnight
+    tomorrow = Time.zone.now.tomorrow.midnight
     fetch_date(d, a, tomorrow)
   end
   
@@ -88,20 +88,20 @@ class Journey < ActiveRecord::Base
   
   #Populate stops if they don't exist in the database
   def self.load_stops(departing, arriving, departing_at)
-  	journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at)
+    journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at)
     journey.load_stops if journey
   end
   
   def load_stops
     if stops and stops.empty?
-	    retries = 0
-	    begin
-    		CitytrainAPI.stops self
-    	rescue Exception
-    		retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-    		retry if retries < 10
-    		raise
-    	end
+      retries = 0
+      begin
+        CitytrainAPI.stops self
+      rescue Exception
+        retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+        retry if retries < 10
+        raise
+      end
     end
   end
   

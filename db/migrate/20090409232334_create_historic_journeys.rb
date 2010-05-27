@@ -8,7 +8,7 @@ class CreateHistoricJourneys < ActiveRecord::Migration
     end
     
     add_index :historic_journeys, [:departing_id, :arriving_id]
-  	
+    
   end
 
   def self.down

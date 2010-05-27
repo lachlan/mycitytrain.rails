@@ -10,9 +10,9 @@ To: blah@example.com
 --Apple-Mail-13-196941151
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain;
-	charset=ISO-8859-1;
-	delsp=yes;
-	format=flowed
+  charset=ISO-8859-1;
+  delsp=yes;
+  format=flowed
 
 This is the first part.
 
@@ -20,7 +20,7 @@ This is the first part.
 Content-Type: text/x-ruby-script; name="hello.rb"
 Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment;
-	filename="api.rb"
+  filename="api.rb"
 
 puts "Hello, world!"
 gets

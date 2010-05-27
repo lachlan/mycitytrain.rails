@@ -12,7 +12,7 @@ module Builder
   def self.check_for_name_collision(klass, method_name, defined_constant=nil)
     if klass.instance_methods.include?(method_name.to_s)
       fail RuntimeError,
-	"Name Collision: Method '#{method_name}' is already defined in #{klass}"
+  "Name Collision: Method '#{method_name}' is already defined in #{klass}"
     end
   end
 end
@@ -34,41 +34,41 @@ module Builder
     # See
     # http://intertwingly.net/stories/2004/04/14/i18n.html#CleaningWindows
     # for details.
-    CP1252 = {			# :nodoc:
-      128 => 8364,		# euro sign
-      130 => 8218,		# single low-9 quotation mark
-      131 =>  402,		# latin small letter f with hook
-      132 => 8222,		# double low-9 quotation mark
-      133 => 8230,		# horizontal ellipsis
-      134 => 8224,		# dagger
-      135 => 8225,		# double dagger
-      136 =>  710,		# modifier letter circumflex accent
-      137 => 8240,		# per mille sign
-      138 =>  352,		# latin capital letter s with caron
-      139 => 8249,		# single left-pointing angle quotation mark
-      140 =>  338,		# latin capital ligature oe
-      142 =>  381,		# latin capital letter z with caron
-      145 => 8216,		# left single quotation mark
-      146 => 8217,		# right single quotation mark
-      147 => 8220,		# left double quotation mark
-      148 => 8221,		# right double quotation mark
-      149 => 8226,		# bullet
-      150 => 8211,		# en dash
-      151 => 8212,		# em dash
-      152 =>  732,		# small tilde
-      153 => 8482,		# trade mark sign
-      154 =>  353,		# latin small letter s with caron
-      155 => 8250,		# single right-pointing angle quotation mark
-      156 =>  339,		# latin small ligature oe
-      158 =>  382,		# latin small letter z with caron
-      159 =>  376,		# latin capital letter y with diaeresis
+    CP1252 = {      # :nodoc:
+      128 => 8364,    # euro sign
+      130 => 8218,    # single low-9 quotation mark
+      131 =>  402,    # latin small letter f with hook
+      132 => 8222,    # double low-9 quotation mark
+      133 => 8230,    # horizontal ellipsis
+      134 => 8224,    # dagger
+      135 => 8225,    # double dagger
+      136 =>  710,    # modifier letter circumflex accent
+      137 => 8240,    # per mille sign
+      138 =>  352,    # latin capital letter s with caron
+      139 => 8249,    # single left-pointing angle quotation mark
+      140 =>  338,    # latin capital ligature oe
+      142 =>  381,    # latin capital letter z with caron
+      145 => 8216,    # left single quotation mark
+      146 => 8217,    # right single quotation mark
+      147 => 8220,    # left double quotation mark
+      148 => 8221,    # right double quotation mark
+      149 => 8226,    # bullet
+      150 => 8211,    # en dash
+      151 => 8212,    # em dash
+      152 =>  732,    # small tilde
+      153 => 8482,    # trade mark sign
+      154 =>  353,    # latin small letter s with caron
+      155 => 8250,    # single right-pointing angle quotation mark
+      156 =>  339,    # latin small ligature oe
+      158 =>  382,    # latin small letter z with caron
+      159 =>  376,    # latin capital letter y with diaeresis
     }
 
     # See http://www.w3.org/TR/REC-xml/#dt-chardata for details.
     PREDEFINED = {
-      38 => '&amp;',		# ampersand
-      60 => '&lt;',		# left angle bracket
-      62 => '&gt;',		# right angle bracket
+      38 => '&amp;',    # ampersand
+      60 => '&lt;',    # left angle bracket
+      62 => '&gt;',    # right angle bracket
     }
 
     # See http://www.w3.org/TR/REC-xml/#charsets for details.
