@@ -1,28 +1,21 @@
 %section#settings.page
   %header
-    %a.flip.transition{:href => "#"}+
     %h1
       %a{:href => '/'}= SITE_NAME
-    %a.back{:href => "#settings"}Done
-  %form{:action => "/favourite", :method => "post" }
+    %a.submit{:href => "#settings"}Done
+  - form_tag "/favourites", :method => "post" do
     %ol
-      - @favourites.each do |favourite|
+      - for @favourite in @favourites
         %li
           %span
-            %img{:src => '/images/minus_27x27.png'}
-            %select{:name => 'departing'}
-              %optgroup{:label => 'Departing'}
-                - @stations.each do |station|
-                  - if favourite.departing.id == station.id
-                    %option{:value => station.id, :selected => 'selected'}= station.name
-                  -else
-                    %option{:value => station.id}= station.name
+            - if @favourite.departing
+              - departing_code = @favourite.departing.code
+            - else
+              - departing_code = nil
+            = select "origin", @favourite.id, @stations.map {|s| [s.name, s.code]}, { :selected => departing_code, :include_blank => 'Origin'}
             to 
-            %select{:name => 'arriving'}
-              %optgroup{:label => 'Arriving'}
-                %option{:value => ''}Arriving
-                - @stations.each do |station|
-                  - if favourite.arriving.id == station.id
-                    %option{:value => station.id, :selected => 'selected'}= station.name
-                  -else
-                    %option{:value => station.id}= station.name
+            - if @favourite.arriving
+              - arriving_code = @favourite.arriving.code
+            - else
+              - arriving_code = nil
+            = select "destination", @favourite.id, @stations.map {|s| [s.name, s.code]}, { :selected => arriving_code, :include_blank => 'Destination'}

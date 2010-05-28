@@ -5,7 +5,7 @@
       %h1
         %a{:href => '/'}= SITE_NAME
       %a.slideup.transition{:href => "/favourites#settings"}Settings
-    %section
+    %section.journeys
       = render :partial => 'journeys', :object => favourite.journeys
     %footer
       = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => idx}
@@ -15,7 +15,7 @@
       %h1
         %a{:href => '/'}= SITE_NAME
       %a.slideup.transition{:href => "#about"}About
-    %section
+    %section.journeys
       = render :partial => 'journeys', :object => favourite.return_journeys
     %footer
       = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => idx}

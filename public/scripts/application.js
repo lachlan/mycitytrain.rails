@@ -1,9 +1,39 @@
 $(document).ready(function() {
+  $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
+  
   var active = 'active';
   
-  // TODO: need to check for current marker or something
-  $('.page').removeClass(active).first().addClass(active);
+  var setActivePage = function() {
+    var activePages = $('.page.' + active);
+    if (activePages.length > 0)
+      activePages.removeClass(active).first().addClass(active);
+    else
+      $('.page').first().addClass(active);
+    $('.page.active').css('min-height',$(window).height());
+  }
+
+  // load page contents asynchronously
+  var loadBody = function() {
+    var pages = $('.page');
+    if (pages.length == 0) {
+      $.get(location.href, function(data) {
+        $('body').append(data);
+        // no favourites so load settings instead
+        if ($('body').children().length == 0) {
+          $.get('/favourites', function(data) {
+            $('body').append(data);
+            setActivePage();
+          });
+        }
+        setActivePage();
+      });    
+    } else {
+      setActivePage();
+    }
+  }
   
+  loadBody();
+    
   $('a.transition').live('click', function() {
     var effects = 'transition in out flip slide pop cube swap slideup dissolve fade reverse';
     var effect = $(this).attr('class');
@@ -15,10 +45,18 @@ $(document).ready(function() {
       $(linker).add(linkee).removeClass(effects).addClass(effect);
       linkee.addClass('in').addClass(active);
       linker.addClass('out');
-      linkee.one('webkitAnimationEnd', function() {
+      
+      var animationFinished = function() {
         linker.removeClass(active).add(linkee).removeClass(effects);
         linkee.find('a.back').attr('href', '#' + linker.attr('id')).addClass('reverse').addClass(effect);
-      });
+        setActivePage();
+      }
+      
+      if ($.support.WebKitAnimationEvent) {
+        linkee.one('webkitAnimationEnd', function() { animationFinished(); });
+      } else {
+        animationFinished();
+      }
     }    
     if ((href).match('^#')) {
       transition($(href));
@@ -52,8 +90,16 @@ $(document).ready(function() {
     return false; 
   });
   
+  $('a.submit').live('click', function() {
+    var form = $(this).parents('.page').last().children('form');
+    $.post(form.attr('action'), form.serialize(), function(data)  {
+      $('body').children().remove();
+      loadBody();
+    });
+  });  
   
-  $('body').swipe({
+  /*
+  $('*').swipe({
     swipeLeft: function() { 
       var target = $('.page.active footer li.active').next();
       if (target) target.children('a').click();
@@ -63,7 +109,7 @@ $(document).ready(function() {
       if (target) target.children('a').click();
     }
   });
-  
+  */
   // hide address bar
   window.scrollTo(0, 1);
 });

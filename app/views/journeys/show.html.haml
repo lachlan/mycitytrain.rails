@@ -23,6 +23,7 @@
                   %span.time= format_time(stop.arriving_at)
                   - if stop.platform.to_i > 0 and (stop == change.first or stop == change.last)
                     %span.platform platform #{h stop.platform}
-                  - if change != @journey.changes.last and stop == change.last
-                    %span.change change service
+            - if change != @journey.changes.last and stop == change.last
+              %li.change Change service
+                    
         %li #{h duration_in_words(@journey.departing_at, @journey.arriving_at).capitalize} duration.

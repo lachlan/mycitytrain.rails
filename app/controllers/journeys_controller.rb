@@ -4,11 +4,14 @@ class JourneysController < ApplicationController
   @@limit = 5
   
   def index
+    i = 0
     @favourites = session[:favourites].map do |f|
-      Favourite.new(f[0], f[1])
+      
+      Favourite.new(i+=1, f[0], f[1])
     end
     @favourites = [] if @favourites.empty?
     @stations = Station.find_all
+    render :layout => !request.xhr?
   end
   
   def departing_after
