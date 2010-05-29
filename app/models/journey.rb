@@ -3,6 +3,8 @@ class Journey < ActiveRecord::Base
   
   belongs_to :departing, :class_name => 'Station'
   belongs_to :arriving, :class_name => 'Station'
+  belongs_to :timetable_type
+  
   has_many :stops, :order => :position
   
   validates_presence_of :departing, :arriving, :departing_at
