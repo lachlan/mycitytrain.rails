@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100529033043) do
+ActiveRecord::Schema.define(:version => 20100529052446) do
 
   create_table "aliases", :force => true do |t|
     t.integer  "station_id"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(:version => 20100529033043) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "arriving_at"
+    t.integer  "timetable_type_id"
   end
 
   add_index "journeys", ["departing_at", "departing_id", "arriving_id"], :name => "index_journeys_on_departing_at_and_departing_id_and_arriving_id"
