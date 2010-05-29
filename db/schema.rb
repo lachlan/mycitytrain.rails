@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100419102954) do
+ActiveRecord::Schema.define(:version => 20100529033043) do
 
   create_table "aliases", :force => true do |t|
     t.integer  "station_id"
@@ -81,6 +81,22 @@ ActiveRecord::Schema.define(:version => 20100419102954) do
   end
 
   add_index "stops", ["journey_id", "position"], :name => "index_stops_on_journey_id_and_position"
+
+  create_table "timetable_days", :force => true do |t|
+    t.integer  "timetable_type_id"
+    t.integer  "wday"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "timetable_days", ["timetable_type_id"], :name => "index_timetable_days_on_timetable_type_id"
+  add_index "timetable_days", ["wday"], :name => "index_timetable_days_on_wday"
+
+  create_table "timetable_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "tl_stations", :force => true do |t|
     t.string   "code"
