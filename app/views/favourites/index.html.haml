@@ -2,7 +2,7 @@
   %header
     %h1
       %a{:href => '/'}= SITE_NAME
-    %a.submit{:href => "#settings"}Done
+    %a.submit.back{:href => "#settings"}Done
   - form_tag "/favourites", :method => "post" do
     %ol
       - for @favourite in @favourites

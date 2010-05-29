@@ -1,12 +1,11 @@
 class JourneysController < ApplicationController  
-  before_filter :find_stations, :except => :index
+  before_filter :find_stations, :except => [:index, :about]
   protect_from_forgery :only => [:create, :update, :destroy] 
   @@limit = 5
   
   def index
     i = 0
     @favourites = session[:favourites].map do |f|
-      
       Favourite.new(i+=1, f[0], f[1])
     end
     @favourites = [] if @favourites.empty?
@@ -28,6 +27,10 @@ class JourneysController < ApplicationController
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
     end
+    render :layout => !request.xhr?
+  end
+  
+  def about
     render :layout => !request.xhr?
   end
   

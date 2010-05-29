@@ -4,7 +4,7 @@
       %li.active!= "&#9679;"
     - elsif i < idx
       %li
-        %a.reverse.slide.transition{:href => "##{id_prefix}#{i}"}!= "&#9675;"
+        %a.reverse.slide.fx{:href => "##{id_prefix}#{i}"}!= "&#9675;"
     - else
       %li
-        %a.slide.transition{:href => "##{id_prefix}#{i}"}!= "&#9675;"
+        %a.slide.fx{:href => "##{id_prefix}#{i}"}!= "&#9675;"

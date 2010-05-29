@@ -2,6 +2,7 @@ $(document).ready(function() {
   $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
   
   var active = 'active';
+  var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
   
   var setActivePage = function() {
     var activePages = $('.page.' + active);
@@ -9,37 +10,48 @@ $(document).ready(function() {
       activePages.removeClass(active).first().addClass(active);
     else
       $('.page').first().addClass(active);
-    $('.page.active').css('min-height',$(window).height());
+    $('.page').css('min-height',$(window).height());
+  }
+
+  var loadFavourites = function(callback) {
+    $.get('/', function(data) {
+      $('#favourites').remove();
+      $('body').append(data);
+      if (callback) callback();
+    });
+  }
+  
+  var loadSettings = function(callback) {
+    $.get('/favourites', function(data) {
+      $('body').append(data);
+      if (callback) callback();
+    });
   }
 
   // load page contents asynchronously
   var loadBody = function() {
     var pages = $('.page');
     if (pages.length == 0) {
-      $.get(location.href, function(data) {
-        $('body').append(data);
-        // no favourites so load settings instead
-        if ($('body').children().length == 0) {
-          $.get('/favourites', function(data) {
-            $('body').append(data);
+      loadFavourites(function() {
+        if ($('#favourites').length == 0) {
+          loadSettings(function() {
             setActivePage();
           });
         }
         setActivePage();
-      });    
+      });
     } else {
       setActivePage();
     }
   }
-  
+    
   loadBody();
     
-  $('a.transition').live('click', function() {
-    var effects = 'transition in out flip slide pop cube swap slideup dissolve fade reverse';
+  $('a.fx').live('click', function() {
     var effect = $(this).attr('class');
     var linker = $(this).parents('.page').last();    
     var href = $(this).attr('href');
-    var transition = function(linkee) {
+    var fx = function(linkee) {
       $(':focus').blur();
       window.scrollTo(0, 1);
       $(linker).add(linkee).removeClass(effects).addClass(effect);
@@ -59,8 +71,9 @@ $(document).ready(function() {
       }
     }    
     if ((href).match('^#')) {
-      transition($(href));
+      fx($(href));
     } else {
+      // load external links via ajax directly into page body
       var element = $('body');
       var id = "__ajax_results__";
       if (href.lastIndexOf('#') > -1) {
@@ -74,29 +87,35 @@ $(document).ready(function() {
       }
       $.get(href, function(data) {
         element.append(data);
-        transition($(id));
+        fx($(id));
       });
     }
     return false;
   });
-  
+    
   $('a.replace').live('click', function() {
     var link = $(this);
     $.get(link.attr('href'), function(data) {
       if (link.hasClass('parent')) link = link.parent();
       // TODO: animating this would be nice
-      link.replaceWith(data);
+      link.replaceWith(data).animate(
+      {
+        width: ['toggle', 'swing'],
+        height: ['toggle', 'swing'],
+        opacity: 'toggle'
+      }, 5000, 'linear', function() {
+        $(this).after('<div>Animation complete.</div>');
+      });
     });
     return false; 
   });
   
-  $('a.submit').live('click', function() {
-    var form = $(this).parents('.page').last().children('form');
+  $(':input').live('change', function() {
+    var form = $(this).parents('form').first();
     $.post(form.attr('action'), form.serialize(), function(data)  {
-      $('body').children().remove();
-      loadBody();
+      loadFavourites();
     });
-  });  
+  });
   
   /*
   $('*').swipe({

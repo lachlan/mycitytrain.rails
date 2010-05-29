@@ -1,5 +1,4 @@
-class FavouritesController < ApplicationController
-  
+class FavouritesController < ApplicationController  
   @@limit = 3
   
   def index

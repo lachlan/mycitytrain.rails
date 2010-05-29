@@ -1,5 +1,5 @@
 %li
-  - link_to({:controller => 'journeys', :action => 'show', :departing => journey.departing, :arriving => journey.arriving, :departing_at => format_time(journey.departing_at, :iso8601)}, :class => 'group slide transition') do
+  - link_to({:controller => 'journeys', :action => 'show', :departing => journey.departing, :arriving => journey.arriving, :departing_at => format_time(journey.departing_at, :iso8601)}, :class => 'group slide fx') do
     %span.eta{:class=>classify_duration_to_now(journey.departing_at)}= duration_in_concise_words_from_now(journey.departing_at)
     %span.departing
       %span.station= journey.departing.name

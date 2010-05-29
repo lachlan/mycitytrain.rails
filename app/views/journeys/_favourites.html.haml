@@ -1,21 +1,22 @@
-- @favourites.each_with_index do |favourite, idx|
-  %section.page{:id => "f#{idx}"}
-    %header
-      %a.flip.transition{:href => "#fr#{idx}"}Return
-      %h1
-        %a{:href => '/'}= SITE_NAME
-      %a.slideup.transition{:href => "/favourites#settings"}Settings
-    %section.journeys
-      = render :partial => 'journeys', :object => favourite.journeys
-    %footer
-      = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => idx}
-  %section.page{:id => "fr#{idx}"}
-    %header
-      %a.reverse.flip.transition{:href => "#f#{idx}"}Back   
-      %h1
-        %a{:href => '/'}= SITE_NAME
-      %a.slideup.transition{:href => "#about"}About
-    %section.journeys
-      = render :partial => 'journeys', :object => favourite.return_journeys
-    %footer
-      = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => idx}
+%section#favourites
+  - @favourites.each_with_index do |favourite, idx|
+    %section.page{:id => "f#{idx}"}
+      %header
+        %a.flip.fx{:href => "#fr#{idx}"}Return
+        %h1
+          %a{:href => '/'}= SITE_NAME
+        %a.slideup.fx{:href => "/favourites#settings"}Settings
+      %section.journeys
+        = render :partial => 'journeys', :object => favourite.journeys
+      %footer
+        = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => idx}
+    %section.page{:id => "fr#{idx}"}
+      %header
+        %a.reverse.flip.fx{:href => "#f#{idx}"}Back   
+        %h1
+          %a{:href => '/'}= SITE_NAME
+        %a.slideup.fx{:href => "/about#about"}About
+      %section.journeys
+        = render :partial => 'journeys', :object => favourite.return_journeys
+      %footer
+        = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => idx}
