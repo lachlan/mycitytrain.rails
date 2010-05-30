@@ -65,24 +65,24 @@ class Journey < ActiveRecord::Base
   def self.fetch_date(d, a, w)
     self.fetch_journeys(:departing => d, :arriving => a, :from => w, :to => w + 1.day)
   end
-  	
+    
   def self.fetch_journeys(o)
-    departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)	
-  	journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
-	
-  	if journeys.empty?
-  	  0.upto(1) do |i|
-    	  retries = 0
-  			begin
-  			  CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
-  			rescue Exception
-  			  retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-  				retry if retries < 10
-  				raise
-  			end
-  		end
+    departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)  
+    journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+  
+    if journeys.empty?
+      0.upto(1) do |i|
+        retries = 0
+        begin
+          CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
+        rescue Exception
+          retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+          retry if retries < 10
+          raise
+        end
+      end
       journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
-  	end
+    end
     journeys
   end
   
