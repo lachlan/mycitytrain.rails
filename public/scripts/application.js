@@ -47,7 +47,7 @@ $(document).ready(function() {
     
   loadBody();
     
-  $('a.fx').live('click', function() {
+  $('a.fx:not(.disabled)').live('click', function() {
     var effect = $(this).attr('class');
     var linker = $(this).parents('.page').last();    
     var href = $(this).attr('href');
@@ -93,42 +93,47 @@ $(document).ready(function() {
     return false;
   });
     
-  $('a.replace').live('click', function() {
+  $('a.replace:not(.disabled)').live('click', function() {
     var link = $(this);
     $.get(link.attr('href'), function(data) {
       if (link.hasClass('parent')) link = link.parent();
       // TODO: animating this would be nice
-      link.replaceWith(data).animate(
-      {
-        width: ['toggle', 'swing'],
-        height: ['toggle', 'swing'],
-        opacity: 'toggle'
-      }, 5000, 'linear', function() {
-        $(this).after('<div>Animation complete.</div>');
-      });
+      link.replaceWith(data);
     });
     return false; 
   });
   
-  $(':input').live('change', function() {
-    var form = $(this).parents('form').first();
-    $.post(form.attr('action'), form.serialize(), function(data)  {
-      loadFavourites();
-    });
-  });
+  $('a.disabled').live('click', function() {
+    return false;
+  })
   
-  /*
-  $('*').swipe({
-    swipeLeft: function() { 
-      var target = $('.page.active footer li.active').next();
-      if (target) target.children('a').click();
-    },
-    swipeRight: function() { 
-      var target = $('.page.active footer li.active').prev();
-      if (target) target.children('a').click();
+  $(':input').live('change', function() {
+    var input = $(this);
+    var link = input.parents('.page').find('a.back');
+    var form = input.parents('form').first();
+    
+    link.addClass('disabled');
+    form.find('li').each(function() {
+      var selected = $(this).find(":selected");
+      var value = selected.first().attr('value');
+      // if you've selected at least one journey, and the origin and destination don't match
+      if ((selected.filter("[value='']").length == 0) && (selected.filter("[value='" + value + "']").length < 2))
+        link.removeClass('disabled');
+    });
+    
+    if (!link.hasClass('disabled')) {
+      link.addClass('disabled');
+      $.post(form.attr('action'), form.serialize(), function(data)  {
+        loadFavourites(function() {
+          if ($('#favourites').length == 0)
+            link.addClass('disabled');
+          else
+            link.removeClass('disabled');
+        });
+      });
     }
   });
-  */
+    
   // hide address bar
   window.scrollTo(0, 1);
 });

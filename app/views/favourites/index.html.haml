@@ -2,7 +2,8 @@
   %header
     %h1
       %a{:href => '/'}= SITE_NAME
-    %a.submit.back{:href => "#settings"}Done
+    - hclass = @favourites.find { |f| f.departing and f.arriving }? '' : 'disabled'
+    %a.back.reverse.slideup.fx{:href => "#f0", :class => hclass}Done
   - form_tag "/favourites", :method => "post" do
     %ol
       - for @favourite in @favourites
@@ -12,10 +13,10 @@
               - departing_code = @favourite.departing.code
             - else
               - departing_code = nil
-            = select "origin", @favourite.id, @stations.map {|s| [s.name, s.code]}, { :selected => departing_code, :include_blank => 'Origin'}
+            = select "origin", @favourite.id, @stations.map {|s| [s.name, s.code]}, { :selected => departing_code, :include_blank => 'Origin'}, {:class => 'origin'}
             to 
             - if @favourite.arriving
               - arriving_code = @favourite.arriving.code
             - else
               - arriving_code = nil
-            = select "destination", @favourite.id, @stations.map {|s| [s.name, s.code]}, { :selected => arriving_code, :include_blank => 'Destination'}
+            = select "destination", @favourite.id, @stations.map {|s| [s.name, s.code]}, { :selected => arriving_code, :include_blank => 'Destination'}, {:class => 'destination'}
