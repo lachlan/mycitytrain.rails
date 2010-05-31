@@ -6,6 +6,7 @@ module ApplicationHelper
       when :short_html  then time.strftime('%I:%M&nbsp;%p').downcase
       when :iso8601     then time.iso8601 
       when :weekday     then time.strftime('%A')
+      when :js          then (time.to_f * 1000).round
     end
   end
     

@@ -8,8 +8,7 @@
           %a{:href => '/'}= SITE_NAME
         %a.slideup.fx{:href => "/favourites#settings"}
           %img{:src => '/images/gear_18x18.png'}
-      %section.journeys
-        = render :partial => 'journeys', :object => favourite.journeys
+      = render :partial => 'journeys', :object => favourite.journeys
       %footer
         = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => idx}
     %section.page{:id => "fr#{idx}"}
@@ -20,7 +19,6 @@
           %a{:href => '/'}= SITE_NAME
         %a.slideup.fx{:href => "/about#about"}
           %img{:src => '/images/info_17x17.png'}
-      %section.journeys
-        = render :partial => 'journeys', :object => favourite.return_journeys
+      = render :partial => 'journeys', :object => favourite.return_journeys
       %footer
         = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => idx}

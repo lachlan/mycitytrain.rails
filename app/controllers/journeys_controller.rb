@@ -14,7 +14,8 @@ class JourneysController < ApplicationController
   end
   
   def departing_after
-    @journeys = Journey.departing_after @departing, @arriving, @departing_at, @@limit
+    limit = params[:limit] || @@limit
+    @journeys = Journey.departing_after @departing, @arriving, @departing_at, limit
     render :layout => !request.xhr?
   end
 
