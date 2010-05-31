@@ -127,7 +127,7 @@ ol li{padding:9px;border-bottom:1px solid #d9d9d9;background-color:#f4f4f4;backg
 ol li a{background-position:center right;background-repeat:no-repeat;padding:9px 26px 9px 9px;margin:-9px;background-color:transparent;background-image:none;text-shadow:1px 1px 0 rgba(255,255,255,0.5);}
 ol li a:last-child{background-image:url(/images/chevron_17x13.png);}
 ol li > *{display:block;text-align:left;}
-ol li a.replace{padding:9px;background-image:none;text-align:center;color:#2470d8;text-shadow:1px 1px 0 rgba(255,255,255,0.5);font-size:15px;line-height:40px;}
+ol li a.loader{padding:9px;background-image:none;text-align:center;color:#2470d8;text-shadow:1px 1px 0 rgba(255,255,255,0.5);font-size:15px;line-height:40px;}
 input,select{text-shadow:none !important;width:136px;font-size:17px;}
 .eta{font-size:12px;float:left;background-color:#66cc00;border-bottom:1px solid #59b200;background-image:-webkit-gradient(linear,left top,left bottom,from(#66cc00),to(#53bc00));background-image:-moz-linear-gradient(top,#66cc00,#53bc00);margin:-9px 9px -10px -9px;padding:11px 5px;text-align:center;width:34px;height:40px;text-overflow:ellipsis;overflow:hidden;text-shadow:-1px -1px 0 rgba(0,0,0,0.5);color:white;}
 .less_than_ten_minutes{background-color:#ff8c00;background-image:-webkit-gradient(linear,left top,left bottom,from(#ff8c00),to(#d86c00));background-image:-moz-linear-gradient(top,#ff8c00,#d86c00);border-color:#c60;}

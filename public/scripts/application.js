@@ -1,3 +1,63 @@
+function addSwipeListener(el, listener){
+ var startX;
+ var dx;
+ var direction;
+ 
+ function cancelTouch()
+ {
+  el.removeEventListener('touchmove', onTouchMove);
+  el.removeEventListener('touchend', onTouchEnd);
+  startX = null;
+  startY = null;
+  direction = null;
+ }
+ 
+ function onTouchMove(e)
+ {
+  if (e.touches.length > 1)
+  {
+   cancelTouch();
+  }
+  else
+  {
+   dx = e.touches[0].pageX - startX;
+   var dy = e.touches[0].pageY - startY;
+   if (direction == null)
+   {
+    direction = dx;
+    e.preventDefault();
+   }
+   else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 15)
+   {
+    cancelTouch();
+   }
+  }
+ }
+
+ function onTouchEnd(e)
+ {
+  cancelTouch();
+  if (Math.abs(dx) > 50)
+  {
+   listener({ target: el, direction: dx > 0 ? 'right' : 'left' });
+  }
+ }
+ 
+ function onTouchStart(e)
+ {
+  if (e.touches.length == 1)
+  {
+   startX = e.touches[0].pageX;
+   startY = e.touches[0].pageY;
+   el.addEventListener('touchmove', onTouchMove, false);
+   el.addEventListener('touchend', onTouchEnd, false);
+  }
+ }
+ 
+ el.addEventListener('touchstart', onTouchStart, false);
+}
+
+
 // crappy pluralize implementation
 function plural(singular) {
   return singular + "s";
@@ -24,9 +84,9 @@ function durationInWords(durationInSeconds) {
     unsigned_duration = duration * -1;
   }
   
-  if (unsigned_duration >= 0 && unsigned_duration <= 60) {
+  if (unsigned_duration == 0) {
     phrase = "now";
-  } else if (unsigned_duration >= 61 && unsigned_duration <= 3599) {
+  } else if (unsigned_duration >= 1 && unsigned_duration <= 3599) {
     phrase = pluralize(Math.ceil(duration/60), "min");
   } else if (unsigned_duration >= 3600 && unsigned_duration <= 86399) {
     var durationInHours = Math.floor(duration/3600);
@@ -50,7 +110,26 @@ function durationInWords(durationInSeconds) {
   return phrase;
 }
 
+var millisecondsUntilNextMinute = function() {
+  var now = new Date();
+  var next = new Date();
+  next.setMinutes(now.getMinutes() + 1);
+  next.setSeconds(0);
+  next.setMilliseconds(0);
+  return next - now;
+}
+
 $(document).ready(function() {
+  addSwipeListener(document.body, function(e) { 
+    var target;
+    if (e.direction == "left") {
+      target = $('.page.active footer li.active').next();
+    } else {
+      target = $('.page.active footer li.active').prev();      
+    }
+    if (target) target.children('a').click();
+  });
+  
   $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
 
   var journey_limit = 5;
@@ -58,12 +137,13 @@ $(document).ready(function() {
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
   
   var setActivePage = function() {
+    $('.page').css('min-height',$(window).height());
+    
     var activePages = $('.page.' + active);
     if (activePages.length > 0)
       activePages.removeClass(active).first().addClass(active);
     else
       $('.page').first().addClass(active);
-    $('.page').css('min-height',$(window).height());
   }
 
   var loadFavourites = function(callback) {
@@ -100,7 +180,14 @@ $(document).ready(function() {
     
   loadBody();
     
-  $('a.fx:not(.disabled)').live('click', function() {
+  // handle transitions automatically on non-disabled and non-submit links
+  $('a.fx:not(.disabled):not(.submit)').live('click', function() {
+    $(this).trigger('transition');
+    return false;
+  });
+  
+  // handle transition event
+  $('a.fx').live('transition', function() {
     var effect = $(this).attr('class');
     var linker = $(this).parents('.page').last();    
     var href = $(this).attr('href');
@@ -145,26 +232,33 @@ $(document).ready(function() {
     }
     return false;
   });
+  
+  // load some more journeys
+  $('a.loader').live('click', function() {
+    loadMoreJourneys($(this).parents('.journeys'));
+    return false; 
+  });
+  
+  var loadMoreJourneys = function(journeys, limit) {
+    var prev = journeys.find('.journey').last();
+    var href = prev.find('a').attr('href') + '/after';
+    if (limit && limit > 0) href = href + '?limit=' + limit;
     
-  $('a.replace:not(.disabled)').live('click', function() {
-    var link = $(this);
-    $.get(link.attr('href'), function(data) {
-      if (link.hasClass('parent')) link = link.parent();
-      // TODO: animating this would be nice  
+    $.get(href, function(data) {
       var id = '__replace_results__';
       $('#' + id).remove();
       $('body').append('<section id="' + id + '"></section>');
       $('#' + id).append(data);
-      link.after($('#' + id).children().hide().slideDown());
-      link.remove();
+      prev.after($('#' + id).children().hide().slideDown());
     });
-    return false; 
-  });
+  }
   
+  // don't allow click events on disabled links
   $('a.disabled').live('click', function() {
     return false;
   })
   
+  // disable done button until user configures a journey
   $(':input').live('change', function() {
     var input = $(this);
     var link = input.parents('.page').find('a.back');
@@ -178,21 +272,25 @@ $(document).ready(function() {
       if ((selected.filter("[value='']").length == 0) && (selected.filter("[value='" + value + "']").length < 2))
         link.removeClass('disabled');
     });
-    
-    if (!link.hasClass('disabled')) {
-      link.addClass('disabled');
-      $.post(form.attr('action'), form.serialize(), function(data)  {
-        loadFavourites(function() {
-          if ($('#favourites').length == 0)
-            link.addClass('disabled');
-          else
-            link.removeClass('disabled');
-        });
-      });
-    }
   });
   
-  window.setInterval(function() {
+  // ajax post settings form and load favourites
+  $('.submit').live('click', function() {
+    var link = $(this);
+    var form = link.parents('.page').find('form');
+    $.post(form.attr('action'), form.serialize(), function(data) {
+      loadFavourites(function() {
+        if ($('#favourites').length == 0) {
+          link.addClass('disabled');
+        } else {
+          link.trigger('transition');
+        }
+      });
+    });
+  });
+  
+  // keep the ETAs up to date with current time and remove departed journeys
+  var updateETAs = function() {
     $('.journey .eta').each(function() {
       var eta = $(this);
       var journey = eta.parents('.journey');
@@ -209,25 +307,39 @@ $(document).ready(function() {
         eta.addClass("less_than_ten_minutes");
       }
       
-      if (duration >= 0 || journey.hasClass('detail')) {
+      if (duration > 0 || journey.hasClass('detail')) {
         eta.html(durationInWords(duration));
       } else {
-        journey.animate({opacity:0.5},500,'linear',function() {
-          $(this).animate({opacity:1},500,'linear',function() {
-            $(this).slideUp('slow', function() {
-              var parent = $(this).parent();
-              var link = $(this).parent().find('a.replace');
-              var href = link.attr('href');
-              $(this).remove();
-              var limit = journey_limit - parent.find('.journey').length;
-              if (limit > 0) link.attr('href', href + '?limit=' + limit).click();
-            })
-          });
-        });
+        journey.addClass('expired');
       }
     });
-  }, 1000);
     
+    $('.journeys').each(function() {
+      var journeys = $(this);
+      var expired = journeys.find('.journey.expired');
+      var count = journey_limit - (journeys.find('.journey').length - expired.length);
+      
+      if (count > 0) loadMoreJourneys(journeys, count);
+      
+      expired.animate({opacity:0.5},1250,'linear',function() {
+        $(this).animate({opacity:1},1250,'linear',function() {
+          $(this).animate({opacity:0.5},1250,'linear',function() {
+            $(this).animate({opacity:1},1250,'linear',function() {          
+              $(this).slideUp('slow', function() {
+                var parent = $(this).parents('.journeys');
+                $(this).remove();
+              });
+            });
+          });
+        });
+      });
+    });
+    // reschedule next run
+    window.setTimeout(updateETAs, millisecondsUntilNextMinute());
+  }
+    
+  updateETAs();
+  
   // hide address bar
   window.scrollTo(0, 1);
 });

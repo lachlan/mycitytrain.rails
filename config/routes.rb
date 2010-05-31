@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'journeys'
-  map.resources :favourites
+  map.resources :settings
   map.resources :journeys
   map.sitemap 'sitemap.xml' , :controller => 'sitemap'
   
