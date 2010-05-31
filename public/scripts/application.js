@@ -149,20 +149,20 @@ $(document).ready(function() {
   var loadFavourites = function(callback) {
     $.get('/', function(data) {
       $('#favourites').remove();
-      $('body').append(data);
+      $('#content').append(data);
       if (callback) callback();
     });
   }
   
   var loadSettings = function(callback) {
     $.get('/favourites', function(data) {
-      $('body').append(data);
+      $('#content').append(data);
       if (callback) callback();
     });
   }
 
   // load page contents asynchronously
-  var loadBody = function() {
+  var loadContent = function() {
     var pages = $('.page');
     if (pages.length == 0) {
       loadFavourites(function() {
@@ -178,7 +178,7 @@ $(document).ready(function() {
     }
   }
     
-  loadBody();
+  loadContent();
     
   // handle transitions automatically on non-disabled and non-submit links
   $('a.fx:not(.disabled):not(.submit)').live('click', function() {
@@ -213,8 +213,8 @@ $(document).ready(function() {
     if ((href).match('^#')) {
       fx($(href));
     } else {
-      // load external links via ajax directly into page body
-      var element = $('body');
+      // load external links via ajax directly into page content
+      var element = $('#content');
       var id = "__ajax_results__";
       if (href.lastIndexOf('#') > -1) {
         id = href.substring(href.lastIndexOf('#'), href.length);
@@ -247,7 +247,7 @@ $(document).ready(function() {
     $.get(href, function(data) {
       var id = '__replace_results__';
       $('#' + id).remove();
-      $('body').append('<section id="' + id + '"></section>');
+      $('#content').append('<section id="' + id + '"></section>');
       $('#' + id).append(data);
       prev.after($('#' + id).children().hide().slideDown());
     });
@@ -342,4 +342,19 @@ $(document).ready(function() {
   
   // hide address bar
   window.scrollTo(0, 1);
+  
+  // show iphone hint
+  if window.navigator.platform == "iPhone")
+  {
+    if (window.innerHeight == 356 || window.innerHeight == 208)
+    {
+      window.setTimeout(function() {
+        $("#iPhoneHint").slideToggle("slow");
+        window.setTimeout(function() {
+          $("#iPhoneHint").slideToggle("slow");
+        }, 8000);
+      }, 1500);
+    }
+  }
+  
 });
