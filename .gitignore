@@ -1,6 +1,7 @@
 log/*.log
 tmp/**/*
 .DS_Store
+db/development.*
 doc/api
 doc/app
 doc/guides
