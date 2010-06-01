@@ -155,7 +155,7 @@ $(document).ready(function() {
   }
   
   var loadSettings = function(callback) {
-    $.get('/favourites', function(data) {
+    $.get('/settings#settings', function(data) {
       $('#content').append(data);
       if (callback) callback();
     });
