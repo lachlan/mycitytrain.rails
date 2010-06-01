@@ -3,8 +3,7 @@ function addSwipeListener(el, listener){
  var dx;
  var direction;
  
- function cancelTouch()
- {
+ function cancelTouch() {
   el.removeEventListener('touchmove', onTouchMove);
   el.removeEventListener('touchend', onTouchEnd);
   startX = null;
@@ -12,8 +11,7 @@ function addSwipeListener(el, listener){
   direction = null;
  }
  
- function onTouchMove(e)
- {
+ function onTouchMove(e) {
   if (e.touches.length > 1)
   {
    cancelTouch();
@@ -34,8 +32,7 @@ function addSwipeListener(el, listener){
   }
  }
 
- function onTouchEnd(e)
- {
+ function onTouchEnd(e) {
   cancelTouch();
   if (Math.abs(dx) > 50)
   {
@@ -43,8 +40,7 @@ function addSwipeListener(el, listener){
   }
  }
  
- function onTouchStart(e)
- {
+ function onTouchStart(e) {
   if (e.touches.length == 1)
   {
    startX = e.touches[0].pageX;
@@ -149,14 +145,14 @@ $(document).ready(function() {
   var loadFavourites = function(callback) {
     $.get('/', function(data) {
       $('#favourites').remove();
-      $('#content').append(data);
+      $('body').append(data);
       if (callback) callback();
     });
   }
   
   var loadSettings = function(callback) {
     $.get('/settings#settings', function(data) {
-      $('#content').append(data);
+      $('body').append(data);
       if (callback) callback();
     });
   }
@@ -214,7 +210,7 @@ $(document).ready(function() {
       fx($(href));
     } else {
       // load external links via ajax directly into page content
-      var element = $('#content');
+      var element = $('body');
       var id = "__ajax_results__";
       if (href.lastIndexOf('#') > -1) {
         id = href.substring(href.lastIndexOf('#'), href.length);
@@ -247,7 +243,7 @@ $(document).ready(function() {
     $.get(href, function(data) {
       var id = '__replace_results__';
       $('#' + id).remove();
-      $('#content').append('<section id="' + id + '"></section>');
+      $('body').append('<section id="' + id + '"></section>');
       $('#' + id).append(data);
       prev.after($('#' + id).children().hide().slideDown());
     });
@@ -321,13 +317,17 @@ $(document).ready(function() {
       
       if (count > 0) loadMoreJourneys(journeys, count);
       
-      expired.animate({opacity:0.5},1250,'linear',function() {
-        $(this).animate({opacity:1},1250,'linear',function() {
-          $(this).animate({opacity:0.5},1250,'linear',function() {
-            $(this).animate({opacity:1},1250,'linear',function() {          
-              $(this).slideUp('slow', function() {
-                var parent = $(this).parents('.journeys');
-                $(this).remove();
+      expired.animate({opacity:0.5},1000,'linear',function() {
+        $(this).animate({opacity:1},1000,'linear',function() {
+          $(this).animate({opacity:0.5},1000,'linear',function() {
+            $(this).animate({opacity:1},1000,'linear',function() {
+              $(this).animate({opacity:0.5},1000,'linear',function() {
+                $(this).animate({opacity:1},1000,'linear',function() {                        
+                  $(this).slideUp('slow', function() {
+                    var parent = $(this).parents('.journeys');
+                    $(this).remove();
+                  });
+                });
               });
             });
           });
