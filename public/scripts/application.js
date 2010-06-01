@@ -344,10 +344,12 @@ $(document).ready(function() {
   window.scrollTo(0, 1);
   
   // show iphone hint
+  alert(window.navigator.platform + ' ' + window.navigator.standalone)
   if (window.navigator.platform == "iPhone")
   {
     if (!window.navigator.standalone)
     {
+      alert('you should see a pop up...')
       window.setTimeout(function() {
         $("#iPhoneHint").slideToggle("slow");
         window.setTimeout(function() {
