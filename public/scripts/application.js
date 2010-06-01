@@ -344,9 +344,9 @@ $(document).ready(function() {
   window.scrollTo(0, 1);
   
   // show iphone hint
-  if window.navigator.platform == "iPhone")
+  if (window.navigator.platform == "iPhone")
   {
-    if (window.innerHeight == 356 || window.innerHeight == 208)
+    if (!window.navigator.standalone)
     {
       window.setTimeout(function() {
         $("#iPhoneHint").slideToggle("slow");
