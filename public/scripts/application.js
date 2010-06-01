@@ -1,58 +1,49 @@
 function addSwipeListener(el, listener){
- var startX;
- var dx;
- var direction;
- 
- function cancelTouch() {
-  el.removeEventListener('touchmove', onTouchMove);
-  el.removeEventListener('touchend', onTouchEnd);
-  startX = null;
-  startY = null;
-  direction = null;
- }
- 
- function onTouchMove(e) {
-  if (e.touches.length > 1)
-  {
-   cancelTouch();
+  var startX;
+  var dx;
+  var direction;
+
+  function cancelTouch() {
+    el.removeEventListener('touchmove', onTouchMove);
+    el.removeEventListener('touchend', onTouchEnd);
+    startX = null;
+    startY = null;
+    direction = null;
   }
-  else
-  {
-   dx = e.touches[0].pageX - startX;
-   var dy = e.touches[0].pageY - startY;
-   if (direction == null)
-   {
-    direction = dx;
-    e.preventDefault();
-   }
-   else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 15)
-   {
+ 
+  function onTouchMove(e) {
+    if (e.touches.length > 1) {
+      cancelTouch();
+    } else {
+      dx = e.touches[0].pageX - startX;
+      var dy = e.touches[0].pageY - startY;
+      if (direction == null) {
+        direction = dx;
+        e.preventDefault();
+      } else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 15) {
+        cancelTouch();
+      }
+    }
+  }
+
+  function onTouchEnd(e) {
     cancelTouch();
-   }
+    if (Math.abs(dx) > 50) {
+      listener({ target: el, direction: dx > 0 ? 'right' : 'left' });
+    }
   }
- }
+ 
+  function onTouchStart(e) {
+    if (e.touches.length == 1) {
+      startX = e.touches[0].pageX;
+      startY = e.touches[0].pageY;
+      el.addEventListener('touchmove', onTouchMove, false);
+      el.addEventListener('touchend', onTouchEnd, false);
+    }
+  }
 
- function onTouchEnd(e) {
-  cancelTouch();
-  if (Math.abs(dx) > 50)
-  {
-   listener({ target: el, direction: dx > 0 ? 'right' : 'left' });
-  }
- }
- 
- function onTouchStart(e) {
-  if (e.touches.length == 1)
-  {
-   startX = e.touches[0].pageX;
-   startY = e.touches[0].pageY;
-   el.addEventListener('touchmove', onTouchMove, false);
-   el.addEventListener('touchend', onTouchEnd, false);
-  }
- }
- 
- el.addEventListener('touchstart', onTouchStart, false);
+  el.addEventListener('touchstart', onTouchStart, false);
 }
-
 
 // crappy pluralize implementation
 function plural(singular) {
@@ -113,6 +104,10 @@ var millisecondsUntilNextMinute = function() {
   next.setSeconds(0);
   next.setMilliseconds(0);
   return next - now;
+}
+
+var generateID = function(href) {
+  return 'id' + href.replace(/[^a-zA-Z0-9]/g, '_');
 }
 
 $(document).ready(function() {
@@ -184,22 +179,21 @@ $(document).ready(function() {
   
   // handle transition event
   $('a.fx').live('transition', function() {
-    var effect = $(this).attr('class');
-    var linker = $(this).parents('.page').last();    
-    var href = $(this).attr('href');
+    var link = $(this);
+    var effect = link.attr('class');
+    var linker = link.parents('.page').last();    
+    var href = link.attr('href');
     var fx = function(linkee) {
       $(':focus').blur();
       window.scrollTo(0, 1);
       $(linker).add(linkee).removeClass(effects).addClass(effect);
       linkee.addClass('in').addClass(active);
       linker.addClass('out');
-      
       var animationFinished = function() {
         linker.removeClass(active).add(linkee).removeClass(effects);
         linkee.find('a.back').attr('href', '#' + linker.attr('id')).addClass('reverse').addClass(effect);
         setActivePage();
       }
-      
       if ($.support.WebKitAnimationEvent) {
         linkee.one('webkitAnimationEnd', function() { animationFinished(); });
       } else {
@@ -210,20 +204,12 @@ $(document).ready(function() {
       fx($(href));
     } else {
       // load external links via ajax directly into page content
-      var element = $('body');
-      var id = "__ajax_results__";
-      if (href.lastIndexOf('#') > -1) {
-        id = href.substring(href.lastIndexOf('#'), href.length);
-        element.children(id).remove();
-      } else {
-        element.children('#' + id).remove();
-        element.append('<section id="' + id + '" class="page"></section>');
-        id = '#' + id;
-        element = $(id);
-      }
+      var id = generateID(href);
+      $('body').find('#' + id).remove();
+      $('body').append('<section id="' + id + '" class="page"></section>');
       $.get(href, function(data) {
-        element.append(data);
-        fx($(id));
+        fx($('#' + id).append(data));
+        link.attr('href', '#' + id);
       });
     }
     return false;
@@ -241,11 +227,14 @@ $(document).ready(function() {
     if (limit && limit > 0) href = href + '?limit=' + limit;
     
     $.get(href, function(data) {
-      var id = '__replace_results__';
+      var id = generateID(href);
       $('#' + id).remove();
       $('body').append('<section id="' + id + '"></section>');
       $('#' + id).append(data);
-      prev.after($('#' + id).children().hide().slideDown());
+      prev.after($('#' + id).children().hide().slideDown('slow', function() {
+        $('#' + id).remove();
+        journeys.find('a.loader').attr('href', journeys.find('.journey').last().find('a').attr('href') + '/after');
+      }));
     });
   }
   
@@ -306,6 +295,7 @@ $(document).ready(function() {
       if (duration > 0 || journey.hasClass('detail')) {
         eta.html(durationInWords(duration));
       } else {
+        eta.html("now");
         journey.addClass('expired');
       }
     });

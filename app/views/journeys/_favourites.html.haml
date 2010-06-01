@@ -6,7 +6,7 @@
           %img{:src => '/images/outbound_25x18.png'}
         %h1
           %a{:href => '/'}= SITE_NAME
-        %a.slideup.fx{:href => "/settings#settings"}
+        %a.slideup.fx{:href => "/settings"}
           %img{:src => '/images/gear_18x18.png'}
       = render :partial => 'journeys', :object => favourite.journeys
       %footer
@@ -17,7 +17,7 @@
           %img{:src => '/images/inbound_25x18.png'}
         %h1
           %a{:href => '/'}= SITE_NAME
-        %a.slideup.fx{:href => "/about#about"}
+        %a.slideup.fx{:href => "/about"}
           %img{:src => '/images/info_17x17.png'}
       = render :partial => 'journeys', :object => favourite.return_journeys
       %footer
