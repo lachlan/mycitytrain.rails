@@ -339,9 +339,9 @@ $(document).ready(function() {
     if (!window.navigator.standalone)
     {
       window.setTimeout(function() {
-        $("#iPhoneHint").addClass("visible");
+        $('#iPhoneHint').slideToggle('slow');
           window.setTimeout(function() {
-          $("#iPhoneHint").removeClass("visible");
+          $("#iPhoneHint").slideToggle("slow");
         }, 8000);
       }, 1500);
     }
