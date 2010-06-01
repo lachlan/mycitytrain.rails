@@ -140,14 +140,14 @@ $(document).ready(function() {
   var loadFavourites = function(callback) {
     $.get('/', function(data) {
       $('#favourites').remove();
-      $('body').append(data);
+      $('#content').append(data);
       if (callback) callback();
     });
   }
   
   var loadSettings = function(callback) {
     $.get('/settings#settings', function(data) {
-      $('body').append(data);
+      $('#content').append(data);
       if (callback) callback();
     });
   }
@@ -205,8 +205,8 @@ $(document).ready(function() {
     } else {
       // load external links via ajax directly into page content
       var id = generateID(href);
-      $('body').find('#' + id).remove();
-      $('body').append('<section id="' + id + '" class="page"></section>');
+      $('#content').find('#' + id).remove();
+      $('#content').append('<section id="' + id + '" class="page"></section>');
       $.get(href, function(data) {
         fx($('#' + id).append(data));
         link.attr('href', '#' + id);
@@ -229,7 +229,7 @@ $(document).ready(function() {
     $.get(href, function(data) {
       var id = generateID(href);
       $('#' + id).remove();
-      $('body').append('<section id="' + id + '"></section>');
+      $('#content').append('<section id="' + id + '"></section>');
       $('#' + id).append(data);
       prev.after($('#' + id).children().hide().slideDown('slow', function() {
         $('#' + id).remove();
@@ -334,17 +334,17 @@ $(document).ready(function() {
   window.scrollTo(0, 1);
   
   // show iphone hint
-  // if (window.navigator.platform == "iPhone")
-  // {
-  //   if (!window.navigator.standalone)
-  //   {
-  //     window.setTimeout(function() {
-  //       $("#iPhoneHint").slideToggle("slow");
-  //       window.setTimeout(function() {
-  //         $("#iPhoneHint").slideToggle("slow");
-  //       }, 8000);
-  //     }, 1500);
-  //   }
-  // }
+  if (window.navigator.platform == "iPhone")
+  {
+    if (!window.navigator.standalone)
+    {
+      window.setTimeout(function() {
+        $("#iPhoneHint").addClass("visible");
+          window.setTimeout(function() {
+          $("#iPhoneHint").removeClass("visible");
+        }, 8000);
+      }, 1500);
+    }
+  }
   
 });
