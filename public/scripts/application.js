@@ -185,7 +185,6 @@ $(document).ready(function() {
     var href = link.attr('href');
     var fx = function(linkee) {
       $(':focus').blur();
-      window.scrollTo(0, 1);
       $(linker).add(linkee).removeClass(effects).addClass(effect);
       linkee.addClass('in').addClass(active);
       linker.addClass('out');
@@ -329,10 +328,7 @@ $(document).ready(function() {
   }
     
   updateETAs();
-  
-  // hide address bar
-  window.scrollTo(0, 1);
-  
+    
   // show iphone hint
   if (window.navigator.platform == "iPhone")
   {
