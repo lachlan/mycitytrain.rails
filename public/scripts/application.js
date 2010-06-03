@@ -146,7 +146,7 @@ $(document).ready(function() {
   }
   
   var loadSettings = function(callback) {
-    $.get('/settings#settings', function(data) {
+    $.get('/settings', function(data) {
       $('#content').append(data);
       if (callback) callback();
     });
