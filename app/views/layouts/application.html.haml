@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-%html
+%html{:manifest => "cache.manifest"}
   %head
     - pagetitle = SITE_NAME
     - pagetitle += ": " + @title if @title
@@ -15,11 +15,14 @@
     %script{:src => '/scripts/application.js', :type => 'text/javascript'}
     %link{:rel => 'stylesheet', :href => '/styles/screen.css'}
   %body
-    #content= yield
-    #iPhoneHint
+    %header
+      %h1
+        %a{:href => '/'}= SITE_NAME
+    %section.content= yield
+    %footer
       %p 
         Add 
         %strong mycitytrain.info
-        to your home screen for more functionality.   
+        to your home screen.   
     %script{:type => "text/javascript"}="var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-6816538-2']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);})();"
     

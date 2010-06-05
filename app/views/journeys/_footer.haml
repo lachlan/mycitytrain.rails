@@ -1,4 +1,9 @@
-%ul
+%ul.group
+  - if idx == 0
+    %li.left.arrow.disabled!= "&larr;"
+  - else
+    %li.left.arrow
+      %a.reverse.slide.fx{:href => "##{id_prefix}#{idx-1}"}!= "&larr;"
   - count.times do |i|
     - if i == idx
       %li.active!= "&#9679;"
@@ -8,3 +13,9 @@
     - else
       %li
         %a.slide.fx{:href => "##{id_prefix}#{i}"}!= "&#9675;"
+  - if idx == (count-1)
+    %li.right.arrow.disabled!= "&rarr;"
+  - else
+    %li.right.arrow
+      %a.slide.fx{:href => "##{id_prefix}#{idx+1}"}!= "&rarr;"
+      

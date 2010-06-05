@@ -9,13 +9,18 @@ class JourneysController < ApplicationController
       Favourite.new(i+=1, f[0], f[1])
     end
     @favourites = [] if @favourites.empty?
-    @stations = Station.find_all
     render :layout => !request.xhr?
   end
   
-  def departing_after
+  def list
     limit = params[:limit] || @@limit
-    @journeys = Journey.departing_after @departing, @arriving, @departing_at, limit
+    if params[:after]
+      after = Time.zone.parse(params[:after])
+      after = Time.zone.now if after < Time.zone.now # only return journeys that haven't departed yet
+    else
+      after = Time.zone.now
+    end
+    @journeys = Journey.departing_after @departing, @arriving, after, limit
     render :layout => !request.xhr?
   end
 

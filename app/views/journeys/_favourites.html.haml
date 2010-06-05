@@ -3,22 +3,22 @@
     %section.page{:id => "f#{idx}"}
       %header
         %a.flip.fx{:href => "#fr#{idx}"}
-          %img{:src => '/images/outbound_25x18.png'}
+          %span Return
         %h1
           %a{:href => '/'}= SITE_NAME
         %a.slideup.fx{:href => "/settings"}
-          %img{:src => '/images/gear_18x18.png'}
+          %span.settings Settings
       = render :partial => 'journeys', :object => favourite.journeys
       %footer
         = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => idx}
     %section.page{:id => "fr#{idx}"}
       %header
         %a.reverse.flip.fx{:href => "#f#{idx}"}
-          %img{:src => '/images/inbound_25x18.png'}
+          %span.inbound Return
         %h1
           %a{:href => '/'}= SITE_NAME
         %a.slideup.fx{:href => "/about"}
-          %img{:src => '/images/info_17x17.png'}
+          %span.about About
       = render :partial => 'journeys', :object => favourite.return_journeys
       %footer
         = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => idx}

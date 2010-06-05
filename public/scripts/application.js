@@ -1,50 +1,3 @@
-function addSwipeListener(el, listener){
-  var startX;
-  var dx;
-  var direction;
-
-  function cancelTouch() {
-    el.removeEventListener('touchmove', onTouchMove);
-    el.removeEventListener('touchend', onTouchEnd);
-    startX = null;
-    startY = null;
-    direction = null;
-  }
- 
-  function onTouchMove(e) {
-    if (e.touches.length > 1) {
-      cancelTouch();
-    } else {
-      dx = e.touches[0].pageX - startX;
-      var dy = e.touches[0].pageY - startY;
-      if (direction == null) {
-        direction = dx;
-        e.preventDefault();
-      } else if ((direction < 0 && dx > 0) || (direction > 0 && dx < 0) || Math.abs(dy) > 15) {
-        cancelTouch();
-      }
-    }
-  }
-
-  function onTouchEnd(e) {
-    cancelTouch();
-    if (Math.abs(dx) > 50) {
-      listener({ target: el, direction: dx > 0 ? 'right' : 'left' });
-    }
-  }
- 
-  function onTouchStart(e) {
-    if (e.touches.length == 1) {
-      startX = e.touches[0].pageX;
-      startY = e.touches[0].pageY;
-      el.addEventListener('touchmove', onTouchMove, false);
-      el.addEventListener('touchend', onTouchEnd, false);
-    }
-  }
-
-  el.addEventListener('touchstart', onTouchStart, false);
-}
-
 // crappy pluralize implementation
 function plural(singular) {
   return singular + "s";
@@ -111,16 +64,6 @@ var generateID = function(href) {
 }
 
 $(document).ready(function() {
-  addSwipeListener(document.body, function(e) { 
-    var target;
-    if (e.direction == "left") {
-      target = $('.page.active footer li.active').next();
-    } else {
-      target = $('.page.active footer li.active').prev();      
-    }
-    if (target) target.children('a').click();
-  });
-  
   $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
 
   var journey_limit = 5;
@@ -140,14 +83,18 @@ $(document).ready(function() {
   var loadFavourites = function(callback) {
     $.get('/', function(data) {
       $('#favourites').remove();
-      $('#content').append(data);
+      $('.content').append(data);
       if (callback) callback();
     });
   }
   
   var loadSettings = function(callback) {
-    $.get('/settings', function(data) {
-      $('#content').append(data);
+    var href = '/settings';
+    var id = generateID(href);
+    $('.content').find('#' + id).remove();
+    $('.content').append('<section id="' + id + '" class="page"></section>');
+    $.get(href, function(data) {
+      $('#' + id).append(data);
       if (callback) callback();
     });
   }
@@ -204,8 +151,8 @@ $(document).ready(function() {
     } else {
       // load external links via ajax directly into page content
       var id = generateID(href);
-      $('#content').find('#' + id).remove();
-      $('#content').append('<section id="' + id + '" class="page"></section>');
+      $('.content').find('#' + id).remove();
+      $('.content').append('<section id="' + id + '" class="page"></section>');
       $.get(href, function(data) {
         fx($('#' + id).append(data));
         link.attr('href', '#' + id);
@@ -222,17 +169,17 @@ $(document).ready(function() {
   
   var loadMoreJourneys = function(journeys, limit) {
     var prev = journeys.find('.journey').last();
-    var href = prev.find('a').attr('href') + '/after';
-    if (limit && limit > 0) href = href + '?limit=' + limit;
+    var href = prev.find('a').attr('href').replace(/^(.*)\/(.*)$/, '$1?after=$2');
+    if (limit && limit > 0) href = href + '&limit=' + limit;
     
     $.get(href, function(data) {
       var id = generateID(href);
       $('#' + id).remove();
-      $('#content').append('<section id="' + id + '"></section>');
+      $('.content').append('<section id="' + id + '"></section>');
       $('#' + id).append(data);
-      prev.after($('#' + id).children().hide().slideDown('slow', function() {
+      prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
         $('#' + id).remove();
-        journeys.find('a.loader').attr('href', journeys.find('.journey').last().find('a').attr('href') + '/after');
+        journeys.find('a.loader').attr('href', journeys.find('.journey').last().find('a').attr('href').replace(/^(.*)\/(.*)$/, '$1?after=$2'));
       }));
     });
   }
@@ -286,9 +233,9 @@ $(document).ready(function() {
       
       var durationInMinutes = duration/60;
       if (durationInMinutes <= 5) {
-        eta.removeClass("less_than_ten_minutes").addClass("less_than_five_minutes");
+        eta.removeClass("lt_ten").addClass("lt_five");
       } else if (durationInMinutes <= 10) {
-        eta.addClass("less_than_ten_minutes");
+        eta.addClass("lt_ten");
       }
       
       if (duration > 0 || journey.hasClass('detail')) {
@@ -330,17 +277,14 @@ $(document).ready(function() {
   updateETAs();
     
   // show iphone hint
-  if (window.navigator.platform == "iPhone")
-  {
-    if (!window.navigator.standalone)
-    {
+  if (window.navigator.platform == "iPhone") {
+    if (!window.navigator.standalone) {
       window.setTimeout(function() {
-        $('#iPhoneHint').slideToggle('slow');
+        $('body > footer').slideToggle('slow');
           window.setTimeout(function() {
-          $("#iPhoneHint").slideToggle("slow");
+          $("body > footer").slideToggle("slow");
         }, 8000);
       }, 1500);
     }
   }
-  
 });

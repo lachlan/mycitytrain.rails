@@ -60,9 +60,9 @@ module ApplicationHelper
     if time
       duration_in_seconds = (time - Time.now).round    
       if duration_in_seconds < 300 then
-        "less_than_five_minutes"
+        "lt_five"
       elsif duration_in_seconds < 600 then
-        "less_than_ten_minutes"
+        "lt_ten"
       else
         ""
       end
@@ -79,12 +79,8 @@ module ApplicationHelper
       unsigned_duration_in_seconds = duration_in_seconds.abs
     
       case unsigned_duration_in_seconds
-        # between 0 seconds and 1 minute
-        when 0..59 then 
-          duration = 'now'
-
-        # between 1 minute and 1 hour
-        when 60..3599 then
+        # between 0 minute and 1 hour
+        when 0..3599 then
           duration_in_minutes = (duration_in_seconds / 60.0).ceil
           duration = pluralize(duration_in_minutes, 'min')
 
