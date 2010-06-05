@@ -1,4 +1,5 @@
 log/*.log
+tmp/*
 tmp/**/*
 .DS_Store
 db/development.*
