@@ -71,7 +71,7 @@ $(document).ready(function() {
   var active = 'active';
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
 
-  var setActivePage = function() {
+  var setActivePage = function(callback) {
     //$('.page').css('min-height',$(window).height());
   
     var activePages = $('.page.' + active);
@@ -79,6 +79,8 @@ $(document).ready(function() {
       activePages.removeClass(active).first().addClass(active);
     else
       $('.page').first().addClass(active);
+      
+    if (callback) callback();
   }
   
   // load some more journeys
@@ -124,19 +126,20 @@ $(document).ready(function() {
   }
 
   // load page contents asynchronously
-  var loadContent = function() {
+  var loadContent = function(callback) {
     var pages = $('.page');
     if (pages.length == 0) {
       loadFavourites(function() {
-        if ($('#favourites').length == 0) {
+        if ($('#favourites').children().length == 0) {
           loadSettings(function() {
-            setActivePage();
+            setActivePage(callback);
           });
+        } else {
+          setActivePage(callback);
         }
-        setActivePage();
       });
     } else {
-      setActivePage();
+      setActivePage(callback);
     }
   }
   
@@ -290,22 +293,22 @@ $(document).ready(function() {
   }
   
   if ($.support.SinglePageMode) {
-    loadContent();
+    loadContent(function() {
+      // show iphone hint
+      if (window.navigator.platform == "iPhone") {
+        if (!window.navigator.standalone) {
+          window.setTimeout(function() {
+            $('body > footer').slideToggle('slow');
+              window.setTimeout(function() {
+              $("body > footer").slideToggle("slow");
+            }, 8000);
+          }, 1500);
+        }
+      }
+    });
   } else {
     setActivePage();
   }
   
   updateETAs();
-    
-  // show iphone hint
-  if (window.navigator.platform == "iPhone") {
-    if (!window.navigator.standalone) {
-      window.setTimeout(function() {
-        $('body > footer').slideToggle('slow');
-          window.setTimeout(function() {
-          $("body > footer").slideToggle("slow");
-        }, 8000);
-      }, 1500);
-    }
-  }
 });
