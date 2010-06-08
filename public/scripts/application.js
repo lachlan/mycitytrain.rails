@@ -71,9 +71,7 @@ $(document).ready(function() {
   var active = 'active';
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
 
-  var setActivePage = function(callback) {
-    //$('.page').css('min-height',$(window).height());
-  
+  var setActivePage = function(callback) {  
     var activePages = $('.page.' + active);
     if (activePages.length > 0)
       activePages.removeClass(active).first().addClass(active);
@@ -237,6 +235,11 @@ $(document).ready(function() {
       $('.active a.return:not(.reverse)').click();
     }
   });
+
+  var setMinHeight = function() {
+    $('.page').css('min-height', $(window).height());
+  };
+  $(window).resize(setMinHeight);
   
   // keep the ETAs up to date with current time and remove departed journeys
   var updateETAs = function() {
@@ -294,6 +297,7 @@ $(document).ready(function() {
   
   if ($.support.SinglePageMode) {
     loadContent(function() {
+      setMinHeight();
       // show iphone hint
       if (window.navigator.platform == "iPhone") {
         if (!window.navigator.standalone) {
@@ -307,7 +311,7 @@ $(document).ready(function() {
       }
     });
   } else {
-    setActivePage();
+    setActivePage(setMinHeight);
   }
   
   updateETAs();
