@@ -1,9 +1,13 @@
 class JourneysController < ApplicationController  
-  before_filter :find_stations, :except => [:index, :about]
+  before_filter :find_stations, :except => [:index, :about, :favourites]
   protect_from_forgery :only => [:create, :update, :destroy] 
   @@limit = 5
   
   def index
+    render :layout => !request.xhr?
+  end
+  
+  def favourites
     i = 0
     @favourites = session[:favourites].map do |f|
       Favourite.new(i+=1, f[0], f[1])

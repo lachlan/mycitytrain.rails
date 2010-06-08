@@ -1,5 +1,5 @@
 %header
-  %a.back{:href => "#"}Back   
+  =link_to("Back", {:action => 'list'}, {:class => 'back'})  
   %h1
     %a{:href => '/'}= SITE_NAME
 - if @journey.changes.nil? or @journey.changes.empty?

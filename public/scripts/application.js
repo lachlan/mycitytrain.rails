@@ -65,29 +65,53 @@ var generateID = function(href) {
 
 $(document).ready(function() {
   $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
+  $.support.SinglePageMode = location.href.match(/^\w+:\/\/[^\/]+\/$/); // if the page is '/' then use single_page mode
 
   var journey_limit = 5;
   var active = 'active';
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
-  
+
   var setActivePage = function() {
-    $('.page').css('min-height',$(window).height());
-    
+    //$('.page').css('min-height',$(window).height());
+  
     var activePages = $('.page.' + active);
     if (activePages.length > 0)
       activePages.removeClass(active).first().addClass(active);
     else
       $('.page').first().addClass(active);
   }
+  
+  // load some more journeys
+  $('a.loader').live('click', function() {
+    loadMoreJourneys($(this).parents('.journeys'));
+    return false; 
+  });
 
+  var loadMoreJourneys = function(journeys, limit) {
+    var prev = journeys.find('.journey').last();
+    var href = prev.find('a').attr('href').replace(/^(.*)\/(.*)$/, '$1?after=$2');
+    if (limit && limit > 0) href = href + '&limit=' + limit;
+  
+    $.get(href, function(data) {
+      var id = generateID(href);
+      $('#' + id).remove();
+      $('.content').append('<section id="' + id + '"></section>');
+      $('#' + id).append(data);
+      prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
+        $('#' + id).remove();
+        journeys.find('a.loader').attr('href', journeys.find('.journey').last().find('a').attr('href').replace(/^(.*)\/(.*)$/, '$1?after=$2'));
+      }));
+    });
+  }
+  
   var loadFavourites = function(callback) {
-    $.get('/', function(data) {
+    $.get('/favourites', function(data) {
       $('#favourites').remove();
       $('.content').append(data);
       if (callback) callback();
     });
   }
-  
+
   var loadSettings = function(callback) {
     var href = '/settings';
     var id = generateID(href);
@@ -115,13 +139,32 @@ $(document).ready(function() {
       setActivePage();
     }
   }
-    
-  loadContent();
-    
+  
   // handle transitions automatically on non-disabled and non-submit links
   $('a.fx:not(.disabled):not(.submit)').live('click', function() {
     $(this).trigger('transition');
     return false;
+  });
+  
+  // don't allow click events on disabled links
+  $('a.disabled').live('click', function() {
+    return false;
+  })
+
+  // disable done button until user configures a journey
+  $(':input').live('change', function() {
+    var input = $(this);
+    var link = input.parents('.page').find('a.back');
+    var form = input.parents('form').first();
+  
+    link.addClass('disabled');
+    form.find('li').each(function() {
+      var selected = $(this).find(":selected");
+      var value = selected.first().attr('value');
+      // if you've selected at least one journey, and the origin and destination don't match
+      if ((selected.filter("[value='']").length == 0) && (selected.filter("[value='" + value + "']").length < 2))
+        link.removeClass('disabled');
+    });
   });
   
   // handle transition event
@@ -148,7 +191,7 @@ $(document).ready(function() {
     }    
     if ((href).match('^#')) {
       fx($(href));
-    } else {
+    } else if ($.support.SinglePageMode) {
       // load external links via ajax directly into page content
       var id = generateID(href);
       $('.content').find('#' + id).remove();
@@ -157,54 +200,13 @@ $(document).ready(function() {
         fx($('#' + id).append(data));
         link.attr('href', '#' + id);
       });
+    } else {
+      // don't worry about transitions, just follow the link
+      location.href = href;
     }
     return false;
   });
-  
-  // load some more journeys
-  $('a.loader').live('click', function() {
-    loadMoreJourneys($(this).parents('.journeys'));
-    return false; 
-  });
-  
-  var loadMoreJourneys = function(journeys, limit) {
-    var prev = journeys.find('.journey').last();
-    var href = prev.find('a').attr('href').replace(/^(.*)\/(.*)$/, '$1?after=$2');
-    if (limit && limit > 0) href = href + '&limit=' + limit;
-    
-    $.get(href, function(data) {
-      var id = generateID(href);
-      $('#' + id).remove();
-      $('.content').append('<section id="' + id + '"></section>');
-      $('#' + id).append(data);
-      prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
-        $('#' + id).remove();
-        journeys.find('a.loader').attr('href', journeys.find('.journey').last().find('a').attr('href').replace(/^(.*)\/(.*)$/, '$1?after=$2'));
-      }));
-    });
-  }
-  
-  // don't allow click events on disabled links
-  $('a.disabled').live('click', function() {
-    return false;
-  })
-  
-  // disable done button until user configures a journey
-  $(':input').live('change', function() {
-    var input = $(this);
-    var link = input.parents('.page').find('a.back');
-    var form = input.parents('form').first();
-    
-    link.addClass('disabled');
-    form.find('li').each(function() {
-      var selected = $(this).find(":selected");
-      var value = selected.first().attr('value');
-      // if you've selected at least one journey, and the origin and destination don't match
-      if ((selected.filter("[value='']").length == 0) && (selected.filter("[value='" + value + "']").length < 2))
-        link.removeClass('disabled');
-    });
-  });
-  
+
   // ajax post settings form and load favourites
   $('.submit').live('click', function() {
     var link = $(this);
@@ -220,6 +222,19 @@ $(document).ready(function() {
     });
   });
   
+  // add arrow key shortcuts for flipping between favourites and return journeys
+  $(document).keydown(function(event) {
+    if (event.keyCode == '37') { 
+      $('.active .left.arrow a').click();
+    } else if (event.keyCode == '39') {
+      $('.active .right.arrow a').click();
+    } else if (event.keyCode == '38') {
+      $('.active a.return.reverse').click();
+    } else if (event.keyCode == '40') {
+      $('.active a.return:not(.reverse)').click();
+    }
+  });
+  
   // keep the ETAs up to date with current time and remove departed journeys
   var updateETAs = function() {
     $('.journey .eta').each(function() {
@@ -228,16 +243,16 @@ $(document).ready(function() {
       var departureDate = new Date();
       var currentDate = new Date();
       departureDate.setTime(eta.parent().find('.time').first().attr('title'));
-      
+    
       var duration = durationInSeconds(currentDate, departureDate);
-      
+    
       var durationInMinutes = duration/60;
       if (durationInMinutes <= 5) {
         eta.removeClass("lt_ten").addClass("lt_five");
       } else if (durationInMinutes <= 10) {
         eta.addClass("lt_ten");
       }
-      
+    
       if (duration > 0 || journey.hasClass('detail')) {
         eta.html(durationInWords(duration));
       } else {
@@ -245,14 +260,14 @@ $(document).ready(function() {
         journey.addClass('expired');
       }
     });
-    
+  
     $('.journeys').each(function() {
       var journeys = $(this);
       var expired = journeys.find('.journey.expired');
       var count = journey_limit - (journeys.find('.journey').length - expired.length);
-      
+    
       if (count > 0) loadMoreJourneys(journeys, count);
-      
+    
       expired.animate({opacity:0.5},1000,'linear',function() {
         $(this).animate({opacity:1},1000,'linear',function() {
           $(this).animate({opacity:0.5},1000,'linear',function() {
@@ -273,7 +288,13 @@ $(document).ready(function() {
     // reschedule next run
     window.setTimeout(updateETAs, millisecondsUntilNextMinute());
   }
-    
+  
+  if ($.support.SinglePageMode) {
+    loadContent();
+  } else {
+    setActivePage();
+  }
+  
   updateETAs();
     
   // show iphone hint

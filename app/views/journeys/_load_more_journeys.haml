@@ -1,2 +1,1 @@
-%li
-  = link_to "Load More Services&hellip;", {:controller => 'journeys', :action => 'list', :departing => journeys.last.departing, :arriving => journeys.last.arriving, :after => format_time(journeys.last.departing_at, :iso8601)}, {:class => 'loader'}
+%li= link_to "Load More Services&hellip;", {:controller => 'journeys', :action => 'list', :departing => journeys.last.departing, :arriving => journeys.last.arriving, :after => format_time(journeys.last.departing_at, :iso8601)}, {:class => 'loader'}

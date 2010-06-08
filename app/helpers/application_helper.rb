@@ -79,8 +79,11 @@ module ApplicationHelper
       unsigned_duration_in_seconds = duration_in_seconds.abs
     
       case unsigned_duration_in_seconds
-        # between 0 minute and 1 hour
-        when 0..3599 then
+        when 0
+          duration = 'now'
+          
+        # between 1 second and 1 hour
+        when 1..3599 then
           duration_in_minutes = (duration_in_seconds / 60.0).ceil
           duration = pluralize(duration_in_minutes, 'min')
 

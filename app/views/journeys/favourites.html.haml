@@ -2,7 +2,7 @@
   - @favourites.each_with_index do |favourite, idx|
     %section.page{:id => "f#{idx}"}
       %header
-        %a.flip.fx{:href => "#fr#{idx}"}
+        %a.flip.fx.return{:href => "#fr#{idx}"}
           %span Return
         %h1
           %a{:href => '/'}= SITE_NAME
@@ -13,7 +13,7 @@
         = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => idx}
     %section.page{:id => "fr#{idx}"}
       %header
-        %a.reverse.flip.fx{:href => "#f#{idx}"}
+        %a.reverse.flip.fx.return{:href => "#f#{idx}"}
           %span.inbound Return
         %h1
           %a{:href => '/'}= SITE_NAME
