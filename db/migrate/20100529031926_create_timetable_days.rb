@@ -1,7 +1,7 @@
 class CreateTimetableDays < ActiveRecord::Migration
   def self.up
     create_table :timetable_days do |t|
-      t.integer :timetable_type_id
+      t.references :timetable_type
       t.integer :wday
 
       t.timestamps

@@ -17,7 +17,8 @@ class CitytrainAPI
   end
   
   def self.journeys(departing, arriving, departing_on)
-    xml = self.ws_get_journeys(departing.code, arriving.code, departing_on.midnight )
+    
+    xml = self.ws_get_journeys(departing.code, arriving.code, departing_on)
       
     journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
     if journey_parts and journey_parts['Journey']
@@ -33,17 +34,20 @@ class CitytrainAPI
           end
         end
       end
-      
+ 
       journeys.each do |j|
-        departing_at = departing_on.midnight + j.first['sDepartureTime'].to_i.seconds
-        arriving_at = departing_on.midnight + j.last['sArrivalTime'].to_i.seconds
-        Journey.find_or_create_by_departing_id_and_arriving_id_and_departing_at_and_arriving_at(:departing_id => departing.id, :arriving_id => arriving.id, :departing_at => departing_at, :arriving_at => arriving_at) 
+        timetable_type_id = TimetableDay.find_by_wday(departing_on.wday).timetable_type_id
+        departing_seconds = j.first['sDepartureTime'].to_i
+        arriving_seconds = j.last['sArrivalTime'].to_i
+        
+        Journey.find_or_create_by_departing_id_and_arriving_id_and_timetable_type_id_and_departing_seconds_and_arriving_seconds(:departing_id => departing.id, :arriving_id => arriving.id, :timetable_type_id => timetable_type_id, :departing_seconds => departing_seconds, :arriving_seconds => arriving_seconds) 
       end
     end
   end
   
   def self.stops(journey)
-    xml = self.ws_get_journeys(journey.departing.code, journey.arriving.code, journey.departing_at.midnight, journey.departing_at.seconds_since_midnight, 1)
+    departing_on = Time.zone.now.midnight #kkk journey.departing_at.midnight
+    xml = self.ws_get_journeys(journey.departing.code, journey.arriving.code, departing_on, journey.departing_seconds, 1)
     journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
     if journey_parts and journey_parts['Journey']
       
@@ -53,7 +57,7 @@ class CitytrainAPI
         #get the trip patterns for this journey
         trip = jp['sTripname']
         daysop = jp['sDaysOp'].to_i
-        base_departing_at = journey.departing_at.midnight + jp['sDepartureTime'].to_i.seconds
+        base_departing_at = departing_on + jp['sDepartureTime'].to_i.seconds
         
         xml = self.ws_get_trip_patterns(trip, daysop, base_departing_at)
         trips = XmlSimple.xml_in(xml, 'force_array' => ['TripStop'])
@@ -75,6 +79,7 @@ class CitytrainAPI
               platform = '0' unless (1..20) === platform.to_i 
               position += 1
               
+              #kkk
               Stop.find_or_create_by_journey_id_and_position(:journey_id => journey.id, :station_name => station_name, :platform => platform, :departing_at => departing_at, :arriving_at => arriving_at, :position => position)
                             
               break if station_name == jp['ArrivalNodeName']

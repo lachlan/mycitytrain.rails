@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100529052446) do
+ActiveRecord::Schema.define(:version => 20100529033043) do
 
   create_table "aliases", :force => true do |t|
     t.integer  "station_id"
@@ -28,17 +28,16 @@ ActiveRecord::Schema.define(:version => 20100529052446) do
   add_index "historic_journeys", ["departing_id", "arriving_id"], :name => "index_historic_journeys_on_departing_id_and_arriving_id"
 
   create_table "journeys", :force => true do |t|
+    t.integer  "timetable_type_id"
     t.integer  "departing_id"
-    t.datetime "departing_at"
+    t.integer  "departing_seconds"
     t.integer  "arriving_id"
+    t.integer  "arriving_seconds"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "arriving_at"
-    t.integer  "timetable_type_id"
-    t.integer  "seconds_since_midnight"
   end
 
-  add_index "journeys", ["departing_at", "departing_id", "arriving_id"], :name => "index_journeys_on_departing_at_and_departing_id_and_arriving_id"
+  add_index "journeys", ["timetable_type_id", "departing_seconds", "departing_id", "arriving_id"], :name => "index_journeys_on_timetable_type_id_and_departing_seconds_and_departing_id_and_arriving_id"
 
   create_table "slugs", :force => true do |t|
     t.string   "name"
@@ -66,8 +65,8 @@ ActiveRecord::Schema.define(:version => 20100529052446) do
     t.integer  "journey_id"
     t.string   "station_name"
     t.string   "platform"
-    t.datetime "departing_at"
-    t.datetime "arriving_at"
+    t.integer  "departing_seconds"
+    t.integer  "arriving_seconds"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
