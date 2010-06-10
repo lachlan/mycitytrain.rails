@@ -1,5 +1,5 @@
 class SettingsController < ApplicationController  
-  @@limit = 3
+  @@limit = 5
   
   def index
     @favourites = []
