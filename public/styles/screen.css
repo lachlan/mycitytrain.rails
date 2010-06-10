@@ -80,11 +80,7 @@ span.settings{background-position: 0 0;width:18px;margin:0 8.5px;}
 span.about{background-position: -18px 0;width:17px;margin:0 9px;}
 ol{font-size:17px;font-weight:bold;padding-bottom:10px;background:transparent url(/images/drop_shadow_1x10.png) bottom left repeat-x;list-style:none;}
 ol li{padding:9px;border-bottom:1px solid #d9d9d9;background-color:#f4f4f4;background-image:-webkit-gradient(linear,left top,left bottom,from(#f4f4f4),to(#e5e5e5));background-image:-moz-linear-gradient(top,#f4f4f4,#e5e5e5);color:#666;text-align:center;}
-ol li a{
-  padding:9px 26px 9px 9px;
-  margin:-9px;
-  text-shadow:1px 1px 0 rgba(255,255,255,0.5);
-  background-image:transparent url(/images/chevron_17x13.png) no-repeat center right;}
+ol li a{padding:9px 26px 9px 9px;margin:-9px;text-shadow:1px 1px 0 rgba(255,255,255,0.5);background-image:transparent url(/images/chevron_17x13.png) no-repeat center right;}
 ol li > *{display:block;text-align:left;}
 ol li a.loader{padding:9px;background-image:none;text-align:center;color:#2470d8;text-shadow:1px 1px 0 rgba(255,255,255,0.5);font-size:15px;line-height:40px;}
 input,select{text-shadow:none !important;width:136px;font-size:17px;}
@@ -109,10 +105,7 @@ footer ul li{display:inline-block;font-size:17px;padding:0;margin:0 2px;}
 footer ul li, footer ul li * {line-height:25px;}
 footer ul li.left,footer ul li.right{display:block;float:left;}
 footer ul li.right{float:right;}
-footer .arrow a span{color:transparent;display:block;width:6px;height:9px;
-  background:url(/images/sprites.png) no-repeat -35px 0;
-  margin:8px 17px 8px 2px;
-  }
+footer .arrow a span{color:transparent;display:block;width:6px;height:9px;background:url(/images/sprites.png) no-repeat -35px 0;margin:8px 17px 8px 2px;}
 footer .right.arrow a span{background-position: -35px -9px;margin:8px 2px 8px 17px;}
 footer .arrow.disabled{color:transparent;}
 .stop .location{font-size:17px;width:134px;float:left;}
