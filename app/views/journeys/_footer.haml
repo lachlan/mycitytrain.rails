@@ -3,7 +3,8 @@
     %li.left.arrow.disabled!= "&larr;"
   - else
     %li.left.arrow
-      %a.reverse.slide.fx{:href => "##{id_prefix}#{idx-1}"}!= "&larr;"
+      %a.reverse.slide.fx{:href => "##{id_prefix}#{idx-1}"}
+        %span!= "&larr;"
   - count.times do |i|
     - if i == idx
       %li.active!= "&#9679;"
@@ -17,5 +18,6 @@
     %li.right.arrow.disabled!= "&rarr;"
   - else
     %li.right.arrow
-      %a.slide.fx{:href => "##{id_prefix}#{idx+1}"}!= "&rarr;"
+      %a.slide.fx{:href => "##{id_prefix}#{idx+1}"}
+        %span!= "&rarr;"
       
