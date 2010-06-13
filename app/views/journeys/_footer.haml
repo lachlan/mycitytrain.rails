@@ -1,6 +1,8 @@
 %ul.group
   - if idx == 0
-    %li.left.arrow.disabled!= "&larr;"
+    %li.left.arrow
+      %a.disabled.reverse.slide.fx{:href => "#"}
+        %span!= "&larr;"
   - else
     %li.left.arrow
       %a.reverse.slide.fx{:href => "##{id_prefix}#{idx-1}"}
@@ -15,7 +17,9 @@
       %li
         %a.slide.fx{:href => "##{id_prefix}#{i}"}!= "&#9675;"
   - if idx == (count-1)
-    %li.right.arrow.disabled!= "&rarr;"
+    %li.right.arrow
+      %a.disabled.slide.fx{:href => "##{id_prefix}#{idx+1}"}
+        %span!= "&rarr;"
   - else
     %li.right.arrow
       %a.slide.fx{:href => "##{id_prefix}#{idx+1}"}

@@ -64,6 +64,8 @@ var generateID = function(href) {
 }
 
 $(document).ready(function() {
+  $.support.iPhone = ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)));
+  $.support.Standalone = window.navigator.standalone;
   $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
   $.support.SinglePageMode = location.href.match(/^\w+:\/\/[^\/]+\/$/); // if the page is '/' then use single_page mode
 
@@ -71,13 +73,16 @@ $(document).ready(function() {
   var active = 'active';
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
 
-  var setActivePage = function(callback) {  
+  var setActivePage = function(callback, fadeIn) {  
     var activePages = $('.page.' + active);
-    if (activePages.length > 0)
-      activePages.removeClass(active).first().addClass(active);
+    var page = $('.page').first();
+    if (activePages.length > 0) page = activePages.removeClass(active).first();
+    if (fadeIn)
+      page.fadeIn('slow', function() {
+        $(this).addClass(active);
+      });
     else
-      $('.page').first().addClass(active);
-      
+      page.addClass(active);
     if (callback) callback();
   }
   
@@ -124,20 +129,25 @@ $(document).ready(function() {
   }
 
   // load page contents asynchronously
-  var loadContent = function(callback) {
+  var loadContent = function(before, after) {
+    var active = function() {
+      if (before) before();
+      setActivePage(function() {
+        if (after) after();
+      }, !$.support.iPhone);
+    }
+    
     var pages = $('.page');
     if (pages.length == 0) {
       loadFavourites(function() {
         if ($('#favourites').children().length == 0) {
-          loadSettings(function() {
-            setActivePage(callback);
-          });
+          loadSettings(active);
         } else {
-          setActivePage(callback);
+          active();
         }
       });
     } else {
-      setActivePage(callback);
+      active();
     }
   }
   
@@ -297,22 +307,25 @@ $(document).ready(function() {
   
   if ($.support.SinglePageMode) {
     loadContent(function() {
+      if ($.support.iPhone) $('.loading').show();
       setMinHeight();
+    }, function() {
+      if ($.support.iPhone) $('.loading').fadeOut('slow');
+      
+      updateETAs();
+      
       // show iphone hint
-      if (window.navigator.platform == "iPhone") {
-        if (!window.navigator.standalone) {
-          window.setTimeout(function() {
-            $('body > footer').slideToggle('slow');
-              window.setTimeout(function() {
-              $("body > footer").slideToggle("slow");
-            }, 8000);
-          }, 1500);
-        }
+      if ($.support.iPhone && !$.support.Standalone) {
+        window.setTimeout(function() {
+          $('body > footer').slideToggle('slow');
+          window.setTimeout(function() { 
+            $("body > footer").slideToggle("slow"); 
+          }, 8000);
+        }, 1500);
       }
     });
   } else {
     setActivePage(setMinHeight);
+    updateETAs();
   }
-  
-  updateETAs();
 });
