@@ -193,7 +193,7 @@ $(document).ready(function() {
       var animationFinished = function() {
         linker.removeClass(active).add(linkee).removeClass(effects);
         linkee.find('a.back').attr('href', '#' + linker.attr('id')).addClass('reverse').addClass(effect);
-        setActivePage();
+        setActivePage(setMinHeight);
       }
       if ($.support.WebKitAnimationEvent) {
         linkee.one('webkitAnimationEnd', function() { animationFinished(); });
@@ -233,6 +233,7 @@ $(document).ready(function() {
         }
       });
     });
+    return false;
   });
   
   // add arrow key shortcuts for flipping between favourites and return journeys
