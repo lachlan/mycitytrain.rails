@@ -153,6 +153,7 @@ $(document).ready(function() {
   
   // handle transitions automatically on non-disabled and non-submit links
   $('a.fx:not(.disabled):not(.submit)').live('click', function() {
+    
     $(this).trigger('transition');
     return false;
   });
@@ -207,9 +208,10 @@ $(document).ready(function() {
       var id = generateID(href);
       $('.content').find('#' + id).remove();
       $('.content').append('<section id="' + id + '" class="page"></section>');
+      link.addClass('disabled');
       $.get(href, function(data) {
         fx($('#' + id).append(data));
-        link.attr('href', '#' + id);
+        link.attr('href', '#' + id).removeClass('disabled');
       });
     } else {
       // don't worry about transitions, just follow the link
@@ -220,14 +222,14 @@ $(document).ready(function() {
 
   // ajax post settings form and load favourites
   $('.submit').live('click', function() {
-    var link = $(this);
+    var link = $(this).addClass('disabled');
     var form = link.parents('.page').find('form');
     $.post(form.attr('action'), form.serialize(), function(data) {
       loadFavourites(function() {
         if ($('#favourites').length == 0) {
           link.addClass('disabled');
         } else {
-          link.trigger('transition');
+          link.trigger('transition').removeClass('disabled');
         }
       });
     });
