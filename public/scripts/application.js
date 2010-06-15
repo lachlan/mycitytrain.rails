@@ -67,7 +67,6 @@ $(document).ready(function() {
   $.support.iPhone = ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)));
   $.support.Standalone = window.navigator.standalone;
   $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
-  $.support.SinglePageMode = location.href.match(/^\w+:\/\/[^\/]+\/$/); // if the page is '/' then use single_page mode
 
   var journey_limit = 5;
   var active = 'active';
@@ -110,7 +109,7 @@ $(document).ready(function() {
   }
   
   var loadFavourites = function(callback) {
-    $.get('/favourites', function(data) {
+    $.get('/', function(data) {
       $('#favourites').remove();
       $('.content').append(data);
       if (callback) callback();
@@ -127,33 +126,9 @@ $(document).ready(function() {
       if (callback) callback();
     });
   }
-
-  // load page contents asynchronously
-  var loadContent = function(before, after) {
-    var active = function() {
-      if (before) before();
-      setActivePage(function() {
-        if (after) after();
-      }, !$.support.iPhone);
-    }
-    
-    var pages = $('.page');
-    if (pages.length == 0) {
-      loadFavourites(function() {
-        if ($('#favourites').children().length == 0) {
-          loadSettings(active);
-        } else {
-          active();
-        }
-      });
-    } else {
-      active();
-    }
-  }
   
   // handle transitions automatically on non-disabled and non-submit links
-  $('a.fx:not(.disabled):not(.submit)').live('click', function() {
-    
+  $('a.fx:not(.disabled):not(.submit)').live('click', function() { 
     $(this).trigger('transition');
     return false;
   });
@@ -168,6 +143,7 @@ $(document).ready(function() {
     var input = $(this);
     var link = input.parents('.page').find('a.back');
     var form = input.parents('form').first();
+    form.data('dirty', true);
   
     link.addClass('disabled');
     form.find('li').each(function() {
@@ -203,7 +179,7 @@ $(document).ready(function() {
     }    
     if ((href).match('^#')) {
       fx($(href));
-    } else if ($.support.SinglePageMode) {
+    } else {
       // load external links via ajax directly into page content
       var id = generateID(href);
       $('.content').find('#' + id).remove();
@@ -213,9 +189,6 @@ $(document).ready(function() {
         fx($('#' + id).append(data));
         link.attr('href', '#' + id).removeClass('disabled');
       });
-    } else {
-      // don't worry about transitions, just follow the link
-      location.href = href;
     }
     return false;
   });
@@ -224,15 +197,20 @@ $(document).ready(function() {
   $('.submit').live('click', function() {
     var link = $(this).addClass('disabled');
     var form = link.parents('.page').find('form');
-    $.post(form.attr('action'), form.serialize(), function(data) {
-      loadFavourites(function() {
-        if ($('#favourites').length == 0) {
-          link.addClass('disabled');
-        } else {
-          link.trigger('transition').removeClass('disabled');
-        }
+    if (form.data('dirty')) {
+      $.post(form.attr('action'), form.serialize(), function(data) {
+        loadFavourites(function() {
+          if ($('#favourites').length == 0) {
+            link.addClass('disabled');
+          } else {
+            link.trigger('transition').removeClass('disabled');
+            form.data('dirty', false)
+          }
+        });
       });
-    });
+    } else {
+      link.trigger('transition').removeClass('disabled');
+    }
     return false;
   });
   
@@ -308,27 +286,16 @@ $(document).ready(function() {
     window.setTimeout(updateETAs, millisecondsUntilNextMinute());
   }
   
-  if ($.support.SinglePageMode) {
-    loadContent(function() {
-      if ($.support.iPhone) $('.loading').show();
-      setMinHeight();
-    }, function() {
-      if ($.support.iPhone) $('.loading').fadeOut('slow');
-      
-      updateETAs();
-      
-      // show iphone hint
-      if ($.support.iPhone && !$.support.Standalone) {
-        window.setTimeout(function() {
-          $('body > footer').slideToggle('slow');
-          window.setTimeout(function() { 
-            $("body > footer").slideToggle("slow"); 
-          }, 8000);
-        }, 1500);
-      }
-    });
-  } else {
-    setActivePage(setMinHeight);
-    updateETAs();
+  setActivePage(setMinHeight);
+  updateETAs();
+  
+  // show iphone hint
+  if ($.support.iPhone && !$.support.Standalone) {
+    window.setTimeout(function() {
+      $('body > footer').slideToggle('slow');
+      window.setTimeout(function() { 
+        $("body > footer").slideToggle("slow"); 
+      }, 8000);
+    }, 1500);
   }
 });

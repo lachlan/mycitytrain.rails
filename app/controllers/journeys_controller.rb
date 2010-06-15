@@ -1,19 +1,33 @@
 class JourneysController < ApplicationController  
-  before_filter :find_stations, :except => [:index, :about, :favourites]
+  before_filter :find_stations, :except => [:index, :create]
   protect_from_forgery :only => [:create, :update, :destroy] 
   @@limit = 5
   
   def index
+    @settings, @favourites = [], []
+    @stations = Station.find_all    
+    @@limit.times do |i|
+      s = session[:favourites][i] || []
+      favourite = Favourite.new(i, s[0], s[1])
+      @settings << favourite
+      @favourites << favourite if favourite.departing and favourite.arriving
+    end
     render :layout => !request.xhr?
   end
   
-  def favourites
-    i = 0
-    @favourites = session[:favourites].map do |f|
-      Favourite.new(i+=1, f[0], f[1])
-    end
-    @favourites = [] if @favourites.empty?
-    render :layout => !request.xhr?
+  def create
+    origins = params[:origin]
+    destinations = params[:destination]
+    
+    @favourites = []
+    cookie = []
+    origins.each { |key, value|
+      @favourites << Favourite.new(key.to_i, value, destinations[key])
+      cookie << [value, destinations[key]] unless value.empty? or destinations[key].empty?
+    }
+    
+    session[:favourites] = cookie
+    redirect_to '/'
   end
   
   def list
@@ -39,11 +53,7 @@ class JourneysController < ApplicationController
     end
     render :layout => !request.xhr?
   end
-  
-  def about
-    render :layout => !request.xhr?
-  end
-  
+    
   private
   def find_stations
     @departing = Station.find params[:departing]

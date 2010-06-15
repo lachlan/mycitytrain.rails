@@ -60,7 +60,7 @@ body{-webkit-user-select:none;-webkit-text-size-adjust:none;background:black;fon
 header,footer{display:none;}
 .content header,.content footer,section{display:block;}
 .content{-webkit-perspective:800;-webkit-transform-style:preserve-3d;}
-.page{z-index:0;overflow:hidden;-webkit-backface-visibility:hidden;-webkit-box-sizing:border-box;display:none;position:absolute;left:0;width:100%;-webkit-transform:translate3d(0,0,0) rotate(0) scale(1);min-height:460px;background:#3a3a3a url(/images/background_4x1.png) top left repeat;margin:0 auto;}
+.page{overflow:hidden;-webkit-backface-visibility:hidden;-webkit-box-sizing:border-box;display:none;position:absolute;left:0;width:100%;-webkit-transform:translate3d(0,0,0) rotate(0) scale(1);min-height:460px;background:#3a3a3a url(/images/background_4x1.png) top left repeat;margin:0 auto;}
 .page.active{display:block !important;}
 .journeys section{margin-bottom:20px;}
 .journeys footer{width:100%;text-align:center;position:absolute;bottom:0;left:0;}
@@ -83,7 +83,6 @@ ol li > *{display:block;text-align:left;}
 ol li a.loader{padding:9px;background-image:none;text-align:center;color:#2470d8;text-shadow:1px 1px 0 rgba(255,255,255,0.5);font-size:15px;line-height:40px;}
 input,select{text-shadow:none !important;width:136px;font-size:17px;}
 form span{text-align:center;}
-.loading{z-index:1;position:absolute;top:0;left:0;display:none;}
 .eta{font-size:12px;float:left;background-color:#66cc00;border-bottom:1px solid #59b200;background-image:-webkit-gradient(linear,left top,left bottom,from(#66cc00),to(#53bc00));background-image:-moz-linear-gradient(top,#66cc00,#53bc00);margin:-9px 9px -10px -9px;padding:11px 5px;text-align:center;width:34px;height:40px;text-overflow:ellipsis;overflow:hidden;text-shadow:-1px -1px 0 rgba(0,0,0,0.5);color:white;}
 .lt_ten{background-color:#ff8c00;background-image:-webkit-gradient(linear,left top,left bottom,from(#ff8c00),to(#d86c00));background-image:-moz-linear-gradient(top,#ff8c00,#d86c00);border-color:#c60;}
 .lt_five{background-color:#e50000;background-image:-webkit-gradient(linear,left top,left bottom,from(#e50000),to(#bf0000));background-image:-moz-linear-gradient(top,#e50000,#bf0000);border-color:#b20000;}
