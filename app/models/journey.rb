@@ -12,13 +12,18 @@ class Journey < ActiveRecord::Base
   attr_accessor :departing_at
   attr_accessor :arriving_at
   
-  named_scope :departing_when, lambda { |start_date| { :conditions => ['timetable_type_id = ? and departing_seconds >= ?', TimetableDay.find_by_wday(start_date.wday).timetable_type_id, start_date.seconds_since_midnight], :order => 'departing_seconds' }  }
+  named_scope :departing_when, lambda { |start_date| { :conditions => ['timetable_type_id = ? and departing_seconds > ?', TimetableDay.find_by_wday(start_date.wday).timetable_type_id, start_date.seconds_since_midnight], :order => 'departing_seconds' }}
+  named_scope :departing_exactly_when, lambda { |start_date| { :conditions => ['timetable_type_id = ? and departing_seconds = ?', TimetableDay.find_by_wday(start_date.wday).timetable_type_id, start_date.seconds_since_midnight]}}
   named_scope :departing_from, lambda { |station| { :conditions => ['departing_id = ?', station] }}
   named_scope :arriving_to, lambda { |station| { :conditions => ['arriving_id = ?', station] }}
   named_scope :limit, lambda { |limit| { :limit => limit }}
   
+  def self.logger
+    RAILS_DEFAULT_LOGGER
+  end
+
   def <=> (b)    
-    (b and b.departing_seconds) ? (departing_seconds ? departing_seconds <=> b.departing_seconds : 1) : ( departing_seconds ? -1 : 0)
+    (b and b.departing_at) ? (departing_at ? departing_at <=> b.departing_at : 1) : ( departing_at ? -1 : 0)
   end
       
   def changes
@@ -57,34 +62,14 @@ class Journey < ActiveRecord::Base
   def self.fetch_journeys(o)
     departing, arriving, from, limit = o[:departing], o[:arriving], o[:from], (o[:limit] || 9999)  
     journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
+
+    if journeys.empty? && from.hour >= 21
+      from = from.midnight + 1.day
+      journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
+    end
   
     if journeys.empty?
-      
-      #Fetch 4 days worth (one day for Monday to Thursday)
-      day_deltas = {}
-      TimetableType.all.each {|type| day_deltas[type.id] = nil}
-      count = day_deltas.count
-      index = 0
-      while count > 0
-        type = TimetableDay.find_by_wday((from + index.days).wday).timetable_type_id
-        if !day_deltas[type]
-          day_deltas[type] = from + index.days 
-          count -= 1
-        end
-        index += 1
-      end
-      
-      day_deltas.each do |key, day|
-        retries = 0
-        begin
-          CitytrainAPI.journeys departing, arriving, day
-        rescue Exception
-          retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-          retry if retries < 10
-          raise
-        end
-      end
-
+      load_journeys
       journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
     end
     
@@ -97,11 +82,46 @@ class Journey < ActiveRecord::Base
     journeys
   end
   
-  #Populate stops if they don't exist in the database
-  def self.load_stops(departing, arriving, departing_at)
-    #kkkk work to do
-    journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at)
-    journey.load_stops if journey
+  def self.find_with_stops(departing, arriving, departing_at)
+    # kkk debugging this
+    logger.info 'find_with_stops'
+    journey = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at).limit(1)
+    logger.info '------------------------------------------------------------------------'
+    logger.info journey.inspect
+    logger.info journey.stops
+    logger.info '------------------------------------------------------------------------'
+    if journey.stops && journey.stops.empty?
+        journey.load_stops 
+        journey = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at)
+    end
+    journey
+  end
+  
+  def load_journeys(departing, arriving, departing_at)
+    #Fetch 4 days worth (one day for Monday to Thursday)
+    day_deltas = {}
+    TimetableType.all.each {|type| day_deltas[type.id] = nil}
+    count = day_deltas.count
+    index = 0
+    while count > 0
+      type = TimetableDay.find_by_wday((from + index.days).wday).timetable_type_id
+      if !day_deltas[type]
+        day_deltas[type] = from + index.days 
+        count -= 1
+      end
+      index += 1
+    end
+  
+    day_deltas.each do |key, day|
+      retries = 0
+      begin
+        CitytrainAPI.journeys departing, arriving, day
+      rescue Exception
+        retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+        retry if retries < 10
+        raise
+      end
+    end
   end
   
   def load_stops

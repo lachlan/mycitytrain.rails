@@ -29,12 +29,7 @@ class JourneysController < ApplicationController
   end
 
   def show
-    #kkk work todo
-    if @departing_at    
-      Journey.load_stops(@departing, @arriving, @departing_at)  
-      #kkk
-      @journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(@departing, @arriving, @departing_at, :include => :stops)
-    end
+    @journey = Journey.find_with_stops(@departing, @arriving, @departing_at) if @departing_at    
     unless @journey
       logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
       redirect_to :action => 'index'
@@ -50,7 +45,6 @@ class JourneysController < ApplicationController
   def find_stations
     @departing = Station.find params[:departing]
     @arriving = Station.find params[:arriving] 
-    #kkk
     @departing_at = Time.zone.parse(params[:departing_at]) if params[:departing_at]   
     unless @departing and @arriving
       logger.error("Attempt to access invalid station/s: '#{params[:departing]}', '#{params[:arriving]}'") 

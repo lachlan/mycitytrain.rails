@@ -46,8 +46,10 @@ class CitytrainAPI
   end
   
   def self.stops(journey)
-    departing_on = Time.zone.now.midnight #kkk journey.departing_at.midnight
-    xml = self.ws_get_journeys(journey.departing.code, journey.arriving.code, departing_on, journey.departing_seconds, 1)
+    xml = self.ws_get_journeys(journey.departing.code, journey.arriving.code, departing_at.midnight, journey.departing_seconds, 1)
+    
+    logger.info xml
+    
     journey_parts = XmlSimple.xml_in(xml, 'force_array' => ['Journey']) if xml
     if journey_parts and journey_parts['Journey']
       
@@ -72,6 +74,7 @@ class CitytrainAPI
             if part_of_journey
               #add this new stop
               base_seconds = trip['sDepartureTime'].to_i if base_seconds == 0
+              #kkk uth need to take a look at the returned xml to figure it out.
               departing_at = base_departing_at + (trip['sDepartureTime'].to_i - base_seconds).seconds
               arriving_at = base_departing_at + (trip['sArrivalTime'].to_i - base_seconds).seconds
               station_name = trip['sStationName']
@@ -80,7 +83,7 @@ class CitytrainAPI
               position += 1
               
               #kkk
-              Stop.find_or_create_by_journey_id_and_position(:journey_id => journey.id, :station_name => station_name, :platform => platform, :departing_at => departing_at, :arriving_at => arriving_at, :position => position)
+              Stop.find_or_create_by_journey_id_and_position(:journey_id => journey.id, :station_name => station_name, :platform => platform, :departing_seconds => departing_seconds, :arriving_seconds => arriving_seconds, :position => position)
                             
               break if station_name == jp['ArrivalNodeName']
               
