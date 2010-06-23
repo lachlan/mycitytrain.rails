@@ -69,7 +69,7 @@ class Journey < ActiveRecord::Base
     end
   
     if journeys.empty?
-      load_journeys
+      load_journeys(departing, arriving, from)
       journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
     end
     
@@ -82,22 +82,8 @@ class Journey < ActiveRecord::Base
     journeys
   end
   
-  def self.find_with_stops(departing, arriving, departing_at)
-    # kkk debugging this
-    logger.info 'find_with_stops'
-    journey = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at).limit(1)
-    logger.info '------------------------------------------------------------------------'
-    logger.info journey.inspect
-    logger.info journey.stops
-    logger.info '------------------------------------------------------------------------'
-    if journey.stops && journey.stops.empty?
-        journey.load_stops 
-        journey = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at)
-    end
-    journey
-  end
   
-  def load_journeys(departing, arriving, departing_at)
+  def self.load_journeys(departing, arriving, from)
     #Fetch 4 days worth (one day for Monday to Thursday)
     day_deltas = {}
     TimetableType.all.each {|type| day_deltas[type.id] = nil}
@@ -124,17 +110,43 @@ class Journey < ActiveRecord::Base
     end
   end
   
-  def load_stops
-    if stops and stops.empty?
-      retries = 0
-      begin
-        CitytrainAPI.stops self
-      rescue Exception
-        retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-        retry if retries < 10
-        raise
-      end
-    end
-  end
+  
+  # def self.debug
+  #   departing = Station.find_by_code 'CRO'
+  #   arriving = Station.find_by_code 'BNC'
+  #   departing_at = Time.parse("2010-06-22 20:39:00 +1000")
+  #   
+  #   find_with_stops(departing, arriving, departing_at)
+  # end
+  # 
+  # def self.find_with_stops(departing, arriving, departing_at)
+  #   # This function currently doesn't work!
+  #   logger.info 'find_with_stops'
+  #   j = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at).limit(1)
+  #   puts j.inspect
+  #   puts j.stops
+  #   logger.info '------------------------------------------------------------------------'
+  #   logger.info j.inspect
+  #   logger.info j.stops
+  #   logger.info '------------------------------------------------------------------------'
+  #   if j.stops && j.stops.empty?
+  #       j.load_stops 
+  #       j = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at)
+  #   end
+  #   j
+  # end
+  # 
+  # def load_stops
+  #   if stops and stops.empty?
+  #     retries = 0
+  #     begin
+  #       CitytrainAPI.stops self
+  #     rescue Exception
+  #       retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+  #       retry if retries < 10
+  #       raise
+  #     end
+  #   end
+  # end
   
 end

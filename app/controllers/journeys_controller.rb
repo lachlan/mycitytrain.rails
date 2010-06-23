@@ -28,14 +28,15 @@ class JourneysController < ApplicationController
     render :layout => !request.xhr?
   end
 
-  def show
-    @journey = Journey.find_with_stops(@departing, @arriving, @departing_at) if @departing_at    
-    unless @journey
-      logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
-      redirect_to :action => 'index'
-    end
-    render :layout => !request.xhr?
-  end
+  # currently this doesn't work!
+  # def show
+  #   @journey = Journey.find_with_stops(@departing, @arriving, @departing_at) if @departing_at    
+  #   unless @journey
+  #     logger.error("Attempt to access invalid journey: '#{params[:departing]}' to '#{params[:arriving]}' at '#{params[:departing_at]}'") 
+  #     redirect_to :action => 'index'
+  #   end
+  #   render :layout => !request.xhr?
+  # end
   
   def about
     render :layout => !request.xhr?

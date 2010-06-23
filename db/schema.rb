@@ -10,6 +10,7 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20100529033043) do
+
   create_table "aliases", :force => true do |t|
     t.integer  "station_id"
     t.string   "name"
