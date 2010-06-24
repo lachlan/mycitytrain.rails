@@ -87,7 +87,7 @@ class Journey < ActiveRecord::Base
     #Fetch 4 days worth (one day for Monday to Thursday)
     day_deltas = {}
     TimetableType.all.each {|type| day_deltas[type.id] = nil}
-    count = day_deltas.count
+    count = day_deltas.length
     index = 0
     while count > 0
       type = TimetableDay.find_by_wday((from + index.days).wday).timetable_type_id
