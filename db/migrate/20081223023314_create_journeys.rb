@@ -10,7 +10,7 @@ class CreateJourneys < ActiveRecord::Migration
       t.timestamps
     end
 
-  add_index :journeys, [:timetable_type_id, :departing_seconds, :departing_id, :arriving_id]
+  add_index :journeys, [:timetable_type_id, :departing_seconds, :departing_id, :arriving_id], :name => 'journey_primary'
   end
 
   def self.down

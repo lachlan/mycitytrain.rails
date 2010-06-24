@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(:version => 20100529033043) do
     t.datetime "updated_at"
   end
 
-  add_index "journeys", ["timetable_type_id", "departing_seconds", "departing_id", "arriving_id"], :name => "index_journeys_on_timetable_type_id_and_departing_seconds_and_departing_id_and_arriving_id"
+  add_index "journeys", ["timetable_type_id", "departing_seconds", "departing_id", "arriving_id"], :name => "journey_primary"
 
   create_table "slugs", :force => true do |t|
     t.string   "name"
