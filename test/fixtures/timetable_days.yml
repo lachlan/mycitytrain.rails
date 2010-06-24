@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  timetable_type_id: 1
+  wday: 1
+
+two:
+  timetable_type_id: 1
+  wday: 1

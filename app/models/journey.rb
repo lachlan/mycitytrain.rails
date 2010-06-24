@@ -3,27 +3,25 @@ class Journey < ActiveRecord::Base
   
   belongs_to :departing, :class_name => 'Station'
   belongs_to :arriving, :class_name => 'Station'
+  belongs_to :timetable_type
+  
   has_many :stops, :order => :position
   
-  validates_presence_of :departing, :arriving, :departing_at
-
-  named_scope :departing_when, lambda { |start_date, end_date| 
-    if start_date and end_date
-      {:conditions => ['departing_at between ? and ?', start_date, end_date], :order => 'departing_at' }
-    elsif start_date
-      { :conditions => ['departing_at > ?', start_date], :order => 'departing_at' }
-    elsif end_date  
-      { :conditions => ['departing_at < ?', end_date], :order => 'departing_at' }
-    else
-      { :order => 'departing_at' } 
-    end
-  }
+  validates_presence_of :departing, :arriving, :departing_seconds
   
+  attr_accessor :departing_at
+  attr_accessor :arriving_at
+  
+  named_scope :departing_when, lambda { |start_date| { :conditions => ['timetable_type_id = ? and departing_seconds > ?', TimetableDay.find_by_wday(start_date.wday).timetable_type_id, start_date.seconds_since_midnight], :order => 'departing_seconds' }}
+  named_scope :departing_exactly_when, lambda { |start_date| { :conditions => ['timetable_type_id = ? and departing_seconds = ?', TimetableDay.find_by_wday(start_date.wday).timetable_type_id, start_date.seconds_since_midnight]}}
   named_scope :departing_from, lambda { |station| { :conditions => ['departing_id = ?', station] }}
   named_scope :arriving_to, lambda { |station| { :conditions => ['arriving_id = ?', station] }}
   named_scope :limit, lambda { |limit| { :limit => limit }}
   
-  #Comparing the departing_at for two journeys
+  def self.logger
+    RAILS_DEFAULT_LOGGER
+  end
+
   def <=> (b)    
     (b and b.departing_at) ? (departing_at ? departing_at <=> b.departing_at : 1) : ( departing_at ? -1 : 0)
   end
@@ -57,46 +55,53 @@ class Journey < ActiveRecord::Base
     fetch_date(d, a, today)
   end
   
-  def self.tomorrow(d, a)
-    tomorrow = Time.zone.now.tomorrow.midnight
-    fetch_date(d, a, tomorrow)
-  end
-  
   def self.fetch_date(d, a, w)
-    self.fetch_journeys(:departing => d, :arriving => a, :from => w, :to => w + 1.day)
+    self.fetch_journeys(:departing => d, :arriving => a, :from => w)
   end
     
   def self.fetch_journeys(o)
-    departing, arriving, from, to, limit = o[:departing], o[:arriving], o[:from], o[:to], (o[:limit] || 9999)  
-    journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+    departing, arriving, from, limit = o[:departing], o[:arriving], o[:from], (o[:limit] || 9999)  
+    journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
+
+    if journeys.empty? && from.hour >= 21
+      from = from.midnight + 1.day
+      journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
+    end
   
     if journeys.empty?
-      0.upto(1) do |i|
-        retries = 0
-        begin
-          CitytrainAPI.journeys departing, arriving, Time.zone.now.midnight + i.day
-        rescue Exception
-          retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-          retry if retries < 10
-          raise
-        end
-      end
-      journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from, to).limit(limit)
+      load_journeys(departing, arriving, from)
+      journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
     end
+    
+    #transpose departing/arriving times
+    journeys.each do |j|
+      j.departing_at = from.midnight + j.departing_seconds
+      j.arriving_at = from.midnight + j.arriving_seconds
+    end    
+    
     journeys
   end
   
-  #Populate stops if they don't exist in the database
-  def self.load_stops(departing, arriving, departing_at)
-    journey = Journey.find_by_departing_id_and_arriving_id_and_departing_at(departing, arriving, departing_at)
-    journey.load_stops if journey
-  end
   
-  def load_stops
-    if stops and stops.empty?
+  def self.load_journeys(departing, arriving, from)
+    #Fetch 4 days worth (one day for Monday to Thursday)
+    day_deltas = {}
+    TimetableType.all.each {|type| day_deltas[type.id] = nil}
+    count = day_deltas.count
+    index = 0
+    while count > 0
+      type = TimetableDay.find_by_wday((from + index.days).wday).timetable_type_id
+      if !day_deltas[type]
+        day_deltas[type] = from + index.days 
+        count -= 1
+      end
+      index += 1
+    end
+  
+    day_deltas.each do |key, day|
       retries = 0
       begin
-        CitytrainAPI.stops self
+        CitytrainAPI.journeys departing, arriving, day
       rescue Exception
         retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
         retry if retries < 10
@@ -104,5 +109,44 @@ class Journey < ActiveRecord::Base
       end
     end
   end
+  
+  
+  # def self.debug
+  #   departing = Station.find_by_code 'CRO'
+  #   arriving = Station.find_by_code 'BNC'
+  #   departing_at = Time.parse("2010-06-22 20:39:00 +1000")
+  #   
+  #   find_with_stops(departing, arriving, departing_at)
+  # end
+  # 
+  # def self.find_with_stops(departing, arriving, departing_at)
+  #   # This function currently doesn't work!
+  #   logger.info 'find_with_stops'
+  #   j = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at).limit(1)
+  #   puts j.inspect
+  #   puts j.stops
+  #   logger.info '------------------------------------------------------------------------'
+  #   logger.info j.inspect
+  #   logger.info j.stops
+  #   logger.info '------------------------------------------------------------------------'
+  #   if j.stops && j.stops.empty?
+  #       j.load_stops 
+  #       j = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at)
+  #   end
+  #   j
+  # end
+  # 
+  # def load_stops
+  #   if stops and stops.empty?
+  #     retries = 0
+  #     begin
+  #       CitytrainAPI.stops self
+  #     rescue Exception
+  #       retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
+  #       retry if retries < 10
+  #       raise
+  #     end
+  #   end
+  # end
   
 end

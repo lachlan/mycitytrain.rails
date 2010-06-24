@@ -4,8 +4,8 @@ class CreateStops < ActiveRecord::Migration
       t.references  :journey
       t.string      :station_name
       t.string      :platform
-      t.datetime    :departing_at
-      t.datetime    :arriving_at
+      t.integer     :departing_seconds
+      t.integer     :arriving_seconds
       t.integer     :position
       
       t.timestamps

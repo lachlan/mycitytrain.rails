@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100419102954) do
+ActiveRecord::Schema.define(:version => 20100529033043) do
 
   create_table "aliases", :force => true do |t|
     t.integer  "station_id"
@@ -27,25 +27,17 @@ ActiveRecord::Schema.define(:version => 20100419102954) do
 
   add_index "historic_journeys", ["departing_id", "arriving_id"], :name => "index_historic_journeys_on_departing_id_and_arriving_id"
 
-  create_table "journey_history", :force => true do |t|
-    t.integer  "departing_id"
-    t.integer  "arriving_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "journey_history", ["departing_id", "arriving_id"], :name => "index_journey_history_on_departing_id_and_arriving_id"
-
   create_table "journeys", :force => true do |t|
+    t.integer  "timetable_type_id"
     t.integer  "departing_id"
-    t.datetime "departing_at"
+    t.integer  "departing_seconds"
     t.integer  "arriving_id"
+    t.integer  "arriving_seconds"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "arriving_at"
   end
 
-  add_index "journeys", ["departing_at", "departing_id", "arriving_id"], :name => "index_journeys_on_departing_at_and_departing_id_and_arriving_id"
+  add_index "journeys", ["timetable_type_id", "departing_seconds", "departing_id", "arriving_id"], :name => "index_journeys_on_timetable_type_id_and_departing_seconds_and_departing_id_and_arriving_id"
 
   create_table "slugs", :force => true do |t|
     t.string   "name"
@@ -73,14 +65,30 @@ ActiveRecord::Schema.define(:version => 20100419102954) do
     t.integer  "journey_id"
     t.string   "station_name"
     t.string   "platform"
-    t.datetime "departing_at"
-    t.datetime "arriving_at"
+    t.integer  "departing_seconds"
+    t.integer  "arriving_seconds"
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "stops", ["journey_id", "position"], :name => "index_stops_on_journey_id_and_position"
+
+  create_table "timetable_days", :force => true do |t|
+    t.integer  "timetable_type_id"
+    t.integer  "wday"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "timetable_days", ["timetable_type_id"], :name => "index_timetable_days_on_timetable_type_id"
+  add_index "timetable_days", ["wday"], :name => "index_timetable_days_on_wday"
+
+  create_table "timetable_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "tl_stations", :force => true do |t|
     t.string   "code"
