@@ -93,7 +93,7 @@ $(document).ready(function() {
 
   var loadMoreJourneys = function(journeys, limit) {
     var prev = journeys.find('.journey').last();
-    var href = prev.find('a').attr('href').replace(/^(.*)\/(.*)$/, '$1?after=$2');
+    var href = journeys.find('a.loader').attr('href').replace(/^(.*)=(.*)$/, '$1=' + prev.attr('title'));
     if (limit && limit > 0) href = href + '&limit=' + limit;
   
     $.get(href, function(data) {
@@ -103,7 +103,8 @@ $(document).ready(function() {
       $('#' + id).append(data);
       prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
         $('#' + id).remove();
-        journeys.find('a.loader').attr('href', journeys.find('.journey').last().find('a').attr('href').replace(/^(.*)\/(.*)$/, '$1?after=$2'));
+        var loader = journeys.find('a.loader');
+        loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('title')));
       }));
     });
   }
