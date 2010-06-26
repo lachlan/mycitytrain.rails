@@ -140,6 +140,7 @@ form span{text-align:center;}
 .journey .destination{float:right;text-align:right;}
 .location,.time{color:#666;display:block;text-shadow:1px 1px 0 rgba(255,255,255,0.5);text-overflow:ellipsis;overflow:hidden;white-space:nowrap;font-size:13px;line-height:20px;}
 .time{color:black;font-size:17px;}
+abbr.time{border-bottom-style:none;}
 li h2{margin-left:0;font-size:17px;text-shadow:1px 1px 0 rgba(255,255,255,0.5);}
 li p{font-size:13px;}
 ul.panel{font-size:17px;display:block;margin:9px;border:1px solid #d9d9d9;background-color:#e5e5e5;background-image:-webkit-gradient(linear,left top,left bottom,from(#f4f4f4),to(#e5e5e5));background-image:-moz-gradient(linear,left top,left bottom,from(#f4f4f4),to(#e5e5e5));-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;-webkit-box-shadow:0 9px 9px rgba(0,0,0,0.1);-moz-box-shadow:0 9px 9px rgba(0,0,0,0.1);box-shadow:0 9px 9px rgba(0,0,0,0.1);}

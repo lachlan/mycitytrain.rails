@@ -240,7 +240,7 @@ $(document).ready(function() {
       var journey = eta.parents('.journey');
       var departureDate = new Date();
       var currentDate = new Date();
-      departureDate.setTime(eta.parent().find('.time').first().attr('title'));
+      departureDate.setTime(eta.parent().find('.time').first().attr('data-time'));
     
       var duration = durationInSeconds(currentDate, departureDate);
     

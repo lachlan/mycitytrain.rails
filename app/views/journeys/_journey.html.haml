@@ -2,7 +2,7 @@
   %span.eta{:class=>classify_duration_to_now(journey.departing_at)}=duration_in_concise_words_from_now(journey.departing_at)
   %span.origin
     %span.location= journey.departing.name
-    %abbr.time{:title => format_time(journey.departing_at, :js)}= format_time(journey.departing_at)
+    %abbr.time{:title => format_time(journey.departing_at, :iso8601), :"data-time" => format_time(journey.departing_at, :js)}= format_time(journey.departing_at)
   %span.destination
     %span.location= journey.arriving.name
-    %abbr.time{:title => format_time(journey.arriving_at, :js)}= format_time(journey.arriving_at)
+    %abbr.time{:title => format_time(journey.arriving_at, :iso8601), :"data-time" => format_time(journey.arriving_at, :js)}= format_time(journey.arriving_at)

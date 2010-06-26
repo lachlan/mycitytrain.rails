@@ -554,6 +554,9 @@ line-height: 20px;
 color: black;
 font-size: 17px;
 }
+abbr.time {
+  border-bottom-style: none;
+}
 li h2 {
 margin-left: 0;
 font-size: 17px;
