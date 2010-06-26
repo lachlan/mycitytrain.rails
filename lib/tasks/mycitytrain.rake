@@ -209,7 +209,7 @@ namespace :mycitytrain do
       journeys.each do |j|
         dep = Station.find_by_code j[0]
         arr = Station.find_by_code j[1]
-        puts "Loading journey #{dep.name} to #{arr.name} (and the return)"
+        puts "#{dep.name} to #{arr.name}"
         Journey.today(dep, arr)
         Journey.today(arr, dep)
       end
