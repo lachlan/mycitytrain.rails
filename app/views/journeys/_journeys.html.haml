@@ -1,3 +1,6 @@
 %ol.journeys
-  = render :partial => 'journey', :collection => journeys
-  = render :partial => 'load_more_journeys', :locals => {:journeys => journeys}
+  - if journeys and journeys.length > 0
+    = render :partial => 'journey', :collection => journeys
+    = render :partial => 'load_more_journeys', :locals => {:journeys => journeys}
+  - else
+    %li= "No journeys could be found at this time."
