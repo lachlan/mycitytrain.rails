@@ -71,7 +71,104 @@ $(document).ready(function() {
   var journey_limit = 5;
   var active = 'active';
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
+  
+  var handlers = function() {
+    // load some more journeys
+    $('a.loader').click(function() {
+      loadMoreJourneys($(this).parents('.journeys'));
+      return false; 
+    });
 
+    // handle transitions automatically on non-disabled and non-submit links
+    $('a.fx:not(.disabled):not(.submit)').click(function() { 
+      $(this).trigger('transition');
+      return false;
+    });
+  
+    // don't allow click events on disabled links
+    $('a.disabled').click(function() {
+      return false;
+    });
+
+    // disable done button until user configures a journey
+    $(':input').change(function() {
+      var input = $(this);
+      var link = input.parents('.page').find('a.back');
+      var form = input.parents('form').first();
+      form.data('dirty', true);
+  
+      link.addClass('disabled');
+      form.find('li').each(function() {
+        var selected = $(this).find(":selected");
+        var value = selected.first().attr('value');
+        // if you've selected at least one journey, and the origin and destination don't match
+        if ((selected.filter("[value='']").length == 0) && (selected.filter("[value='" + value + "']").length < 2))
+          link.removeClass('disabled');
+      });
+    });
+  
+    // handle transition event
+    $('a.fx').bind('transition', function() {
+      var link = $(this);
+      var effect = link.attr('class');
+      var linker = link.parents('.page').last();    
+      var href = link.attr('href');
+      var fx = function(linkee) {
+        $(':focus').blur();
+        $(linker).add(linkee).removeClass(effects).addClass(effect);
+        linkee.addClass('in').addClass(active);
+        linker.addClass('out');
+        var animationFinished = function() {
+          linker.removeClass(active).add(linkee).removeClass(effects);
+          linkee.find('a.back').attr('href', '#' + linker.attr('id')).addClass('reverse').addClass(effect);
+          setActivePage(setMinHeight);
+        }
+        if ($.support.WebKitAnimationEvent) {
+          linkee.one('webkitAnimationEnd', function() { animationFinished(); });
+        } else {
+          animationFinished();
+        }
+      }    
+      if ((href).match('^#')) {
+        fx($(href));
+      } else {
+        // load external links via ajax directly into page content
+        var id = generateID(href);
+        $('.content').find('#' + id).remove();
+        $('.content').append('<div id="' + id + '" class="page"></div>');
+        link.addClass('disabled');
+        $.get(href, function(data) {
+          fx($('#' + id).append(data));
+          link.attr('href', '#' + id).removeClass('disabled');
+          handlers();
+        });
+      }
+      return false;
+    });
+
+    // ajax post settings form and load favourites
+    $('.submit').click(function() {
+      var link = $(this).addClass('disabled');
+      var form = link.parents('.page').find('form');
+      if (form.data('dirty')) {
+        $.post(form.attr('action'), form.serialize(), function(data) {
+          loadFavourites(function() {
+            handlers();
+            if ($('#favourites').length == 0) {
+              link.addClass('disabled');
+            } else {
+              link.trigger('transition').removeClass('disabled');
+              form.data('dirty', false)
+            }
+          });
+        });
+      } else {
+        link.trigger('transition').removeClass('disabled');
+      }
+      return false;
+    });
+  };
+  
   var setActivePage = function(callback, fadeIn) {  
     var activePages = $('.page.' + active);
     var page = $('.page').first();
@@ -84,13 +181,15 @@ $(document).ready(function() {
       page.addClass(active);
     if (callback) callback();
   }
-  
-  // load some more journeys
-  $('a.loader').click(function() {
-    loadMoreJourneys($(this).parents('.journeys'));
-    return false; 
-  });
 
+  var loadFavourites = function(callback) {
+    $.get('/', function(data) {
+      $('#favourites').remove();
+      $('.content').append(data);
+      if (callback) callback();
+    });
+  }
+    
   var loadMoreJourneys = function(journeys, limit) {
     var prev = journeys.find('.journey').last();
     var href = journeys.find('a.loader').attr('href').replace(/^(.*)=(.*)$/, '$1=' + prev.attr('title'));
@@ -106,103 +205,10 @@ $(document).ready(function() {
         var loader = journeys.find('a.loader');
         loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('title')));
       }));
+      // reattach handlers
+      handlers();
     });
-  }
-  
-  var loadFavourites = function(callback) {
-    $.get('/', function(data) {
-      $('#favourites').remove();
-      $('.content').append(data);
-      if (callback) callback();
-    });
-  }
-
-  // handle transitions automatically on non-disabled and non-submit links
-  $('a.fx:not(.disabled):not(.submit)').live('click', function() { 
-    $(this).trigger('transition');
-    return false;
-  });
-  
-  // don't allow click events on disabled links
-  $('a.disabled').live('click', function() {
-    return false;
-  })
-
-  // disable done button until user configures a journey
-  $(':input').change(function() {
-    var input = $(this);
-    var link = input.parents('.page').find('a.back');
-    var form = input.parents('form').first();
-    form.data('dirty', true);
-  
-    link.addClass('disabled');
-    form.find('li').each(function() {
-      var selected = $(this).find(":selected");
-      var value = selected.first().attr('value');
-      // if you've selected at least one journey, and the origin and destination don't match
-      if ((selected.filter("[value='']").length == 0) && (selected.filter("[value='" + value + "']").length < 2))
-        link.removeClass('disabled');
-    });
-  });
-  
-  // handle transition event
-  $('a.fx').bind('transition', function() {
-    var link = $(this);
-    var effect = link.attr('class');
-    var linker = link.parents('.page').last();    
-    var href = link.attr('href');
-    var fx = function(linkee) {
-      $(':focus').blur();
-      $(linker).add(linkee).removeClass(effects).addClass(effect);
-      linkee.addClass('in').addClass(active);
-      linker.addClass('out');
-      var animationFinished = function() {
-        linker.removeClass(active).add(linkee).removeClass(effects);
-        linkee.find('a.back').attr('href', '#' + linker.attr('id')).addClass('reverse').addClass(effect);
-        setActivePage(setMinHeight);
-      }
-      if ($.support.WebKitAnimationEvent) {
-        linkee.one('webkitAnimationEnd', function() { animationFinished(); });
-      } else {
-        animationFinished();
-      }
-    }    
-    if ((href).match('^#')) {
-      fx($(href));
-    } else {
-      // load external links via ajax directly into page content
-      var id = generateID(href);
-      $('.content').find('#' + id).remove();
-      $('.content').append('<div id="' + id + '" class="page"></div>');
-      link.addClass('disabled');
-      $.get(href, function(data) {
-        fx($('#' + id).append(data));
-        link.attr('href', '#' + id).removeClass('disabled');
-      });
-    }
-    return false;
-  });
-
-  // ajax post settings form and load favourites
-  $('.submit').click(function() {
-    var link = $(this).addClass('disabled');
-    var form = link.parents('.page').find('form');
-    if (form.data('dirty')) {
-      $.post(form.attr('action'), form.serialize(), function(data) {
-        loadFavourites(function() {
-          if ($('#favourites').length == 0) {
-            link.addClass('disabled');
-          } else {
-            link.trigger('transition').removeClass('disabled');
-            form.data('dirty', false)
-          }
-        });
-      });
-    } else {
-      link.trigger('transition').removeClass('disabled');
-    }
-    return false;
-  });
+  }  
   
   // add arrow key shortcuts for flipping between favourites and return journeys
   $(document).keydown(function(event) {
@@ -278,6 +284,7 @@ $(document).ready(function() {
   
   setActivePage(setMinHeight);
   updateETAs();
+  handlers();
   
   // show iphone hint
   if ($.support.iPhone && !$.support.Standalone) {
