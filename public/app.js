@@ -146,7 +146,7 @@ $(document).ready(function() {
   });
   
   // handle transition event
-  $('a.fx').live('transition', function() {
+  $('a.fx').bind('transition', function() {
     var link = $(this);
     var effect = link.attr('class');
     var linker = link.parents('.page').last();    
