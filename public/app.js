@@ -152,15 +152,19 @@ $(document).ready(function() {
       var form = link.parents('.page').find('form');
       if (form.data('dirty')) {
         $.post(form.attr('action'), form.serialize(), function(data) {
-          loadFavourites(function() {
-            handlers();
-            if ($('#favourites').length == 0) {
-              link.addClass('disabled');
-            } else {
-              link.trigger('transition').removeClass('disabled');
-              form.data('dirty', false)
-            }
-          });
+          if ($.browser.msie) {
+            location.href = "/";
+          } else {
+            loadFavourites(function() {
+              handlers();
+              if ($('#favourites').length == 0) {
+                link.addClass('disabled');
+              } else {
+                link.trigger('transition').removeClass('disabled');
+                form.data('dirty', false)
+              }
+            });
+          }
         });
       } else {
         link.trigger('transition').removeClass('disabled');
