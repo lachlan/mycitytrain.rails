@@ -1,8 +1,8 @@
-%section#favourites
+#favourites
   - @favourites.each do |favourite|
     - if favourite.departing and favourite.arriving
-      %section.page{:id => "f#{favourite.id}"}
-        %header
+      .page{:id => "f#{favourite.id}"}
+        .header
           %a.flip.fx.return{:href => "#fr#{favourite.id}"}
             %span Return
           %h1
@@ -10,10 +10,10 @@
           %a.slideup.fx{:href => '#settings'}
             %span.settings Settings
         = render :partial => 'journeys', :object => favourite.journeys
-        %footer
+        .footer
           = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => favourite.id}
-      %section.page{:id => "fr#{favourite.id}"}
-        %header
+      .page{:id => "fr#{favourite.id}"}
+        .header
           %a.reverse.flip.fx.return{:href => "#f#{favourite.id}"}
             %span.inbound Return
           %h1
@@ -21,11 +21,11 @@
           %a.slideup.fx{:href => '#about'}
             %span.about About
         = render :partial => 'journeys', :object => favourite.return_journeys
-        %footer
+        .footer
           = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => favourite.id}
 - unless request.xhr?
-  %section#settings.page
-    %header
+  #settings.page
+    .header
       %h1
         %a{:href => '/'}= SITE_NAME
       - hclass = @settings.find { |f| f.departing and f.arriving }? '' : 'disabled'
@@ -46,8 +46,8 @@
               - else
                 - arriving_code = nil
               = select "destination", setting.id, @stations.map {|s| [s.name, s.code]}, { :selected => arriving_code, :include_blank => 'Destination'}, {:class => 'destination'}
-  %section#about.page
-    %header
+  #about.page
+    .header
       %h1.title
         %a{:href => '/'}= SITE_NAME
       %a.back.reverse.slideup.fx{:href => "#"}Done

@@ -99,7 +99,7 @@ $(document).ready(function() {
     $.get(href, function(data) {
       var id = generateID(href);
       $('#' + id).remove();
-      $('.content').append('<section id="' + id + '"></section>');
+      $('.content').append('<div id="' + id + '"></div>');
       $('#' + id).append(data);
       prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
         $('#' + id).remove();
@@ -121,7 +121,7 @@ $(document).ready(function() {
     var href = '/settings';
     var id = generateID(href);
     $('.content').find('#' + id).remove();
-    $('.content').append('<section id="' + id + '" class="page"></section>');
+    $('.content').append('<div id="' + id + '" class="page"></div>');
     $.get(href, function(data) {
       $('#' + id).append(data);
       if (callback) callback();
@@ -184,7 +184,7 @@ $(document).ready(function() {
       // load external links via ajax directly into page content
       var id = generateID(href);
       $('.content').find('#' + id).remove();
-      $('.content').append('<section id="' + id + '" class="page"></section>');
+      $('.content').append('<div id="' + id + '" class="page"></div>');
       link.addClass('disabled');
       $.get(href, function(data) {
         fx($('#' + id).append(data));
@@ -293,9 +293,9 @@ $(document).ready(function() {
   // show iphone hint
   if ($.support.iPhone && !$.support.Standalone) {
     window.setTimeout(function() {
-      $('body > footer').slideToggle('slow');
+      $('body > .footer').slideToggle('slow');
       window.setTimeout(function() { 
-        $("body > footer").slideToggle("slow"); 
+        $("body > .footer").slideToggle("slow"); 
       }, 8000);
     }, 1500);
   }
