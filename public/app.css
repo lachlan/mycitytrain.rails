@@ -625,7 +625,7 @@ vertical-align: middle;
 }
 .footer ul li {
 display: inline-block;
-font-size: 17px;
+font-size: 16px;
 padding: 0;
 margin: 0 2px;
 }
@@ -640,6 +640,7 @@ float: left;
 float: right;
 }
 .footer .arrow a span {
+text-indent: -9999px;
 color: transparent;
 display: block;
 width: 6px;

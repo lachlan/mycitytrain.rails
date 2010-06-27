@@ -150,11 +150,11 @@ ul.panel > li:last-child{-webkit-border-bottom-left-radius:8px;-webkit-border-bo
 ul.panel li *{font-weight:normal;font-size:13px;}
 ul.panel li h2{color:black;font-weight:bold;font-size:17px;}
 .footer ul{margin-top:-2px;list-style-type:none;text-align:center;vertical-align:middle;}
-.footer ul li{display:inline-block;font-size:17px;padding:0;margin:0 2px;}
+.footer ul li{display:inline-block;font-size:16px;padding:0;margin:0 2px;}
 .footer ul li,.footer ul li *{line-height:25px;}
 .footer ul li.left,.footer ul li.right{display:block;float:left;}
 .footer ul li.right{float:right;}
-.footer .arrow a span{color:transparent;display:block;width:6px;height:9px;background:url(/images/sprites.png) no-repeat -35px 0;margin:8px 17px 8px 2px;}
+.footer .arrow a span{text-indent:-9999px;color:transparent;display:block;width:6px;height:9px;background:url(/images/sprites.png) no-repeat -35px 0;margin:8px 17px 8px 2px;}
 .footer .right.arrow a span{background-position:-35px -9px;margin:8px 2px 8px 17px;}
 .footer .arrow a.disabled span{color:transparent;background:none;}
 .stop .location{font-size:17px;width:134px;float:left;}

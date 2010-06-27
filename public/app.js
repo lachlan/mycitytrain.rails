@@ -86,7 +86,7 @@ $(document).ready(function() {
   }
   
   // load some more journeys
-  $('a.loader').live('click', function() {
+  $('a.loader').click(function() {
     loadMoreJourneys($(this).parents('.journeys'));
     return false; 
   });
@@ -117,17 +117,6 @@ $(document).ready(function() {
     });
   }
 
-  var loadSettings = function(callback) {
-    var href = '/settings';
-    var id = generateID(href);
-    $('.content').find('#' + id).remove();
-    $('.content').append('<div id="' + id + '" class="page"></div>');
-    $.get(href, function(data) {
-      $('#' + id).append(data);
-      if (callback) callback();
-    });
-  }
-  
   // handle transitions automatically on non-disabled and non-submit links
   $('a.fx:not(.disabled):not(.submit)').live('click', function() { 
     $(this).trigger('transition');
@@ -140,7 +129,7 @@ $(document).ready(function() {
   })
 
   // disable done button until user configures a journey
-  $(':input').live('change', function() {
+  $(':input').change(function() {
     var input = $(this);
     var link = input.parents('.page').find('a.back');
     var form = input.parents('form').first();
@@ -195,7 +184,7 @@ $(document).ready(function() {
   });
 
   // ajax post settings form and load favourites
-  $('.submit').live('click', function() {
+  $('.submit').click(function() {
     var link = $(this).addClass('disabled');
     var form = link.parents('.page').find('form');
     if (form.data('dirty')) {
