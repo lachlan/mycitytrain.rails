@@ -76,7 +76,7 @@ Rails::Initializer.run do |config|
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
   
   #Used in the about page and also in the description meta data for each page
-  ABOUT_BLURB = "MyCitytrain is about taking the QR Citytrain timetable with you on the go. Optimised for mobile devices like the iPhone, it's now easy to check when your next train departs wherever you are."
+  ABOUT_BLURB = "MyCitytrain is about taking the Queensland Rail timetable with you on the go. Optimised for mobile devices like the iPhone, it's now easy to check when your next train departs wherever you are."
 
   SITE_NAME = "MyCitytrain"
   
