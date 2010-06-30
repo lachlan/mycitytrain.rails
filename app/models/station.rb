@@ -12,12 +12,7 @@ class Station < ActiveRecord::Base
   end
 
   def self.find_all
-    stations = Station.find(:all, :order => 'name')
-    if stations.empty?
-      CitytrainAPI.stations
-      stations = Station.find(:all, :order => 'name')
-    end
-    stations
+    Station.find(:all, :order => 'name')
   end
 
 end

@@ -68,11 +68,6 @@ class Journey < ActiveRecord::Base
       journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
     end
   
-    if journeys.empty?
-      load_journeys(departing, arriving, from)
-      journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
-    end
-    
     #transpose departing/arriving times
     journeys.each do |j|
       j.departing_at = from.midnight + j.departing_seconds
@@ -83,70 +78,5 @@ class Journey < ActiveRecord::Base
   end
   
   
-  def self.load_journeys(departing, arriving, from)
-    #Fetch 4 days worth (one day for Monday to Thursday)
-    day_deltas = {}
-    TimetableType.all.each {|type| day_deltas[type.id] = nil}
-    count = day_deltas.length
-    index = 0
-    while count > 0
-      type = TimetableDay.find_by_wday((from + index.days).wday).timetable_type_id
-      if !day_deltas[type]
-        day_deltas[type] = from + index.days 
-        count -= 1
-      end
-      index += 1
-    end
-  
-    day_deltas.each do |key, day|
-      retries = 0
-      begin
-        CitytrainAPI.journeys departing, arriving, day
-      rescue Exception
-        retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-        retry if retries < 10
-        raise
-      end
-    end
-  end
-  
-  
-  # def self.debug
-  #   departing = Station.find_by_code 'CRO'
-  #   arriving = Station.find_by_code 'BNC'
-  #   departing_at = Time.parse("2010-06-22 20:39:00 +1000")
-  #   
-  #   find_with_stops(departing, arriving, departing_at)
-  # end
-  # 
-  # def self.find_with_stops(departing, arriving, departing_at)
-  #   # This function currently doesn't work!
-  #   logger.info 'find_with_stops'
-  #   j = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at).limit(1)
-  #   puts j.inspect
-  #   puts j.stops
-  #   logger.info '------------------------------------------------------------------------'
-  #   logger.info j.inspect
-  #   logger.info j.stops
-  #   logger.info '------------------------------------------------------------------------'
-  #   if j.stops && j.stops.empty?
-  #       j.load_stops 
-  #       j = Journey.departing_from(departing).arriving_to(arriving).departing_exactly_when(departing_at)
-  #   end
-  #   j
-  # end
-  # 
-  # def load_stops
-  #   if stops and stops.empty?
-  #     retries = 0
-  #     begin
-  #       CitytrainAPI.stops self
-  #     rescue Exception
-  #       retries += 1; sleep 3 #Sleep in between attempts (3 seconds)
-  #       retry if retries < 10
-  #       raise
-  #     end
-  #   end
-  # end
   
 end

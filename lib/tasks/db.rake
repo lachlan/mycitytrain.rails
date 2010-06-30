@@ -5,8 +5,6 @@ namespace :db do
     (1..4).each {|wday| TimetableDay.create(:timetable_type => TimetableType.find_or_create_by_name(:name => 'Mon-Thu'), :wday => wday)}
     TimetableDay.create(:timetable_type => TimetableType.create(:name => 'Fri'), :wday => 5)
     TimetableDay.create(:timetable_type => TimetableType.create(:name => 'Sat'), :wday => 6)
-    
-    CitytrainAPI.stations
   end
 
   desc "This drops the db, builds the db, and seeds the data."
