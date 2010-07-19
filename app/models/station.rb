@@ -1,6 +1,4 @@
 class Station < ActiveRecord::Base
-  has_friendly_id :name, :use_slug => true
-  
   has_many :departing_journeys, :class_name => "Journey", :foreign_key => "departing_id", :dependent => :destroy
   has_many :arriving_journeys, :class_name => "Journey", :foreign_key => "arriving_id", :dependent => :destroy
 
