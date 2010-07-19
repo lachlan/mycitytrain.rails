@@ -121,9 +121,9 @@ $(document).ready(function() {
 	addSwipeListener(document.body, function(e) {
 	    var target;
 	    if (e.direction == "left") {
-	        target = $('.page.active footer li.active').next();
+	        target = $('.page.active .footer li.active').next();
 	    } else {
-	        target = $('.page.active footer li.active').prev();
+	        target = $('.page.active .footer li.active').prev();
 	    }
 	    if (target) target.children('a').click();
 	});
