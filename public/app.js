@@ -196,22 +196,25 @@ $(document).ready(function() {
     
   var loadMoreJourneys = function(journeys, limit) {
     var prev = journeys.find('.journey').last();
-    var href = journeys.find('a.loader').attr('href').replace(/^(.*)=(.*)$/, '$1=' + prev.attr('title'));
-    if (limit && limit > 0) href = href + '&limit=' + limit;
-  
-    $.get(href, function(data) {
-      var id = generateID(href);
-      $('#' + id).remove();
-      $('.content').append('<div id="' + id + '"></div>');
-      $('#' + id).append(data);
-      prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
+    var href = journeys.find('a.loader').attr('href');
+    if (href) {
+      href = href.replace(/^(.*)=(.*)$/, '$1=' + prev.attr('title'));
+      if (limit && limit > 0) href = href + '&limit=' + limit;
+
+      $.get(href, function(data) {
+        var id = generateID(href);
         $('#' + id).remove();
-        var loader = journeys.find('a.loader');
-        loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('title')));
-      }));
-      // reattach handlers
-      handlers();
-    });
+        $('.content').append('<div id="' + id + '"></div>');
+        $('#' + id).append(data);
+        prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
+          $('#' + id).remove();
+          var loader = journeys.find('a.loader');
+          loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('title')));
+        }));
+        // reattach handlers
+        handlers();
+      });
+    }
   }  
   
   // add arrow key shortcuts for flipping between favourites and return journeys
