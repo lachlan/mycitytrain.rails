@@ -296,9 +296,9 @@ $(document).ready(function() {
   // show iphone hint
   if ($.support.iPhone && !$.support.Standalone) {
     window.setTimeout(function() {
-      $('body > .footer').slideToggle('slow');
+      $('.hint').slideToggle('slow');
       window.setTimeout(function() { 
-        $("body > .footer").slideToggle("slow"); 
+        $(".hint").slideToggle("slow"); 
       }, 8000);
     }, 1500);
   }

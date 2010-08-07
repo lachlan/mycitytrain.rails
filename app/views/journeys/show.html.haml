@@ -1,7 +1,6 @@
 .header
   %a.back.reverse.slide.fx{:href => "#"}Back
-  %h1
-    %a{:href => '/'}= SITE_NAME
+  %h1= SITE_NAME
 - if @journey.changes.nil? or @journey.changes.empty?
   %ol.journey.detail
     %li No details available.

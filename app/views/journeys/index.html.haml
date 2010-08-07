@@ -5,8 +5,7 @@
         .header
           %a.flip.fx.return{:href => "#fr#{favourite.id}"}
             %span Return
-          %h1
-            %a{:href => '/'}= SITE_NAME
+          %h1= SITE_NAME
           %a.slideup.fx{:href => '#settings'}
             %span.settings Settings
         = render :partial => 'journeys', :object => favourite.journeys
@@ -16,8 +15,7 @@
         .header
           %a.reverse.flip.fx.return{:href => "#f#{favourite.id}"}
             %span.inbound Return
-          %h1
-            %a{:href => '/'}= SITE_NAME
+          %h1= SITE_NAME
           %a.slideup.fx{:href => '#about'}
             %span.about About
         = render :partial => 'journeys', :object => favourite.return_journeys
@@ -26,8 +24,7 @@
 - unless request.xhr?
   #settings.page
     .header
-      %h1
-        %a{:href => '/'}= SITE_NAME
+      %h1= SITE_NAME
       - hclass = @settings.find { |f| f.departing and f.arriving }? '' : 'disabled'
       %a.submit.back.reverse.slideup.fx{:href => "#f0", :class => hclass}Done
     - form_tag "/settings", :method => "post" do
@@ -48,13 +45,12 @@
               = select "destination", setting.id, @stations.map {|s| [s.name, s.code]}, { :selected => arriving_code, :include_blank => 'Destination'}, {:class => 'destination'}
   #about.page
     .header
-      %h1.title
-        %a{:href => '/'}= SITE_NAME
+      %h1.title= SITE_NAME
       %a.back.reverse.slideup.fx{:href => "#"}Done
     %ul.panel
-      %li
+      %li.first.item
         %h2 About
         %p= ABOUT_BLURB
-      %li
+      %li.last.item
         %h2 Credits
         %p Design and development by Kevin Read and Lachlan Dowding. Served from #{h Socket.gethostname}.
