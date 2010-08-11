@@ -493,6 +493,7 @@ ol li a.loader {
   text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
   font-size: 15px;
   line-height: 40px;
+  margin: -9px;
 }
 input,select {
   text-shadow: none !important;
