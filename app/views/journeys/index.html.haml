@@ -1,26 +1,25 @@
 #favourites
-  - @favourites.each do |favourite|
-    - if favourite.departing and favourite.arriving
-      .page{:id => "f#{favourite.id}"}
-        .header
-          %a.flip.fx.return{:href => "#fr#{favourite.id}"}
-            %span Return
-          %h1= SITE_NAME
-          %a.slideup.fx{:href => '#settings'}
-            %span.settings Settings
-        = render :partial => 'journeys', :object => favourite.journeys
-        .footer
-          = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => favourite.id}
-      .page{:id => "fr#{favourite.id}"}
-        .header
-          %a.reverse.flip.fx.return{:href => "#f#{favourite.id}"}
-            %span.inbound Return
-          %h1= SITE_NAME
-          %a.slideup.fx{:href => '#about'}
-            %span.about About
-        = render :partial => 'journeys', :object => favourite.return_journeys
-        .footer
-          = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => favourite.id}
+  - @favourites.each_with_index do |favourite, id|
+    .page{:id => "f#{id}"}
+      .header
+        %a.flip.fx.return{:href => "#fr#{id}"}
+          %span Return
+        %h1= SITE_NAME
+        %a.slideup.fx{:href => '#settings'}
+          %span.settings Settings
+      = render :partial => 'journeys', :object => favourite.journeys
+      .footer
+        = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => id}
+    .page{:id => "fr#{favourite.id}"}
+      .header
+        %a.reverse.flip.fx.return{:href => "#f#{id}"}
+          %span.inbound Return
+        %h1= SITE_NAME
+        %a.slideup.fx{:href => '#about'}
+          %span.about About
+      = render :partial => 'journeys', :object => favourite.return_journeys
+      .footer
+        = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => id}
 - unless request.xhr?
   #settings.page
     .header

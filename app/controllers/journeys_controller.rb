@@ -8,10 +8,14 @@ class JourneysController < ApplicationController
     @stations = Station.find_all    
     @@limit.times do |i|
       s = session[:favourites][i] || []
-      favourite = Favourite.new(i, s[0], s[1])
-      @settings << favourite
-      @favourites << favourite if favourite.departing and favourite.arriving
+      if @settings.include? [s[1], s[0]]
+        @settings << []
+      else
+        @settings << [s[0], s[1]]
+      end
     end
+    @settings = @settings.map{|i| Favourite.new i[0], i[1]}
+    @favourites = @settings.select{|i| i.departing and i.arriving}
     render :layout => !request.xhr?
   end
   

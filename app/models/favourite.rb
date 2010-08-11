@@ -3,8 +3,7 @@ class Favourite
   
   @@limit = 5
   
-  def initialize(id, departing_code, arriving_code)
-    @id = id
+  def initialize(departing_code, arriving_code)
     @departing = Station.find_by_code departing_code if departing_code
     @arriving = Station.find_by_code arriving_code if arriving_code
   end
