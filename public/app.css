@@ -481,12 +481,6 @@ ol li {
   text-align: center;
   behavior: url(/PIE.htc);
 }
-ol li a {
-  padding: 9px 26px 9px 9px;
-  margin: -9px;
-  text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
-  background: transparent url(/images/chevron_17x13.png) no-repeat center right;
-}
 ol li > * {
   display: block;
   text-align: left;
