@@ -444,14 +444,14 @@ body {
   left: expression(this.previousSibling==null? '0' : 'auto');
 }
 .header a span {
-  background: url(/images/sprites.png) no-repeat -66px 0;
+  background: url(/images/sprites.png) no-repeat -60px 0;
   display: block;
   text-indent: -9999px;
   width: 25px;
   margin: 0 5px;
 }
 .header a span.inbound {
-  background-position: -41px 0;
+  background-position: -35px 0;
 }
 .header a span.settings {
   background-position: 0 0;
@@ -658,17 +658,10 @@ li p {
   right: 0;
 }
 .footer .arrow a span {
-  text-indent: -9999px;
-  color: transparent;
+  font-size:12px;
   display: block;
-  width: 6px;
-  height: 9px;
-  background: url(/images/sprites.png) no-repeat -35px 0;
-  margin: 8px 17px 8px 2px;
 }
 .footer .right a span {
-  background-position: -35px -9px;
-  margin: 8px 2px 8px 17px;
 }
 .footer .arrow a.disabled span {
   color: transparent;

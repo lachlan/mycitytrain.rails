@@ -126,8 +126,8 @@ body{-webkit-user-select:none;-webkit-text-size-adjust:none;background:black;fon
 .header a:first-child{left:0;}
 /* ie */
 .header a{left:expression(this.previousSibling==null? '0' :'auto');}
-.header a span{background:url(/images/sprites.png) no-repeat -66px 0;display:block;text-indent:-9999px;width:25px;margin:0 5px;}
-.header a span.inbound{background-position:-41px 0;}
+.header a span{background:url(/images/sprites.png) no-repeat -60px 0;display:block;text-indent:-9999px;width:25px;margin:0 5px;}
+.header a span.inbound{background-position:-35px 0;}
 .header a span.settings{background-position:0 0;width:18px;margin:0 8.5px;}
 .header a span.about{background-position:-18px 0;width:17px;margin:0 9px;}
 ol{font-size:17px;font-weight:bold;padding-bottom:10px;background:transparent url(/images/drop_shadow_1x10.png) bottom left repeat-x;list-style:none;}
@@ -158,8 +158,8 @@ li p{font-size:13px;}
 .footer ul li,.footer ul li *{line-height:25px;}
 .footer ul li.left,.footer ul li.right{display:block;position:absolute;left:0;}
 .footer ul li.right{left:auto;right:0;}
-.footer .arrow a span{text-indent:-9999px;color:transparent;display:block;width:6px;height:9px;background:url(/images/sprites.png) no-repeat -35px 0;margin:8px 17px 8px 2px;}
-.footer .right a span{background-position:-35px -9px;margin:8px 2px 8px 17px;}
+.footer .arrow a span{font-size:12px;display:block;}
+.footer .right a span{}
 .footer .arrow a.disabled span{color:transparent;background:none;}
 .stop .location{font-size:17px;width:134px;float:left;}
 .stop .time{width:75px;float:right;text-align:right;}
