@@ -10,7 +10,7 @@
       = render :partial => 'journeys', :object => favourite.journeys
       .footer
         = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => id}
-    .page{:id => "fr#{favourite.id}"}
+    .page{:id => "fr#{id}"}
       .header
         %a.reverse.flip.fx.return{:href => "#f#{id}"}
           %span.inbound Return
