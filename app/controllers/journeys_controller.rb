@@ -25,9 +25,9 @@ class JourneysController < ApplicationController
     
     @favourites = []
     cookie = []
-    origins.each { |key, value|
-      @favourites << Favourite.new(key.to_i, value, destinations[key])
-      cookie << [value, destinations[key]] unless value.empty? or destinations[key].empty?
+    origins.each_with_index { |value, index|
+      @favourites << Favourite.new(value, destinations[index])
+      cookie << [value, destinations[index]] unless value.empty? or destinations[index].empty?
     }
     
     session[:favourites] = cookie
