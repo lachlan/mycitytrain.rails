@@ -27,10 +27,10 @@ class JourneysController < ApplicationController
     cookie = []
     origins.each_with_index { |value, index|
       @favourites << Favourite.new(value, destinations[index])
-      cookie << [value, destinations[index]] unless value.empty? or destinations[index].empty?
+      cookie << [value, destinations[index]] unless value.empty? or destinations[index].empty? or cookie.include? [destinations[index], value]
     }
     
-    session[:favourites] = cookie
+    session[:favourites] = cookie.uniq
     redirect_to '/'
   end
   
