@@ -1,20 +1,11 @@
 #settings.page
   .header
     %h1= SITE_NAME
-    - hclass = @settings.find { |f| f.departing and f.arriving }? '' : 'disabled'
-    %a.submit.back.reverse.slideup.fx{:href => "#f0", :class => hclass}Done
+    %a.submit.back.reverse.slideup.fx{:href => "#f0"}Done
   - form_tag "/settings", :method => "post", :class => 'content' do
     %ol
-      - @settings.each do |setting|
+      - @settings.each_with_index do |favourite, index|
         %li
-          - if setting.departing
-            - departing_code = setting.departing.name
-          - else
-            - departing_code = nil
-          = text_field 'origin', setting.id, :class => 'origin', :placeholder => 'Origin', :value => departing_code
+          = text_field 'origin', index, :class => 'origin', :placeholder => 'Origin', :value => favourite.origin
           to 
-          - if setting.arriving
-            - arriving_code = setting.arriving.name
-          - else
-            - arriving_code = nil
-          = text_field 'destination', setting.id, :class => 'destination', :placeholder => 'Destination', :value => arriving_code
+          = text_field 'destination', index, :class => 'destination', :placeholder => 'Destination', :value => favourite.destination

@@ -1,11 +1,25 @@
 class Favourite
-  attr_accessor :id, :departing, :arriving
+  attr_accessor :id, :departing, :arriving, :origin, :destination
   
   @@limit = 5
   
-  def initialize(departing, arriving)
-    @departing = (Station.find_by_code(departing) || Station.find_by_name(departing)) if departing      
-    @arriving = (Station.find_by_code(arriving) || Station.find_by_name(arriving)) if arriving
+  def initialize(origin, destination)
+    @origin = origin
+    @destination = destination
+    @departing = find_station origin    
+    @arriving = find_station destination
+  end
+  
+  def origin
+    @origin || ""
+  end
+  
+  def destination
+    @destination || ""
+  end
+  
+  def empty?
+    origin.empty? and destination.empty?
   end
   
   def journeys(limit = @@limit)
@@ -14,6 +28,11 @@ class Favourite
   
   def return_journeys(limit = @@limit)
     Journey.upcoming(arriving, departing, @@limit)
+  end
+  
+  private
+  def find_station(name_or_code)
+    (Station.find_by_code(name_or_code) || Station.find_by_name(name_or_code)) if name_or_code
   end
   
 end

@@ -4,18 +4,13 @@ class JourneysController < ApplicationController
   @@limit = 5
   
   def index
-    @settings, @favourites = [], []
+    @settings = []
     @stations = Station.find_all    
     @@limit.times do |i|
       s = session[:favourites][i] || []
-      if @settings.include? [s[1], s[0]]
-        @settings << []
-      else
-        @settings << [s[0], s[1]]
-      end
+      @settings << Favourite.new(s[0], s[1])
     end
-    @settings = @settings.map{|i| Favourite.new i[0], i[1]}
-    @favourites = @settings.select{|i| i.departing and i.arriving}
+    @favourites = @settings.reject { |f| f.empty? }
     render :layout => !request.xhr?
   end
   
@@ -25,12 +20,15 @@ class JourneysController < ApplicationController
     
     @favourites = []
     cookie = []
-    origins.each_with_index { |value, index|
-      @favourites << Favourite.new(value, destinations[index])
-      cookie << [value, destinations[index]] unless value.empty? or destinations[index].empty? or cookie.include? [destinations[index], value]
+    origins.each { |key, value|
+      unless key.empty? and value.empty?
+        favourite = Favourite.new(value, destinations[key])
+        @favourites << favourite
+        cookie << [favourite.origin, favourite.destination]
+      end
     }
     
-    session[:favourites] = cookie.uniq
+    session[:favourites] = cookie
     redirect_to '/'
   end
   

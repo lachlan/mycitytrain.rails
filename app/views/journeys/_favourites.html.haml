@@ -7,7 +7,7 @@
         %h1= SITE_NAME
         %a.slideup.fx{:href => '#settings'}
           %span.ir.settings Settings
-      = render :partial => 'journeys', :object => favourite.journeys, :locals => {:departing => favourite.departing, :arriving => favourite.arriving}
+      = render :partial => 'journeys', :object => favourite.journeys, :locals => {:origin => favourite.origin, :destination => favourite.destination}
       .footer
         = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => @favourites.length, :idx => id}
     .page{:id => "fr#{id}"}
@@ -17,6 +17,6 @@
         %h1= SITE_NAME
         %a.slideup.fx{:href => '#about'}
           %span.ir.about About
-      = render :partial => 'journeys', :object => favourite.return_journeys, :locals => {:departing => favourite.arriving, :arriving => favourite.departing}
+      = render :partial => 'journeys', :object => favourite.return_journeys, :locals => {:origin => favourite.destination, :destination => favourite.origin}
       .footer
         = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => @favourites.length, :idx => id}

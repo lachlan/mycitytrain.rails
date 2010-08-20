@@ -70,12 +70,15 @@ $(document).ready(function() {
   var active = 'active';
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
   
-  var cache = new Array();
-  var search = function(term) {
-    var pattern = new RegExp('^' + term, 'i');
+  var stations = new Array();
+  var search = function(term, exact) {
+    if (exact)
+      var pattern = new RegExp('^' + term + '$', 'i');
+    else
+      var pattern = new RegExp('^' + term, 'i');
     var matches = new Array();
-    for (var i = 0; i < cache.length; i++) {
-      if (cache[i].match(pattern)) matches.push(cache[i]);
+    for (var i = 0; i < stations.length; i++) {
+      if (stations[i].match(pattern)) matches.push(stations[i]);
     }
     return matches;
   };
@@ -83,16 +86,22 @@ $(document).ready(function() {
 	$('input.origin, input.destination').autocomplete({
 		minLength: 1,
 		source: function(request, response) {
-			if (cache.length > 0) {
-				response(search(request.term));
-			} else {
-  			$.getJSON('/stations', function(data) {
-          cache = data;
-          response(search(request.term));
-        });
-      }
+		  loadStations(function() {
+		    response(search(request.term));
+		  });
 		}
 	});
+	
+	var loadStations = function(callback) {
+	  if (stations.length == 0) {
+  	  $.getJSON('/stations', function(data) {
+  	    stations = data;
+        if (callback) callback();
+      });
+    } else {
+      if (callback) callback();
+    }
+	};
     
   var handlers = function() {
     // load some more journeys
@@ -110,23 +119,6 @@ $(document).ready(function() {
     // don't allow click events on disabled links
     $('a.disabled').click(function() {
       return false;
-    });
-
-    // disable done button until user configures a journey
-    $(':input').change(function() {
-      var input = $(this);
-      var link = input.parents('.page').find('a.back');
-      var form = input.parents('form').first();
-      form.data('dirty', true);
-  
-      link.addClass('disabled');
-      form.find('li').each(function() {
-        var selected = $(this).find(":selected");
-        var value = selected.first().attr('value');
-        // if you've selected at least one journey, and the origin and destination don't match
-        if ((selected.filter("[value='']").length == 0) && (selected.filter("[value='" + value + "']").length < 2))
-          link.removeClass('disabled');
-      });
     });
   
     // handle transition event
@@ -168,29 +160,42 @@ $(document).ready(function() {
       return false;
     });
 
+    var updateStationName = function() {
+      var value = $(this).attr('value');
+      if (value) {
+        var matches = search(value, true);
+        if (matches.length > 0) {
+          $(this).attr('value', matches[0]);
+        }
+      }
+    };
+
+    $('#settings form input').change(updateStationName);
+
     // ajax post settings form and load favourites
     $('.submit').click(function() {
-      var link = $(this).addClass('disabled');
-      var form = link.parents('.page').find('form');
-      if (form.data('dirty')) {
+      var link = $(this);
+      var form = $('#settings form');
+      
+      loadStations(function() {
+        link.addClass('disabled');
+        
+        // set station name to correctly capitalized name
+        $('#settings form input[type=text]').each(updateStationName);
+
         $.post(form.attr('action'), form.serialize(), function(data) {
           if ($.browser.msie) {
-            location.href = "/";
+            location.href = '/';
           } else {
             loadFavourites(function() {
               handlers();
-              if ($('#favourites').length == 0) {
-                link.addClass('disabled');
-              } else {
+              if ($('#favourites').length > 0) {
                 link.trigger('transition').removeClass('disabled');
-                form.data('dirty', false)
               }
             });
           }
-        });
-      } else {
-        link.trigger('transition').removeClass('disabled');
-      }
+        });        
+      });
       return false;
     });
   };
@@ -237,7 +242,7 @@ $(document).ready(function() {
         handlers();
       });
     }
-  }  
+  }
   
   // add arrow key shortcuts for flipping between favourites and return journeys
   $(document).keydown(function(event) {
