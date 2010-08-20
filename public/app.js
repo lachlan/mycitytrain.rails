@@ -170,32 +170,38 @@ $(document).ready(function() {
       }
     };
 
-    $('#settings form input').change(updateStationName);
+    $('#settings form input').change(function() {
+      updateStationName();
+      $(this).parents('form').data('dirty', true);
+    });
 
     // ajax post settings form and load favourites
     $('.submit').click(function() {
       var link = $(this);
       var form = $('#settings form');
       
-      loadStations(function() {
-        link.addClass('disabled');
-        
-        // set station name to correctly capitalized name
-        $('#settings form input[type=text]').each(updateStationName);
-
-        $.post(form.attr('action'), form.serialize(), function(data) {
-          if ($.browser.msie) {
-            location.href = '/';
-          } else {
-            loadFavourites(function() {
-              handlers();
-              if ($('#favourites').length > 0) {
-                link.trigger('transition').removeClass('disabled');
-              }
-            });
-          }
-        });        
-      });
+      if (form.data('dirty')) {
+        loadStations(function() {
+          link.addClass('disabled');
+          // set station name to correctly capitalized name
+          $('#settings form input[type=text]').each(updateStationName);
+          $.post(form.attr('action'), form.serialize(), function(data) {
+            form.data('dirty', false);
+            if ($.browser.msie) {
+              location.href = '/';
+            } else {
+              loadFavourites(function() {
+                handlers();
+                if ($('#favourites').length > 0) {
+                  link.trigger('transition').removeClass('disabled');
+                }
+              });
+            }
+          });        
+        });
+      } else {
+        link.trigger('transition').removeClass('disabled');
+      }
       return false;
     });
   };
