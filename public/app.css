@@ -283,6 +283,16 @@ a.disabled {
 h1,h2,h3,h4,h5,h6{
   font-size: 17px;
 }
+.browser-warning {
+  border: 5px solid #e50000;
+  background: #a01010;
+  display:block;
+  padding: 9px;
+  font-size: 20px;
+}
+.browser-warning a {
+  border-bottom: 1px solid white;
+}
 .page {
   overflow: hidden;
   -webkit-backface-visibility: hidden;
