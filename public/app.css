@@ -288,7 +288,7 @@ h1,h2,h3,h4,h5,h6{
   background: #a01010;
   display:block;
   padding: 9px;
-  font-size: 20px;
+  font-size: 17px;
 }
 .browser-warning a {
   border-bottom: 1px solid white;
@@ -320,9 +320,7 @@ h1,h2,h3,h4,h5,h6{
   background: #333;
   background-image: -webkit-gradient(linear,0 0,0 100%,from(rgba(255,255,255,0.45)),to(transparent),color-stop(50%,rgba(255,255,255,0.25)),color-stop(50%,transparent));
   background-image: -moz-linear-gradient(top,rgba(255,255,255,0.45),rgba(255,255,255,0.25) 50%,transparent 50%);
-  -pie-background: #333, linear-gradient(top, rgba(255,255,255,0.45),rgba(255,255,255,0.25) 50%,transparent 50%);
   border-bottom: 3px solid #282828;
-  behavior: url(/PIE.htc);
 }
 .header h1 {
   font-size: 18px;
@@ -348,8 +346,6 @@ h1,h2,h3,h4,h5,h6{
   background: black;
   background-image: -webkit-gradient(linear,0 0,0 100%,from(rgba(255,255,255,0.45)),to(transparent),color-stop(50%,rgba(255,255,255,0.25)),color-stop(50%,transparent));
   background-image: -moz-linear-gradient(top,rgba(255,255,255,0.45),rgba(255,255,255,0.25) 50%,transparent 50%);
-  -pie-background: linear-gradient(top, rgba(255,255,255,0.45),rgba(255,255,255,0.25) 50%,transparent 50%);
-  behavior: url(/PIE.htc);
 }
 .header a.left {
   left: 0;
@@ -392,10 +388,8 @@ ol li {
   background: #f4f4f4;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#f4f4f4),to(#e5e5e5));
   background-image: -moz-linear-gradient(top,#f4f4f4,#e5e5e5);
-  -pie-background: #f4f4f4, linear-gradient(top,#f4f4f4,#e5e5e5); 
   color: #666;
   text-align: left;
-  behavior: url(/PIE.htc);
   height:62px;
 }
 ol li a.loader {
@@ -458,24 +452,18 @@ ol li a.loader {
   border-bottom: 1px solid #59b200;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#66cc00),to(#53bc00));
   background-image: -moz-linear-gradient(top,#66cc00,#53bc00);
-  -pie-background: #66cc00, linear-gradient(top,#66cc00,#53bc00);
-  behavior: url(/PIE.htc);
 }
 .lt_ten {
   background: #ff8c00;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#ff8c00),to(#d86c00));
   background-image: -moz-linear-gradient(top,#ff8c00,#d86c00);
-  -pie-background: #ff8c00, linear-gradient(top,#ff8c00,#d86c00);
   border-color: #c60;
-  behavior: url(/PIE.htc);
 }
 .lt_five {
   background: #e50000;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#e50000),to(#bf0000));
   background-image: -moz-linear-gradient(top,#e50000,#bf0000);
-  -pie-background: #e50000, linear-gradient(top,#e50000,#bf0000);
   border-color: #b20000;
-  behavior: url(/PIE.htc);
 }
 input, select {
   text-shadow: none !important;
@@ -493,16 +481,12 @@ form li {
   margin: 9px;
   border: 1px solid #d9d9d9;
   background: #e5e5e5;
-  background-image: -webkit-gradient(linear,left top,left bottom,from(#f4f4f4),to(#e5e5e5));
-  background-image: -moz-linear-gradient(top,#f4f4f4,#e5e5e5);
-  -pie-background: #e5e5e5, linear-gradient(top,#f4f4f4,#e5e5e5);
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
   border-radius: 8px;
   -webkit-box-shadow: 0 9px 9px rgba(0,0,0,0.1);
   -moz-box-shadow: 0 9px 9px rgba(0,0,0,0.1);
   box-shadow: 0 9px 9px rgba(0,0,0,0.1);
-  behavior: url(/PIE.htc);
 }
 .panel .item {
   text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
@@ -515,8 +499,6 @@ form li {
   background: #f4f4f4;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#f4f4f4),to(#e5e5e5));
   background-image: -moz-linear-gradient(top,#f4f4f4,#e5e5e5);
-  -pie-background: #f4f4f4, linear-gradient(top,#f4f4f4,#e5e5e5);
-  behavior: url(/PIE.htc);
 }
 .panel * {
   font-weight: normal;
@@ -532,7 +514,6 @@ form li {
   -webkit-border-bottom-right-radius: 8px;
   -moz-border-radius: 0 0 8px 8px;
   border-radius: 0 0 8px 8px;
-  behavior: url(/PIE.htc);
 }
 .panel .first {
   border: none;
@@ -540,7 +521,6 @@ form li {
   -webkit-border-top-right-radius: 8px;
   -moz-border-radius: 8px 8px 0 0;
   border-radius: 8px 8px 0 0;
-  behavior: url(/PIE.htc);
 }
 .panel a {
   color: black;
@@ -603,14 +583,11 @@ form li {
   -webkit-box-shadow: -3px 3px 9px rgba(0,0,0,0.5);
   -moz-box-shadow: 9px 9px 9px rgba(0,0,0,0.5);
   box-shadow: 9px 9px 9px rgba(0,0,0,0.5);
-  behavior: url(/PIE.htc);
 }
 .ui-autocomplete li a {
   background: #545454;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#545454),to(#454545));
   background-image: -moz-linear-gradient(top,#545454,#454545);
-  -pie-background: #545454, linear-gradient(top,#545454,#454545);
-  behavior: url(/PIE.htc);
   border: 1px solid #393939;  
   border-top:none;
   color:white;
@@ -624,8 +601,6 @@ form li {
   background: #242424;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#242424),to(#151515));
   background-image: -moz-linear-gradient(top,#242424,#151515);
-  -pie-background: #242424, linear-gradient(top,#242424,#151515);
-  behavior: url(/PIE.htc);
 }
 /* 
  * print styles
