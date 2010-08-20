@@ -64,14 +64,36 @@ var generateID = function(href) {
 }
 
 $(document).ready(function() {
-  $.support.iPhone = ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)));
-  $.support.Standalone = window.navigator.standalone;
   $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
 
   var journey_limit = 5;
   var active = 'active';
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
   
+  var cache = new Array();
+  var search = function(term) {
+    var pattern = new RegExp('^' + term, 'i');
+    var matches = new Array();
+    for (var i = 0; i < cache.length; i++) {
+      if (cache[i].match(pattern)) matches.push(cache[i]);
+    }
+    return matches;
+  };
+  
+	$('input.origin, input.destination').autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			if (cache.length > 0) {
+				response(search(request.term));
+			} else {
+  			$.getJSON('/stations', function(data) {
+          cache = data;
+          response(search(request.term));
+        });
+      }
+		}
+	});
+    
   var handlers = function() {
     // load some more journeys
     $('a.loader').click(function() {
@@ -134,8 +156,8 @@ $(document).ready(function() {
       } else {
         // load external links via ajax directly into page content
         var id = generateID(href);
-        $('.content').find('#' + id).remove();
-        $('.content').append('<div id="' + id + '" class="page"></div>');
+        $('body').find('#' + id).remove();
+        $('body').append('<div id="' + id + '" class="page"></div>');
         link.addClass('disabled');
         $.get(href, function(data) {
           fx($('#' + id).append(data));
@@ -189,7 +211,7 @@ $(document).ready(function() {
   var loadFavourites = function(callback) {
     $.get('/', function(data) {
       $('#favourites').remove();
-      $('.content').append(data);
+      $('body').append(data);
       if (callback) callback();
     });
   }
@@ -204,7 +226,7 @@ $(document).ready(function() {
       $.get(href, function(data) {
         var id = generateID(href);
         $('#' + id).remove();
-        $('.content').append('<div id="' + id + '"></div>');
+        $('body').append('<div id="' + id + '"></div>');
         $('#' + id).append(data);
         prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
           $('#' + id).remove();
@@ -242,7 +264,7 @@ $(document).ready(function() {
       var journey = eta.parents('.journey');
       var departureDate = new Date();
       var currentDate = new Date();
-      departureDate.setTime(eta.parent().find('.time').first().attr('data-time'));
+      departureDate.setTime(eta.parent().find('time').first().attr('data-time'));
     
       var duration = durationInSeconds(currentDate, departureDate);
     
@@ -292,14 +314,4 @@ $(document).ready(function() {
   setActivePage(setMinHeight);
   updateETAs();
   handlers();
-  
-  // show iphone hint
-  if ($.support.iPhone && !$.support.Standalone) {
-    window.setTimeout(function() {
-      $('.hint').slideToggle('slow');
-      window.setTimeout(function() { 
-        $(".hint").slideToggle("slow"); 
-      }, 8000);
-    }, 1500);
-  }
 });

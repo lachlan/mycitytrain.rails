@@ -3,9 +3,9 @@ class Favourite
   
   @@limit = 5
   
-  def initialize(departing_code, arriving_code)
-    @departing = Station.find_by_code departing_code if departing_code
-    @arriving = Station.find_by_code arriving_code if arriving_code
+  def initialize(departing, arriving)
+    @departing = (Station.find_by_code(departing) || Station.find_by_name(departing)) if departing      
+    @arriving = (Station.find_by_code(arriving) || Station.find_by_name(arriving)) if arriving
   end
   
   def journeys(limit = @@limit)

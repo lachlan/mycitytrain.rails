@@ -1,6 +1,13 @@
-%ol.journeys
+%ol.journeys.content
   - if journeys and journeys.length > 0
     = render :partial => 'journey', :collection => journeys
     = render :partial => 'load_more_journeys', :locals => {:journeys => journeys}
   - else
-    %li= "No journeys could be found at this time."
+    %li.journey
+      %p.warning!= "&#9888;"
+      %p.origin
+        =departing.name 
+      %p.destination
+        =arriving.name 
+      %p.message No journeys found at this time.
+      

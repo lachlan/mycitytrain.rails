@@ -1,8 +1,12 @@
-%li.journey.summary.group{:title=>format_time(journey.departing_at, :iso8601)}
-  %span.eta{:class=>classify_duration_to_now(journey.departing_at)}=duration_in_concise_words_from_now(journey.departing_at)
-  %span.origin
-    %span.location= journey.departing.name
-    %abbr.time{:title => format_time(journey.departing_at, :iso8601), :"data-time" => format_time(journey.departing_at, :js)}= format_time(journey.departing_at)
-  %span.destination
-    %span.location= journey.arriving.name
-    %abbr.time{:title => format_time(journey.arriving_at, :iso8601), :"data-time" => format_time(journey.arriving_at, :js)}= format_time(journey.arriving_at)
+%li.journey{:title=>format_time(journey.departing_at, :iso8601)}
+  %p.eta{:class=>classify_duration_to_now(journey.departing_at)}
+    %span.visuallyhidden Departing in
+    =duration_in_concise_words_from_now(journey.departing_at)
+  %p.origin
+    %span.visuallyhidden Departs
+    =journey.departing.name 
+    %time{:datetime => format_time(journey.departing_at, :iso8601), :"data-time" => format_time(journey.departing_at, :js)}= format_time(journey.departing_at)
+  %p.destination
+    %span.visuallyhidden Arrives 
+    =journey.arriving.name 
+    %time{:datetime => format_time(journey.arriving_at, :iso8601), :"data-time" => format_time(journey.arriving_at, :js)}= format_time(journey.arriving_at)

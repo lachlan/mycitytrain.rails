@@ -9,7 +9,8 @@
         %span!= "&#9664;"
   - count.times do |i|
     - if i == idx
-      %li.active!= "&#9679;"
+      %li.active
+        %a{:href => '#'}!= "&#9679;"
     - elsif i < idx
       %li
         %a.reverse.slide.fx{:href => "##{id_prefix}#{i}"}!= "&#9675;"

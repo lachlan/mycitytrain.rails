@@ -7,4 +7,8 @@ ActionController::Routing::Routes.draw do |map|
     # show not currently working
     # t.connect '/:departing/:arriving/:departing_at', :action => 'show'
   end
+  
+  map.with_options :controller => 'station' do |t|
+    t.connect '/stations', :action => 'index'
+  end
 end
