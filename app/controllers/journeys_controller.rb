@@ -1,7 +1,7 @@
 class JourneysController < ApplicationController  
   before_filter :find_stations, :except => [:index, :create]
   protect_from_forgery :only => [:create, :update, :destroy] 
-  @@limit = 5
+  @@limit = 7
   
   def index
     @settings = []
@@ -20,7 +20,8 @@ class JourneysController < ApplicationController
     
     @favourites = []
     cookie = []
-    origins.each { |key, value|
+    origins.sort.each { |item|
+      key, value = item[0], item[1]
       unless key.empty? and value.empty?
         favourite = Favourite.new(value, destinations[key])
         @favourites << favourite
