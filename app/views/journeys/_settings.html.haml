@@ -11,12 +11,10 @@
             - departing_code = setting.departing.name
           - else
             - departing_code = nil
-          /= select "origin", setting.id, @stations.map {|s| [s.name, s.code]}, { :selected => departing_code, :include_blank => 'Origin'}, {:class => 'origin'}
           = text_field 'origin', setting.id, :class => 'origin', :placeholder => 'Origin', :value => departing_code
           to 
           - if setting.arriving
             - arriving_code = setting.arriving.name
           - else
             - arriving_code = nil
-          /= select "destination", setting.id, @stations.map {|s| [s.name, s.code]}, { :selected => arriving_code, :include_blank => 'Destination'}, {:class => 'destination'}
           = text_field 'destination', setting.id, :class => 'destination', :placeholder => 'Destination', :value => arriving_code
