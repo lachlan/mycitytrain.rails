@@ -294,33 +294,44 @@ $(document).ready(function() {
       }
     });
   
-    $('.journeys').each(function() {
-      var journeys = $(this);
-      var expired = journeys.find('.journey.expired');
-      var count = journey_limit - (journeys.find('.journey').length - expired.length);
-    
-      if (count > 0) loadMoreJourneys(journeys, count);
-    
-      expired.animate({opacity:0.5},1000,'linear',function() {
-        $(this).animate({opacity:1},1000,'linear',function() {
-          $(this).animate({opacity:0.5},1000,'linear',function() {
-            $(this).animate({opacity:1},1000,'linear',function() {
-              $(this).animate({opacity:0.5},1000,'linear',function() {
-                $(this).animate({opacity:1},1000,'linear',function() {                        
-                  $(this).slideUp('slow', function() {
-                    var parent = $(this).parents('.journeys');
-                    $(this).remove();
+    var flasher = function(element) {
+      if (element) {
+        element.animate({opacity:0.5},1000,'linear',function() {
+          $(this).animate({opacity:1},1000,'linear',function() {
+            $(this).animate({opacity:0.5},1000,'linear',function() {
+              $(this).animate({opacity:1},1000,'linear',function() {
+                $(this).animate({opacity:0.5},1000,'linear',function() {
+                  $(this).animate({opacity:1},1000,'linear',function() {                        
+                    $(this).slideUp('slow', function() {
+                      var parent = $(this).parents('.journeys');
+                      $(this).remove();
+                    });
                   });
                 });
               });
             });
           });
         });
-      });
+      }
+    };
+  
+    $('.journeys').each(function() {
+      var journeys = $(this);
+      var expired = journeys.find('.journey.expired');
+      var count = journey_limit - (journeys.find('.journey').length - expired.length);
+      if (count > 0) loadMoreJourneys(journeys, count);
+      flasher(expired);
     });
     // reschedule next run
     window.setTimeout(updateETAs, millisecondsUntilNextMinute());
   }
+  
+  var browserWarning = $('.ie6 .browser-warning, .ie7 .browser-warning, .ie8 .browser-warning');
+  browserWarning.slideDown('slow', function() {
+    window.setTimeout(function() {
+      browserWarning.slideUp('slow');
+    }, 20000);
+  })
   
   setActivePage(setMinHeight);
   updateETAs();

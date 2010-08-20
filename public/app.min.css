@@ -113,7 +113,7 @@ body{-webkit-user-select:none;-webkit-perspective:800;-webkit-transform-style:pr
 a:link,a:active,a:visited{color:white;text-decoration:none;}
 a.disabled{cursor:default;-webkit-tap-highlight-color:transparent;}
 h1,h2,h3,h4,h5,h6{font-size:17px;}
-.browser-warning{border:5px solid #e50000;background:#a01010;display:block;padding:9px;font-size:17px;}
+.browser-warning{border:5px solid #e50000;background:#a01010;display:none;padding:9px;font-size:17px;}
 .browser-warning a{border-bottom:1px solid white;}
 .page{overflow:hidden;-webkit-backface-visibility:hidden;-webkit-box-sizing:border-box;display:none;position:absolute;left:0;width:100%;-webkit-transform:translate3d(0,0,0) rotate(0) scale(1);min-height:100%;background:#3a3a3a url(/images/background_4x1.png) top left repeat;margin:0 auto;}
 .ie6 .page{height:100%;}
