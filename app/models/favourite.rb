@@ -11,11 +11,19 @@ class Favourite
   end
   
   def origin
-    @origin || ""
+    if @departing
+      @departing.name
+    else
+      @origin || ""
+    end
   end
   
   def destination
-    @destination || ""
+    if @arriving
+      @arriving.name
+    else
+      @destination || ""
+    end
   end
   
   def empty?
