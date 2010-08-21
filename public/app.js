@@ -324,7 +324,7 @@ $(document).ready(function() {
   var browserWarning = $('.ie6 .browser-warning, .ie7 .browser-warning, .ie8 .browser-warning');
   browserWarning.slideDown('slow', function() {
     window.setTimeout(function() {
-      browserWarning.slideUp('slow');
+      browserWarning.slideUp('slow').remove();
     }, 10000);
   })
   
