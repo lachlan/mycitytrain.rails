@@ -187,16 +187,12 @@ $(document).ready(function() {
           $('#settings form input[type=text]').each(updateStationName);
           $.post(form.attr('action'), form.serialize(), function(data) {
             form.data('dirty', false);
-            if ($.browser.msie) {
-              location.href = '/';
-            } else {
-              loadFavourites(function() {
-                handlers();
-                if ($('#favourites').length > 0) {
-                  link.trigger('transition').removeClass('disabled');
-                }
-              });
-            }
+            loadFavourites(function() {
+              handlers();
+              if ($('#favourites').length > 0) {
+                link.trigger('transition').removeClass('disabled');
+              }
+            });
           });        
         });
       } else {
