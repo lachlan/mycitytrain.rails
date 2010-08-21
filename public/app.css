@@ -577,15 +577,32 @@ form li {
   color: transparent;
   background: none;
 }
-.ui-autocomplete {
-  background:transparent;
-  list-style:none;
-  width:auto !important;
-  -webkit-box-shadow: -3px 3px 9px rgba(0,0,0,0.5);
-  -moz-box-shadow: 9px 9px 9px rgba(0,0,0,0.5);
-  box-shadow: 9px 9px 9px rgba(0,0,0,0.5);
+.ui-autocomplete { 
+  position: absolute; 
+  cursor: default; 
 }
-.ui-autocomplete li a {
+* html .ui-autocomplete { 
+  width:1px; /* without this, the menu expands to 100% in IE6 */
+}
+.ui-menu {
+	list-style:none;
+	display:block;
+	float: left;	
+	background:transparent;
+  -webkit-box-shadow: -3px 3px 9px rgba(0,0,0,0.5);
+  -moz-box-shadow: -3px 3px 9px rgba(0,0,0,0.5);
+  box-shadow: -3px 3px 9px rgba(0,0,0,0.5);
+}
+.ui-menu .ui-menu-item {
+	zoom: 1;
+	float: left;
+	clear: left;
+	width: 100%;
+}
+.ui-menu .ui-menu-item a {
+	text-decoration:none;
+	display:block;
+	zoom:1;
   background: #545454;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#545454),to(#454545));
   background-image: -moz-linear-gradient(top,#545454,#454545);
@@ -595,10 +612,12 @@ form li {
   text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
   display:block;
   font-size:13px;
-  padding:9px;
+  line-height:20px;
+  padding:6px;	
 }
-.ui-autocomplete li a:hover {
-  border-color:transparent;
+.ui-menu .ui-menu-item a.ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-active {
+	border-color:transparent;
   background: #242424;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#242424),to(#151515));
   background-image: -moz-linear-gradient(top,#242424,#151515);
