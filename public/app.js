@@ -322,10 +322,10 @@ $(document).ready(function() {
   }
   
   var browserWarning = $('.ie6 .browser-warning, .ie7 .browser-warning, .ie8 .browser-warning');
-  browserWarning.slideDown('slow', function() {
+  browserWarning.first().slideDown('slow', function() {
     window.setTimeout(function() {
-      browserWarning.slideUp('slow', function() {
-        $(this).remove();
+      browserWarning.first().slideUp('slow', function() {
+        $('.browser-warning').remove();
       });
     }, 10000);
   })
