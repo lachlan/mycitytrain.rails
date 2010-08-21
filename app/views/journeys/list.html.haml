@@ -1,4 +1,4 @@
 .page{:id => h("#{@departing.name}_to_#{@arriving.name}")}
   .header
     %h1= SITE_NAME
-  = render :partial => 'journeys'
+  = render :partial => 'journeys', :object => @journeys, :locals => {:origin => @departing.name, :destination => @arriving.name}

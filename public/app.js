@@ -159,48 +159,48 @@ $(document).ready(function() {
       }
       return false;
     });
-
-    var updateStationName = function() {
-      var value = $(this).attr('value');
-      if (value) {
-        var matches = search(value, true);
-        if (matches.length > 0) {
-          $(this).attr('value', matches[0]);
-        }
-      }
-    };
-
-    $('#settings form input').change(function() {
-      updateStationName();
-      $(this).parents('form').data('dirty', true);
-    });
-
-    // ajax post settings form and load favourites
-    $('.submit').click(function() {
-      var link = $(this);
-      var form = $('#settings form');
-      
-      if (form.data('dirty')) {
-        loadStations(function() {
-          link.addClass('disabled');
-          // set station name to correctly capitalized name
-          $('#settings form input[type=text]').each(updateStationName);
-          $.post(form.attr('action'), form.serialize(), function(data) {
-            form.data('dirty', false);
-            loadFavourites(function() {
-              handlers();
-              if ($('#favourites').length > 0) {
-                link.trigger('transition').removeClass('disabled');
-              }
-            });
-          });        
-        });
-      } else {
-        link.trigger('transition').removeClass('disabled');
-      }
-      return false;
-    });
   };
+  
+  var updateStationName = function() {
+    var value = $(this).attr('value');
+    if (value) {
+      var matches = search(value, true);
+      if (matches.length > 0) {
+        $(this).attr('value', matches[0]);
+      }
+    }
+  };
+
+  $('#settings form input').change(function() {
+    updateStationName();
+    $(this).parents('form').data('dirty', true);
+  });
+
+  // ajax post settings form and load favourites
+  $('.submit').click(function() {
+    var link = $(this);
+    var form = $('#settings form');
+    
+    //if (form.data('dirty')) {
+      loadStations(function() {
+        link.addClass('disabled');
+        // set station name to correctly capitalized name
+        $('#settings form input[type=text]').each(updateStationName);
+        $.post(form.attr('action'), form.serialize(), function(data) {
+          form.data('dirty', false);
+          loadFavourites(function() {
+            handlers();
+            if ($('#favourites').length > 0) {
+              link.trigger('transition').removeClass('disabled');
+            }
+          });
+        });        
+      });
+    //} else {
+    //  link.trigger('transition').removeClass('disabled');
+    //}
+    return false;
+  });
   
   var setActivePage = function(callback, fadeIn) {  
     var activePages = $('.page.' + active);
@@ -216,7 +216,7 @@ $(document).ready(function() {
   }
 
   var loadFavourites = function(callback) {
-    $.get('/', function(data) {
+    $.get('/favourites', function(data) {
       $('#favourites').replaceWith(data);
       if (callback) callback();
     });
@@ -317,6 +317,7 @@ $(document).ready(function() {
       if (count > 0) loadMoreJourneys(journeys, count);
       flasher(expired);
     });
+
     // reschedule next run
     window.setTimeout(updateETAs, millisecondsUntilNextMinute());
   }

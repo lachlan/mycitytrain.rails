@@ -1,16 +1,15 @@
 class JourneysController < ApplicationController  
-  before_filter :find_stations, :except => [:index, :create]
+  before_filter :find_stations, :except => [:index, :favourites, :create]
+  before_filter :find_favourites, :only => [:index, :favourites]
+  
   protect_from_forgery :only => [:create, :update, :destroy] 
-  @@limit = 7
+  @@journeys_limit = 5
+  @@settings_limit = 7
   
   def index
-    @settings = []
-    @stations = Station.find_all    
-    @@limit.times do |i|
-      s = session[:favourites][i] || []
-      @settings << Favourite.new(s[0], s[1])
-    end
-    @favourites = @settings.reject { |f| f.empty? }
+  end
+  
+  def favourites
     render :layout => !request.xhr?
   end
   
@@ -34,7 +33,7 @@ class JourneysController < ApplicationController
   end
   
   def list
-    limit = params[:limit] || @@limit
+    limit = params[:limit] || @@journeys_limit
     if params[:after]
       after = Time.zone.parse(params[:after])
       after = Time.zone.now if after < Time.zone.now # only return journeys that haven't departed yet
@@ -69,4 +68,14 @@ class JourneysController < ApplicationController
       redirect_to :action => 'index'
     end
   end
+  
+  def find_favourites
+    @settings = []
+    @stations = Station.find_all    
+    @@settings_limit.times do |i|
+      s = session[:favourites][i] || []
+      @settings << Favourite.new(s[0], s[1])
+    end
+    @favourites = @settings.reject { |f| f.empty? }
+  end 
 end
