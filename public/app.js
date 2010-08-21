@@ -329,7 +329,7 @@ $(document).ready(function() {
   browserWarning.slideDown('slow', function() {
     window.setTimeout(function() {
       browserWarning.slideUp('slow');
-    }, 20000);
+    }, 10000);
   })
   
   setActivePage(setMinHeight);
