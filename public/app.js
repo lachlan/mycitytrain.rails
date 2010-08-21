@@ -63,26 +63,64 @@ var generateID = function(href) {
   return 'id' + href.replace(/[^a-zA-Z0-9]/g, '_');
 }
 
+var stations = new Array();
+var search = function(term, exact) {
+  if (exact)
+    var pattern = new RegExp('^' + term + '$', 'i');
+  else
+    var pattern = new RegExp('^' + term, 'i');
+  var matches = new Array();
+  for (var i = 0; i < stations.length; i++) {
+    if (stations[i].match(pattern)) matches.push(stations[i]);
+  }
+  return matches;
+};
+
+var loadStations = function(callback) {
+  if (stations.length == 0) {
+	  $.getJSON('/stations', function(data) {
+	    stations = data;
+      if (callback) callback();
+    });
+  } else {
+    if (callback) callback();
+  }
+};
+
+var updateStationName = function(element) {
+  var value = $(element).attr('value');
+  if (value) {
+    var matches = search(value, true);
+    if (matches.length > 0) {
+      $(element).attr('value', matches[0]);
+    }
+  }
+};
+
+// save the original value of each form input field
+// only works for <input> elements
+var saveFormValues = function(form) {
+  $(form).find('input').each(function() {
+    $(this).data('value', $(this).attr('value'));
+  });
+}
+
+var formHasChanged = function(form) {
+  var dirty = false;
+  $(form).find('input').each(function() {
+    dirty = dirty || ($(this).attr('value') !== $(this).data('value'));
+  });
+  return dirty;
+};
+
 $(document).ready(function() {
   $.support.WebKitAnimationEvent = (typeof WebKitTransitionEvent == "object");
 
   var journey_limit = 5;
   var active = 'active';
   var effects = 'fx in out flip slide pop cube swap slideup dissolve fade reverse';
-  
-  var stations = new Array();
-  var search = function(term, exact) {
-    if (exact)
-      var pattern = new RegExp('^' + term + '$', 'i');
-    else
-      var pattern = new RegExp('^' + term, 'i');
-    var matches = new Array();
-    for (var i = 0; i < stations.length; i++) {
-      if (stations[i].match(pattern)) matches.push(stations[i]);
-    }
-    return matches;
-  };
-  
+
+  // set up the autocomplete suggestions on the form input fields
 	$('input.origin, input.destination').autocomplete({
 		minLength: 1,
 		source: function(request, response) {
@@ -91,114 +129,96 @@ $(document).ready(function() {
 		  });
 		}
 	});
-	
-	var loadStations = function(callback) {
-	  if (stations.length == 0) {
-  	  $.getJSON('/stations', function(data) {
-  	    stations = data;
-        if (callback) callback();
-      });
-    } else {
-      if (callback) callback();
-    }
-	};
-    
-  var handlers = function() {
-    // load some more journeys
-    $('a.loader').click(function() {
-      loadMoreJourneys($(this).parents('.journeys'));
-      return false; 
+	    
+  // load some more journeys
+  $('body').delegate('a.loader:not(.disabled)', 'click', function() {
+    var loader = $(this);
+    loader.addClass('disabled')
+    loadMoreJourneys($(this).parents('.journeys'), null, function() {
+      loader.removeClass('disabled');
     });
-
-    // handle transitions automatically on non-disabled and non-submit links
-    $('a.fx:not(.disabled):not(.submit)').click(function() { 
-      $(this).trigger('transition');
-      return false;
-    });
-  
-    // don't allow click events on disabled links
-    $('a.disabled').click(function() {
-      return false;
-    });
-  
-    // handle transition event
-    $('a.fx').bind('transition', function() {
-      var link = $(this);
-      var effect = link.attr('class');
-      var linker = link.parents('.page').last();    
-      var href = link.attr('href');
-      var fx = function(linkee) {
-        $(':focus').blur();
-        $(linker).add(linkee).removeClass(effects).addClass(effect);
-        linkee.addClass('in').addClass(active);
-        linker.addClass('out');
-        var animationFinished = function() {
-          linker.removeClass(active).add(linkee).removeClass(effects);
-          linkee.find('a.back').attr('href', '#' + linker.attr('id')).addClass('reverse').addClass(effect);
-          setActivePage(setMinHeight);
-        }
-        if ($.support.WebKitAnimationEvent) {
-          linkee.one('webkitAnimationEnd', function() { animationFinished(); });
-        } else {
-          animationFinished();
-        }
-      }    
-      if ((href).match('^#')) {
-        fx($(href));
-      } else {
-        // load external links via ajax directly into page content
-        var id = generateID(href);
-        $('body').find('#' + id).remove();
-        $('body').append('<div id="' + id + '" class="page"></div>');
-        link.addClass('disabled');
-        $.get(href, function(data) {
-          fx($('#' + id).append(data));
-          link.attr('href', '#' + id).removeClass('disabled');
-          handlers();
-        });
-      }
-      return false;
-    });
-  };
-  
-  var updateStationName = function() {
-    var value = $(this).attr('value');
-    if (value) {
-      var matches = search(value, true);
-      if (matches.length > 0) {
-        $(this).attr('value', matches[0]);
-      }
-    }
-  };
-
-  $('#settings form input').change(function() {
-    updateStationName();
-    $(this).parents('form').data('dirty', true);
+    return false; 
   });
 
+  // handle transitions automatically on non-disabled and non-submit links
+  $('body').delegate('a.fx:not(.disabled):not(.submit)', 'click', function() { 
+    $(this).trigger('transition');
+    return false;
+  });
+
+  // don't allow click events on disabled links
+  $('body').delegate('a.disabled', 'click', function() {
+    return false;
+  });
+
+  // handle transition event
+  $('body').delegate('a.fx', 'transition', function() {
+    var link = $(this);
+    var effect = link.attr('class');
+    var linker = link.parents('.page').last();    
+    var href = link.attr('href');
+    var fx = function(linkee) {
+      $(':focus').blur();
+      $(linker).add(linkee).removeClass(effects).addClass(effect);
+      linkee.addClass('in').addClass(active);
+      linker.addClass('out');
+      var animationFinished = function() {
+        linker.removeClass(active).add(linkee).removeClass(effects);
+        linkee.find('a.back').attr('href', '#' + linker.attr('id')).addClass('reverse').addClass(effect);
+        setActivePage(setMinHeight);
+      }
+      if ($.support.WebKitAnimationEvent) {
+        linkee.one('webkitAnimationEnd', function() { animationFinished(); });
+      } else {
+        animationFinished();
+      }
+    }    
+    if ((href).match('^#')) {
+      fx($(href));
+    } else {
+      // load external links via ajax directly into page content
+      var id = generateID(href);
+      $('body').find('#' + id).remove();
+      $('body').append('<div id="' + id + '" class="page"></div>');
+      link.addClass('disabled');
+      $.get(href, function(data) {
+        fx($('#' + id).append(data));
+        link.attr('href', '#' + id).removeClass('disabled');
+      });
+    }
+    return false;
+  });
+      
+  // update user entered value to use the correctly captitalized 
+  // station names after an input field changes
+  $('#settings form input').change(function() {
+    updateStationName($(this));
+  });
+   
+  saveFormValues($('#settings form'));
+  
   // ajax post settings form and load favourites
   $('.submit').click(function() {
     var link = $(this);
     var form = $('#settings form');
     
-    //if (form.data('dirty')) {
+    if (formHasChanged(form)) {
       loadStations(function() {
         link.addClass('disabled');
         // set station name to correctly capitalized name
         $('#settings form input[type=text]').each(updateStationName);
         $.post(form.attr('action'), form.serialize(), function(data) {
-          form.data('dirty', false);
+          saveFormValues(form);
           loadFavourites(function() {
-            handlers();
             if ($('#favourites').length > 0) {
               link.trigger('transition').removeClass('disabled');
             }
           });
         });        
       });
-    //} else {
-    //  link.trigger('transition').removeClass('disabled');
-    //}
+    } else {
+      link.trigger('transition').removeClass('disabled');
+    }
     return false;
   });
   
@@ -222,7 +242,7 @@ $(document).ready(function() {
     });
   }
     
-  var loadMoreJourneys = function(journeys, limit) {
+  var loadMoreJourneys = function(journeys, limit, callback) {
     var prev = journeys.find('.journey').last();
     var href = journeys.find('a.loader').attr('href');
     if (href) {
@@ -239,8 +259,7 @@ $(document).ready(function() {
           var loader = journeys.find('a.loader');
           loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('title')));
         }));
-        // reattach handlers
-        handlers();
+        if (callback) callback();
       });
     }
   }
@@ -333,5 +352,4 @@ $(document).ready(function() {
   
   setActivePage(setMinHeight);
   updateETAs();
-  handlers();
 });
