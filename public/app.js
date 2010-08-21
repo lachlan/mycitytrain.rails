@@ -254,11 +254,14 @@ $(document).ready(function() {
         $('#' + id).remove();
         $('body').append('<div id="' + id + '"></div>');
         $('#' + id).append(data);
-        prev.after($('#' + id).find('.journey').hide().slideDown('slow', function() {
-          $('#' + id).remove();
-          var loader = journeys.find('a.loader');
-          loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('title')));
-        }));
+        
+        var newJourneys = $('#' + id).find('.journey').hide();
+        prev.after(newJourneys);
+        $('#' + id).remove();                
+        var loader = journeys.find('a.loader');
+        loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('title')));
+        newJourneys.slideDown('slow');
+        
         if (callback) callback();
       });
     }
