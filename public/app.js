@@ -221,8 +221,7 @@ $(document).ready(function() {
 
   var loadFavourites = function(callback) {
     $.get('/', function(data) {
-      $('#favourites').remove();
-      $('body').append(data);
+      $('#favourites').replaceWith(data);
       if (callback) callback();
     });
   }
