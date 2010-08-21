@@ -420,10 +420,11 @@ ol li a.loader {
   right:0;
   text-align: right;
 }
-.origin time, .destination time, .message, .warning {
+.origin .time, .destination .time, .message, .warning {
   display:block;
   color: black;
   font-size: 17px; 
+  border:none;
 }
 .message {
   top:20px;
