@@ -56,7 +56,7 @@ module ApplicationHelper
   
   def classify_duration_to_now(time)
     if time
-      duration_in_seconds = (time - Time.now).round    
+      duration_in_seconds = (time - Time.zone.now).round    
       if duration_in_seconds < 300 then
         "lt_five"
       elsif duration_in_seconds < 600 then
@@ -122,6 +122,6 @@ module ApplicationHelper
   end
   
   def duration_in_concise_words_from_now(to_time)
-    duration_in_concise_words(Time.now, to_time)
+    duration_in_concise_words(Time.zone.now, to_time)
   end
 end
