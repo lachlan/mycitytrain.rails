@@ -5,4 +5,5 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
-Location.refresh
+count = Location.refresh
+puts "Refreshed #{count} network location/s from TransLink"
