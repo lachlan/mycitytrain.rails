@@ -1,0 +1,27 @@
+%ul.group
+  - if idx == 0
+    %li.left.arrow
+      %a.disabled.reverse.slide.fx{:href => "#"}
+        %span!= "&#9664;"
+  - else
+    %li.left.arrow
+      %a.reverse.slide.fx{:href => "##{id_prefix}#{idx-1}"}
+        %span!= "&#9664;"
+  - count.times do |i|
+    - if i == idx
+      %li.active
+        %a{:href => '#'}!= "&#9679;"
+    - elsif i < idx
+      %li
+        %a.reverse.slide.fx{:href => "##{id_prefix}#{i}"}!= "&#9675;"
+    - else
+      %li
+        %a.slide.fx{:href => "##{id_prefix}#{i}"}!= "&#9675;"
+  - if idx == (count-1)
+    %li.right.arrow
+      %a.disabled.slide.fx{:href => "##{id_prefix}#{idx+1}"}
+        %span!= "&#9654;"
+  - else
+    %li.right.arrow
+      %a.slide.fx{:href => "##{id_prefix}#{idx+1}"}
+        %span!= "&#9654;"

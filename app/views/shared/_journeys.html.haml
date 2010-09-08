@@ -1,0 +1,14 @@
+%ol.journeys.content
+  - if @journeys.nil? or @journeys.empty?
+    -# Set title attribute to latest journey in database, because this is where we want to load from
+    - time = (@latest.depart_at unless @latest.nil?) || Time.now
+    %li.journey{:title=>format_time(time, :iso8601)}
+      %p.warning!= "&#9888;"
+      %p.origin
+        = @origin.name
+      %p.destination
+        = @destination.name
+      %p.message No services found at this time.
+  - else
+    = render :partial => 'shared/journey', :collection => @journeys
+  = render :partial => 'shared/load_more_journeys'

@@ -1,82 +1,109 @@
 class Journey < ActiveRecord::Base
   include Comparable
   
-  belongs_to :departing, :class_name => 'Station'
-  belongs_to :arriving, :class_name => 'Station'
-  belongs_to :timetable_type
+  @@limit = 5
   
-  has_many :stops, :order => :position
-  
-  validates_presence_of :departing, :arriving, :departing_seconds
-  
-  attr_accessor :departing_at
-  attr_accessor :arriving_at
-  
-  named_scope :departing_when, lambda { |start_date| { :conditions => ['timetable_type_id = ? and departing_seconds > ?', TimetableDay.find_by_wday(start_date.wday).timetable_type_id, start_date.seconds_since_midnight], :order => 'departing_seconds' }}
-  named_scope :departing_exactly_when, lambda { |start_date| { :conditions => ['timetable_type_id = ? and departing_seconds = ?', TimetableDay.find_by_wday(start_date.wday).timetable_type_id, start_date.seconds_since_midnight]}}
-  named_scope :departing_from, lambda { |station| { :conditions => ['departing_id = ?', station] }}
-  named_scope :arriving_to, lambda { |station| { :conditions => ['arriving_id = ?', station] }}
-  named_scope :limit, lambda { |limit| { :limit => limit }}
-  
-  def self.logger
-    RAILS_DEFAULT_LOGGER
-  end
-
-  def <=> (b)    
-    (b and b.departing_at) ? (departing_at ? departing_at <=> b.departing_at : 1) : ( departing_at ? -1 : 0)
-  end
-      
-  def changes
-    changes, service, last_stop = [], [], nil
+  belongs_to :origin, :class_name => 'Location'
+  belongs_to :destination, :class_name => 'Location'
     
-    stops.each do |stop|
-        if last_stop == stop.station_name
-          changes << service
-          service = []
-        end
-        service << stop
-        last_stop = stop.station_name
+  validates_presence_of :origin, :destination, :depart_at, :arrive_at
+  
+  def self.latest(origin, destination)
+    Journey.where(:origin_id => origin, :destination_id => destination).order('depart_at DESC').limit(1).first
+  end
+  
+  def self.after(origin, destination, depart_after = Time.now, limit = @@limit)
+    date, limit, journeys = depart_after, limit.to_i, []
+    if origin.id? and destination.id? # only bother with real locations stored in the database
+      unless origin == destination # don't even try and load journeys where the origin equals the destination
+        begin
+          journeys = Journey.where(:origin_id => origin, :destination_id => destination).where('depart_at > ?', depart_after).order('depart_at ASC').limit(limit)
+          # pull some more journeys if we don't have enough then try again
+          date = journeys.last.depart_at unless journeys.nil? or journeys.empty?  
+          count = (Journey.refresh(origin, destination, limit - journeys.length) if journeys.length < limit) || 0
+          raise "Journey.refresh did not download any new services" if count == 0
+        rescue => detail
+          break # ignore errors, we'll just act like there are no services
+        end until journeys.length == limit
+      end
     end
-    changes << service if service and !service.empty?
-  end
-
-  def self.departing_after(departing_station, arriving_station, departing_at, limit = 10)
-    #Record when upcoming journeys are being requested.  Only put it in the upcoming, as today/tommorrow are used during rake populate task
-    HistoricJourney.create :departing => departing_station, :arriving => arriving_station
-    self.fetch_journeys(:departing => departing_station, :arriving => arriving_station, :from => departing_at, :limit => limit)
-  end
-
-  def self.upcoming(departing_station, arriving_station, limit = 10)
-    departing_after(departing_station, arriving_station, Time.zone.now, limit)
-  end
-  
-  def self.today(d, a)
-    today = Time.zone.now.midnight 
-    fetch_date(d, a, today)
-  end
-  
-  def self.fetch_date(d, a, w)
-    self.fetch_journeys(:departing => d, :arriving => a, :from => w)
-  end
-    
-  def self.fetch_journeys(o)
-    departing, arriving, from, limit = o[:departing], o[:arriving], o[:from], (o[:limit] || 9999)  
-    journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
-
-    if journeys.empty? && from.hour >= 21
-      from = from.midnight + 1.day
-      journeys = Journey.departing_from(departing).arriving_to(arriving).departing_when(from).limit(limit)
-    end
-  
-    #transpose departing/arriving times
-    journeys.each do |j|
-      j.departing_at = from.midnight + j.departing_seconds
-      j.arriving_at = from.midnight + j.arriving_seconds
-    end    
-    
     journeys
   end
   
+  # downloads the given date range of timetabled services for this journey from TransLink
+  def self.refresh(origin, destination, limit = @@limit)
+    retries, count, depart_after, latest_journey = 1, 0, Time.now, latest(origin, destination)
+    depart_after = latest_journey.first.depart_at + 1.minute unless latest_journey.nil?
+    
+    begin  
+      departure_times = []
+      arrival_times = []
+
+      puts "Trying: origin = #{origin.name}, destination = #{destination.name}, limit = #{limit}, depart_after = #{depart_after.to_s}"
+      html = Nokogiri::HTML(open(url(origin, destination, depart_after)))      
+      rows = html.css('table table + table tr')
+      rows.each do |row|
+        heading = row.css('td:first-child b').first
+        location = row.css('td')[2]
+        time = row.css('td')[1]
+        
+        unless heading.nil? or location.nil? or time.nil?
+          if time.content.strip =~ /\+$/
+            base = depart_after.midnight + 1.day
+          else
+            base = depart_after.midnight
+          end            
+          if heading.content.strip =~ /departing/i
+            if location.content.strip == origin.translink_name
+              departure_times << Time.strptime(time.content.strip, '%I.%M%P', base)
+            end
+          elsif heading.content.strip =~ /arriving/i
+            if location.content.strip == destination.translink_name
+              arrival_times << Time.strptime(time.content.strip, '%I.%M%P', base)
+            end
+          end
+        end
+      end
+      departure_times.each_with_index do |dt, idx|
+        journey = Journey.where(:origin_id => origin, :destination_id => destination, :depart_at => dt).limit(1).first
+        journey = Journey.new if journey.nil?
+        
+        journey.origin = origin
+        journey.destination = destination
+        journey.depart_at = dt
+        journey.arrive_at = arrival_times[idx]
+        journey.save
+      end
+      
+      raise "No services returned by TransLink" if departure_times.length == 0
+      depart_after = departure_times.last + 1.minute
+      count += departure_times.length
+    rescue => detail
+      if retries > 0
+        retries -= 1
+        depart_after = depart_after.midnight + 1.day # try starting from the next day
+        retry
+      else
+        raise
+      end
+    end until count >= limit
+    count
+  end
   
+  def <=> (other)
+    if self.timetable_day < other.timetable_day
+      -1
+    elsif self.timetable_day > other.timetable_day
+      1
+    else
+      self.depart_at <=> other.depart_at
+    end
+  end  
   
+  #private
+  def self.url(origin, destination, depart_at = Time.now)
+    #"http://jp.translink.com.au/TransLinkFromToTimetable.asp?Origin=#{CGI::escape(origin.translink_name)}&Destination=#{CGI::escape(destination.translink_name)}&Date=#{CGI::escape(depart_at.strftime('%d/%m/%Y'))}"    
+    # it's important not to include leading zeroes on the dates or times in this URL :-(
+    "http://jp.translink.com.au/TransLinkEnquiry.asp?MaxJourneys=5&PageFrom=TransLinkStationTimetable.asp&Vehicle=Train&WalkDistance=0&FromSuburb=#{CGI::escape(origin.translink_name)}&ToSuburb=#{CGI::escape(destination.translink_name)}&IsAfter=A&JourneyTimeHours=#{CGI::escape(depart_at.strftime('%I').to_i.to_s)}&JourneyTimeMinutes=#{CGI::escape(depart_at.strftime('%M').to_i.to_s)}&JourneyTimeAmPm=#{CGI::escape(depart_at.strftime('%p'))}&Date=#{CGI::escape(depart_at.strftime('%d').to_i.to_s + '/' + depart_at.strftime('%m').to_i.to_s + '/' + depart_at.strftime('%Y'))}"    
+  end
 end

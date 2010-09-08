@@ -1,9 +1,7 @@
-# Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-
   def format_time(time, format = :short_html)  
     case format
-      when :short_html  then time.strftime('%I:%M&nbsp;%p').downcase
+      when :short_html  then time.strftime('%I:%M&nbsp;%p').downcase.html_safe
       when :iso8601     then time.iso8601 
       when :weekday     then time.strftime('%A')
       when :js          then (time.to_f * 1000).round
@@ -120,11 +118,10 @@ module ApplicationHelper
     else
       duration = "&mdash;"
     end
-    duration
+    duration.html_safe
   end
   
   def duration_in_concise_words_from_now(to_time)
     duration_in_concise_words(Time.now, to_time)
   end
-  
 end

@@ -1,3 +1,0 @@
-rack --version '1.0.1'
-nokogiri --version '>= 1.4.1'
-rest-client --version '>= 1.5.0'

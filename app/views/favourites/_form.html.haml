@@ -1,0 +1,11 @@
+#settings.page
+  .header
+    %h1= SITE_NAME
+    %a.submit.back.reverse.slideup.fx{:href => "#f0"}Done
+  %form{:action => '/favourites', :method => 'post', :class => 'content'}
+    %ol
+      - @favourites.each_with_index do |favourite, index|
+        %li
+          = text_field 'origin', index, :class => 'origin', :placeholder => 'Origin', :value => favourite.origin.name
+          to 
+          = text_field 'destination', index, :class => 'destination', :placeholder => 'Destination', :value => favourite.destination.name

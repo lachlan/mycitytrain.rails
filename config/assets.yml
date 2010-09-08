@@ -1,0 +1,12 @@
+package_assets: on
+javascripts:
+  app:
+    - public/javascripts/jquery.min.js
+    - public/javascripts/jquery-ui-1.8.4.custom.min.js
+    - public/javascripts/app.js
+stylesheets:
+  app:
+    - public/stylesheets/reset.css
+    - public/stylesheets/print.css
+    - public/stylesheets/effects.css
+    - public/stylesheets/app.css

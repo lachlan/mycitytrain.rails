@@ -1,4 +1,4 @@
-= render :partial => 'browser_warning'
-= render :partial => 'favourites'
-= render :partial => 'settings'
-= render :partial => 'about'
+.page{:id => h("#{@origin.name}_to_#{@destination.name}")}
+  .header
+    %h1= SITE_NAME
+  = render :partial => 'shared/journeys'

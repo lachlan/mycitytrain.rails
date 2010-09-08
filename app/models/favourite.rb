@@ -1,46 +1,43 @@
 class Favourite
-  attr_accessor :id, :departing, :arriving, :origin, :destination
+  include ActiveModel::Serialization
+  include ActiveModel::Validations
   
-  @@limit = 5
+  validates_presence_of :origin, :destination
+  attr_accessor :origin, :destination
   
   def initialize(origin, destination)
-    @origin = origin
-    @destination = destination
-    @departing = find_station origin    
-    @arriving = find_station destination
-  end
-  
-  def origin
-    if @departing
-      @departing.name
-    else
-      @origin || ""
-    end
-  end
-  
-  def destination
-    if @arriving
-      @arriving.name
-    else
-      @destination || ""
-    end
+    @origin, @destination = find_location(origin), find_location(destination)
   end
   
   def empty?
-    origin.empty? and destination.empty?
+    (@origin.nil? or @origin.name.empty?) and (@destination.nil? or destination.name.empty?)
   end
   
-  def journeys(limit = @@limit)
-    Journey.upcoming(departing, arriving, @@limit)
+  def invert
+    Favourite.new(@destination.name, @origin.name)
   end
-  
-  def return_journeys(limit = @@limit)
-    Journey.upcoming(arriving, departing, @@limit)
+
+  def journeys
+    Journey.after(@origin, @destination) unless @origin.nil? or @destination.nil?
   end
-  
+
+  def latest
+    Journey.latest(@origin, @destination) unless @origin.nil? or @destination.nil?
+  end
+
   private
-  def find_station(name_or_code)
-    (Station.find_by_code(name_or_code) || Station.find_by_name(name_or_code)) if name_or_code
+  def find_location(location)
+    unless location.instance_of? Location
+      name = location.to_s
+      if name.empty?
+        location = nil
+      else
+        location = Location.where('name like ?', name).limit(1).first # look for a matching location in the database
+        location = Location.new(:name => name) if location.nil? # if we didn't find a real location, create a fake one
+      end
+    end    
+    location
   end
-  
+
 end
+
