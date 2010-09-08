@@ -1,12 +1,12 @@
-%li.journey{:title=>format_time(journey.depart_at, :iso8601)}
+%li.journey{:"data-depart-time-iso8601" => format_time(journey.depart_at, :iso8601), :"data-depart-time-js" => format_time(journey.depart_at, :js)}
   %p.eta{:class=>classify_duration_to_now(journey.depart_at)}
     %span.visuallyhidden Departing in
     =duration_in_concise_words_from_now(journey.depart_at)
   %p.origin
     %span.visuallyhidden Departs
     =journey.origin.name 
-    %abbr.time{:title => format_time(journey.depart_at, :iso8601), :"data-time" => format_time(journey.depart_at, :js)}= format_time(journey.depart_at)
+    %span.time= format_time(journey.depart_at)
   %p.destination
     %span.visuallyhidden Arrives 
     =journey.destination.name 
-    %abbr.time{:title => format_time(journey.arrive_at, :iso8601), :"data-time" => format_time(journey.arrive_at, :js)}= format_time(journey.arrive_at)
+    %span.time= format_time(journey.arrive_at)

@@ -23,6 +23,7 @@ class Journey < ActiveRecord::Base
           count = (Journey.refresh(origin, destination, limit - journeys.length) if journeys.length < limit) || 0
           raise "Journey.refresh did not download any new services" if count == 0
         rescue => detail
+          puts "[ERROR] #{detail.to_s}"
           break # ignore errors, we'll just act like there are no services
         end until journeys.length == limit
       end
@@ -33,7 +34,7 @@ class Journey < ActiveRecord::Base
   # downloads the given date range of timetabled services for this journey from TransLink
   def self.refresh(origin, destination, limit = @@limit)
     retries, count, depart_after, latest_journey = 1, 0, Time.now, latest(origin, destination)
-    depart_after = latest_journey.first.depart_at + 1.minute unless latest_journey.nil?
+    depart_after = latest_journey.depart_at + 1.minute unless latest_journey.nil?
     
     begin  
       departure_times = []

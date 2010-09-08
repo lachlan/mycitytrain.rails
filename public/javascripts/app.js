@@ -246,8 +246,11 @@ $(document).ready(function() {
     var prev = journeys.find('.journey').last();
     var href = journeys.find('a.loader').attr('href');
     if (href) {
-      href = href.replace(/^(.*)=(.*)$/, '$1=' + prev.attr('title'));
-      if (limit && limit > 0) href = href + '&limit=' + limit;
+      var departTime = prev.attr('data-depart-time-iso8601');
+      if (departTime) {
+        href = href.replace(/^(.*)=(.*)$/, '$1=' + departTime);
+        if (limit && limit > 0) href = href + '&limit=' + limit;
+      }
 
       $.get(href, function(data) {
         var id = generateID(href);
@@ -259,7 +262,11 @@ $(document).ready(function() {
         prev.after(newJourneys);
         $('#' + id).remove();                
         var loader = journeys.find('a.loader');
-        loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('title')));
+        loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('data-depart-time-iso8601')));
+        
+        journeys.find('.missing').hide().last().show();
+        journeys.find('.missing:hidden').remove();
+        
         newJourneys.slideDown('slow');
         
         if (callback) callback();
@@ -287,12 +294,12 @@ $(document).ready(function() {
   
   // keep the ETAs up to date with current time and remove departed journeys
   var updateETAs = function() {
-    $('.journey .eta').each(function() {
-      var eta = $(this);
-      var journey = eta.parents('.journey');
+    $('.journey').each(function() {
+      var journey = $(this);
+      var eta = journey.find('.eta');
       var departureDate = new Date();
       var currentDate = new Date();
-      departureDate.setTime(eta.parent().find('.time').first().attr('data-time'));
+      departureDate.setTime(journey.attr('data-depart-time-js'));
     
       var duration = durationInSeconds(currentDate, departureDate);
     
@@ -310,7 +317,7 @@ $(document).ready(function() {
         journey.addClass('expired');
       }
     });
-  
+    
     var flasher = function(element) {
       if (element) {
         element.animate({opacity:0.5},1000,'linear',function() {
@@ -334,7 +341,7 @@ $(document).ready(function() {
   
     $('.journeys').each(function() {
       var journeys = $(this);
-      var expired = journeys.find('.journey.expired');
+      var expired = journeys.find('.journey.expired:not(.missing)');
       var count = journey_limit - (journeys.find('.journey').length - expired.length);
       if (count > 0) loadMoreJourneys(journeys, count);
       flasher(expired);

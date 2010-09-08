@@ -1,6 +1,6 @@
 #favourites
-  - count = @favourites.reject!{|f| f.empty?}.length
-  - @favourites.each_with_index do |favourite, id|
+  - favourites = @favourites.reject{|f| f.empty?}
+  - favourites.each_with_index do |favourite, id|
     .page{:id => "f#{id}"}
       .header
         %a.left.flip.fx.return{:href => "#fr#{id}"}
@@ -11,7 +11,7 @@
       - @journeys, @origin, @destination = favourite.journeys, favourite.origin, favourite.destination
       = render :partial => 'shared/journeys'
       .footer
-        = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => count, :idx => id}
+        = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => favourites.length, :idx => id}
     -# Automatically include return journeys
     .page{:id => "fr#{id}"}
       .header
@@ -23,4 +23,4 @@
       - @journeys, @origin, @destination = favourite.invert.journeys, favourite.invert.origin, favourite.invert.destination
       = render :partial => 'shared/journeys'
       .footer
-        = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => count, :idx => id}
+        = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => favourites.length, :idx => id}

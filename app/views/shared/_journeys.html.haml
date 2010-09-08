@@ -2,7 +2,7 @@
   - if @journeys.nil? or @journeys.empty?
     -# Set title attribute to latest journey in database, because this is where we want to load from
     - time = (@latest.depart_at unless @latest.nil?) || Time.now
-    %li.journey{:title=>format_time(time, :iso8601)}
+    %li.journey.missing{:"data-depart-time-iso8601" => format_time(time, :iso8601), :"data-depart-time-js" => format_time(time, :js)}
       %p.warning!= "&#9888;"
       %p.origin
         = @origin.name
