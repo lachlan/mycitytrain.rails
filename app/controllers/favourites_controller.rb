@@ -16,7 +16,7 @@ class FavouritesController < ApplicationController
   
   # POST /favourites  
   def create
-    favourites = []
+    favourites, cookie = [], []
     origins = params[:origin]
     destinations = params[:destination]
 
@@ -24,9 +24,10 @@ class FavouritesController < ApplicationController
       key, value = item[0], item[1]
       unless key.empty? and value.empty?
         favourites << Favourite.new(value, destinations[key])
+        cookie << [favourites.last.origin.name, favourites.last.destination.name]
       end
     end
-    session[:favourites] = favourites.map {|favourite| [favourite.origin.name, favourite.destination.name]}
+    session[:favourites] = cookie
     render :layout => !request.xhr?
   end
   
