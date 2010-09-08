@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-MyCitytrain::Application.config.secret_token = 'a99ff9773cfec496a6ff31e5bfa408e66c7db1b8676b16760246b8b31d6397e2df9911fd2c2fa6ceb7a99f38c5c925138c71b297a18dc8e70eb4ab54e952dd75'
+MyCitytrain::Application.config.secret_token = '296835085ba78206ede6b257f50912e06955d99069da769078803d0245734e5b02dc3b43efb4b63dddcfd7accc8ce4cdcacbaeeb347c969be84a50f2dd673e08'
