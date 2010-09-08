@@ -26,7 +26,7 @@ class FavouritesController < ApplicationController
         favourites << Favourite.new(value, destinations[key])
       end
     end
-    session[:favourites] = favourites.map {|favourite| [favourite.origin, favourite.destination]}
+    session[:favourites] = favourites.map {|favourite| [favourite.origin.name, favourite.destination.name]}
     render :layout => !request.xhr?
   end
   
