@@ -56,11 +56,11 @@ class Journey < ActiveRecord::Base
           end            
           if heading.content.strip =~ /departing/i
             if location.content.strip == origin.translink_name
-              departure_times << Time.strptime(time.content.strip, '%I.%M%P', base)
+              departure_times << DateTime.strptime("#{base.strftime('%Y-%m-%d')} #{time.content.strip}", '%Y-%m-%d %I.%M%P', base).to_time
             end
           elsif heading.content.strip =~ /arriving/i
             if location.content.strip == destination.translink_name
-              arrival_times << Time.strptime(time.content.strip, '%I.%M%P', base)
+              arrival_times << DateTime.strptime("#{base.strftime('%Y-%m-%d')} #{time.content.strip}", '%Y-%m-%d %I.%M%P', base).to_time
             end
           end
         end
