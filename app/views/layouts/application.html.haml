@@ -13,9 +13,14 @@
     %meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"}
     %meta{:name => "apple-mobile-web-app-capable", :content => "yes"}
     %link{:rel => "apple-touch-startup-image", :href => "/images/startup_320x460.png"}
-    = include_stylesheets :app, :media => 'all'
     -#%script{:src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'}
-    = include_javascripts :app
+    -# Work around incompatibility with jammit gem for packaging static assets, and heroku :-(
+    - if Rails.env.production?
+      %link{:rel => 'stylesheet', :href => '/assets/app.css'}
+      %script{:src => '/assets/app.js'}
+    - else
+      = include_stylesheets :app, :media => 'all'
+      = include_javascripts :app
   -#  paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/
   <!--[if lt IE 7 ]><body class="ie6"><![endif]-->
   <!--[if IE 7 ]><body class="ie7"><![endif]-->
