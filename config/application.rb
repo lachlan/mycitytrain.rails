@@ -46,3 +46,16 @@ module MyCitytrain
     ActiveRecord::Base.include_root_in_json = false
   end
 end
+
+# Dirty hack to work around the following error caused by Rails 3 renaming the FlashHash class used in Rails 2,
+# which has been stored in the permanent session cookie we set for mycitytrain by Rails itself.  So we define
+# the Rails 2 FlashHash class just so the session can be restored by Rails 3:
+# ActionDispatch::Session::SessionRestoreError (Session contains objects whose class definition isn't available.
+# Remember to require the classes for all objects kept in the session.
+# (Original exception: uninitialized constant ActionController::Flash::FlashHash [NameError]))
+module ActionController
+  module Flash
+    class FlashHash
+    end
+  end
+end
