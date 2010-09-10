@@ -12,18 +12,18 @@ class Journey < ActiveRecord::Base
     Journey.where(:origin_id => origin, :destination_id => destination).order('depart_at DESC').limit(1).first
   end
   
-  def self.after(origin, destination, depart_after = Time.zone.now, limit = @@limit)
-    date, limit, journeys = depart_after, limit.to_i, []
+  def self.after(origin, destination, depart_after, limit = @@limit)
+    limit, journeys = limit.to_i, []
+    depart_after = Time.zone.now if depart_after.nil? or depart_after < Time.zone.now # only return journeys that haven't departed yet
     if origin.id? and destination.id? # only bother with real locations stored in the database
-      unless origin == destination # don't even try and load journeys where the origin equals the destination
+      unless origin == destination # don't even try and load journeys where the origin equals the destination        
         begin
           journeys = Journey.where(:origin_id => origin, :destination_id => destination).where('depart_at > ?', depart_after).order('depart_at ASC').limit(limit)
           # pull some more journeys if we don't have enough then try again
-          date = journeys.last.depart_at unless journeys.nil? or journeys.empty?  
           count = (Journey.refresh(origin, destination, limit - journeys.length) if journeys.length < limit) || 0
-          raise "Journey.refresh did not download any new services" if count == 0
+          raise "Journey.refresh did not download any new services for #{origin.name} to #{destination.name}" if count == 0
         rescue => detail
-          puts "[ERROR] #{detail.to_s}"
+          puts "[ERROR] #{detail}"
           break # ignore errors, we'll just act like there are no services
         end until journeys.length == limit
       end
@@ -33,14 +33,15 @@ class Journey < ActiveRecord::Base
   
   # downloads the given date range of timetabled services for this journey from TransLink
   def self.refresh(origin, destination, limit = @@limit)
-    retries, count, depart_after, latest_journey = 1, 0, Time.zone.now, latest(origin, destination)
+    retries, count, latest_journey, limit = 1, 0, latest(origin, destination), limit.to_i
     depart_after = latest_journey.depart_at + 1.minute unless latest_journey.nil?
+    depart_after = Time.zone.now if depart_after.nil? or depart_after < Time.zone.now
     
     begin  
       departure_times = []
       arrival_times = []
 
-      puts "Trying: origin = #{origin.name}, destination = #{destination.name}, limit = #{limit}, depart_after = #{depart_after.to_s}"
+      #puts "Trying: origin = #{origin.name}, destination = #{destination.name}, limit = #{limit}, depart_after = #{depart_after.to_s}"
       html = Nokogiri::HTML(open(url(origin, destination, depart_after)))      
       rows = html.css('table table + table tr')
       rows.each do |row|
@@ -77,7 +78,7 @@ class Journey < ActiveRecord::Base
         journey.save
       end
       
-      raise "No services returned by TransLink" if departure_times.length == 0
+      raise "No services returned by TransLink for #{origin.name} to #{destination.name}" if departure_times.length == 0
       depart_after = departure_times.last + 1.minute
       count += departure_times.length
     rescue => detail
@@ -102,7 +103,6 @@ class Journey < ActiveRecord::Base
     end
   end  
   
-  #private
   def self.url(origin, destination, depart_at = Time.zone.now)
     #"http://jp.translink.com.au/TransLinkFromToTimetable.asp?Origin=#{CGI::escape(origin.translink_name)}&Destination=#{CGI::escape(destination.translink_name)}&Date=#{CGI::escape(depart_at.strftime('%d/%m/%Y'))}"    
     # it's important not to include leading zeroes on the dates or times in this URL :-(

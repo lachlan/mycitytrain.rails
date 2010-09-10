@@ -6,12 +6,7 @@ class JourneysController < ApplicationController
     @destination = Location.find params[:destination]
     
     limit = params[:limit] || @@limit
-    if params[:after]
-      after = Time.zone.parse(params[:after])
-      after = Time.zone.now if after.nil? or after < Time.zone.now # only return journeys that haven't departed yet
-    else
-      after = Time.zone.now
-    end
+    after = (Time.zone.parse(params[:after]) if params[:after]) || Time.zone.now
 
     @journeys = Journey.after @origin, @destination, after, limit
     @latest = Journey.latest @origin, @destination if @journeys.nil? or @journeys.empty?
