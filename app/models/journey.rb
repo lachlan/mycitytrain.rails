@@ -12,7 +12,7 @@ class Journey < ActiveRecord::Base
     Journey.where(:origin_id => origin, :destination_id => destination).order('depart_at DESC').limit(1).first
   end
   
-  def self.after(origin, destination, depart_after, limit = @@limit)
+  def self.after(origin, destination, depart_after = nil, limit = @@limit)
     limit, journeys = limit.to_i, []
     depart_after = Time.zone.now if depart_after.nil? or depart_after < Time.zone.now # only return journeys that haven't departed yet
     if origin.id? and destination.id? # only bother with real locations stored in the database
