@@ -15,11 +15,7 @@ class Journey < ActiveRecord::Base
   #
   # Returns the last Journey or nil if none was found.
   def self.latest(origin, destination)
-    Journey.where(:origin_id => origin, 
-                  :destination_id => destination)
-           .order('depart_at DESC')
-           .limit(1)
-           .first
+    Journey.where(:origin_id => origin, :destination_id => destination).order('depart_at DESC').limit(1).first
   end
   
   # List the next departing Journeys after a given time.
@@ -45,11 +41,7 @@ class Journey < ActiveRecord::Base
       # don't even try and load journeys where the origin equals the destination
       unless origin == destination    
         begin
-          journeys = Journey.where(:origin_id => origin, 
-                                   :destination_id => destination)
-                            .where('depart_at > ?', depart_after)
-                            .order('depart_at ASC')
-                            .limit(limit)
+          journeys = Journey.where(:origin_id => origin, :destination_id => destination).where('depart_at > ?', depart_after).order('depart_at ASC').limit(limit)
           # pull some more journeys if we don't have enough then try again
           count = (Journey.refresh(origin, destination, limit - journeys.length) if journeys.length < limit) || 0
           raise "Journey.refresh did not download any new services for #{origin.name} to #{destination.name}" if count == 0
@@ -109,11 +101,7 @@ class Journey < ActiveRecord::Base
         end
       end
       departure_times.each_with_index do |dt, idx|
-        journey = Journey.where(:origin_id => origin, 
-                                :destination_id => destination, 
-                                :depart_at => dt)
-                         .limit(1)
-                         .first
+        journey = Journey.where(:origin_id => origin, :destination_id => destination, :depart_at => dt).limit(1).first
         journey = Journey.new if journey.nil?
         
         journey.origin = origin
