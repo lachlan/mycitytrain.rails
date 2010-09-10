@@ -18,16 +18,16 @@ class Location < ActiveRecord::Base
   end
   
   def translink_name
-    name + " Railway Station"
+    # even if the location name retrieved from translink has an apostrophe in it, when requesting journeys 
+    # translink's web site won't work if the location has an apostrophe
+    name.gsub(/'/, '') + " Railway Station"
   end
   
   def <=> (other)
     self.name <=> other.name
   end
   
-  private  
   def self.url
     'http://jp.translink.com.au/TransLinkstationTimetable.asp'
   end
-  
 end
