@@ -1,3 +1,6 @@
+require 'open-uri'
+require 'nokogiri'
+
 class Journey < ActiveRecord::Base
   include Comparable
   
