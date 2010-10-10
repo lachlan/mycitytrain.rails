@@ -10,7 +10,6 @@ class FavouritesController < ApplicationController
     end
     respond_to do |format|
       format.html { render :layout => !request.xhr? }
-      format.json { render :json => @favourites.to_json(:methods => [:journeys, :return_journeys]) }
     end
   end
   

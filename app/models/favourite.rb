@@ -51,7 +51,7 @@ class Favourite
   def find_location(location)
     unless location.instance_of? Location
       name = location.to_s
-      location = Location.where('name like ?', name).limit(1).first # look for a matching location in the database
+      location = Location.search(name) # look for a matching location in the database
       location = Location.new(:name => name) if location.nil? # if we didn't find a real location, create a fake one
     end    
     location

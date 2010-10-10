@@ -9,10 +9,17 @@ class Location < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
   
+  def self.search(term)
+    term = term.to_s
+    location = where(:id => term).limit(1).first
+    location = where('name like ?', term).limit(1).first if location.nil?
+    location
+  end
+  
   # Downloads all CityTrain station Locations from the TransLink web site.
   #
   # Returns the Integer count of Locations downloaded.
-  def self.refresh
+  def self.seed
     html = Nokogiri::HTML(open(url))
     tags = html.css('select[name=FromSuburb] option')
     locations = tags.map { |option| option['value'] }.sort
@@ -27,7 +34,7 @@ class Location < ActiveRecord::Base
   def translink_name
     # even if the location name retrieved from translink has an apostrophe in it, when requesting journeys 
     # translink's web site won't work if the location has an apostrophe
-    name.gsub(/'/, '') + " Railway Station"
+    name.gsub(/'/, '').gsub(/ \(Vulture St\)/i, '') + " Railway Station"
   end
   
   # Location spaceship operator: http://en.wikipedia.org/wiki/Spaceship_operator.

@@ -60,5 +60,5 @@ MyCitytrain::Application.routes.draw do
   match '/favourites(.:format)', :to => 'favourites#index',  :via => 'get'
   match '/favourites', :to => 'favourites#create', :via => 'post'
   match '/locations',  :to => 'locations#index'
-  match '/journeys/:origin/:destination(.:format)', :to => 'journeys#index'
+  match '/:origin/:destination(.:format)', :to => 'journeys#index'
 end

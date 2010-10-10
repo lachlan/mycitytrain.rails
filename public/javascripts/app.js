@@ -87,7 +87,7 @@ var loadLocations = function(callback) {
   }
 };
 
-var updateStationName = function(element) {
+var updateLocationName = function(element) {
   var value = $(element).attr('value');
   if (value) {
     var matches = search(value, true);
@@ -192,7 +192,7 @@ $(document).ready(function() {
   // update user entered value to use the correctly captitalized 
   // station names after an input field changes
   $('#settings form input').change(function() {
-    updateStationName($(this));
+    updateLocationName($(this));
   });
    
   saveFormValues($('#settings form'));
@@ -206,7 +206,7 @@ $(document).ready(function() {
       loadLocations(function() {
         link.addClass('disabled');
         // set station name to correctly capitalized name
-        $('#settings form input[type=text]').each(updateStationName);
+        $('#settings form input[type=text]').each(updateLocationName);
         $.post(form.attr('action'), form.serialize(), function(data) {
           saveFormValues(form);
           loadFavourites(function() {
@@ -243,14 +243,16 @@ $(document).ready(function() {
   }
     
   var loadMoreJourneys = function(journeys, limit, callback) {
+    var origin = journeys.attr('data-origin');
+    var destination = journeys.attr('data-destination');
+    var href = '/' + escape(origin).toLowerCase() + '/' + escape(destination).toLowerCase() + '?';
     var prev = journeys.find('.journey').last();
-    var href = journeys.find('a.loader').attr('href');
     if (href) {
       var departTime = prev.attr('data-depart-time-iso8601');
       if (departTime) {
-        href = href.replace(/^(.*)=(.*)$/, '$1=' + departTime);
-        if (limit && limit > 0) href = href + '&limit=' + limit;
+        href += '&after=' + departTime;
       }
+      if (limit && limit > 0) href = href + '&limit=' + limit;
 
       $.get(href, function(data) {
         var id = generateID(href);
@@ -258,17 +260,17 @@ $(document).ready(function() {
         $('body').append('<div id="' + id + '"></div>');
         $('#' + id).append(data);
         
-        var newJourneys = $('#' + id).find('.journey').hide();
-        prev.after(newJourneys);
-        $('#' + id).remove();                
-        var loader = journeys.find('a.loader');
-        loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('data-depart-time-iso8601')));
-        
-        journeys.find('.missing').hide().last().show();
-        journeys.find('.missing:hidden').remove();
-        
-        newJourneys.slideDown('slow');
-        
+        var newJourneys = $('#' + id).find('.journey:not(.missing)').hide();
+        if (newJourneys.length > 0) {
+          prev.after(newJourneys);
+          var loader = journeys.find('a.loader');
+          loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('data-depart-time-iso8601')));        
+          newJourneys.slideDown('slow');  
+          journeys.find('.missing').slideUp('slow', function() {
+            $(this).remove();
+          });
+        }
+        $('#' + id).remove();
         if (callback) callback();
       });
     }
@@ -294,7 +296,7 @@ $(document).ready(function() {
   
   // keep the ETAs up to date with current time and remove departed journeys
   var updateETAs = function() {
-    $('.journey').each(function() {
+    $('.journey:not(.missing)').each(function() {
       var journey = $(this);
       var eta = journey.find('.eta');
       var departureDate = new Date();
@@ -341,8 +343,8 @@ $(document).ready(function() {
   
     $('.journeys').each(function() {
       var journeys = $(this);
-      var expired = journeys.find('.journey.expired:not(.missing)');
-      var count = journey_limit - (journeys.find('.journey').length - expired.length);
+      var expired = journeys.find('.journey.expired');
+      var count = journey_limit - (journeys.find('.journey:not(.missing)').length - expired.length);
       if (count > 0) loadMoreJourneys(journeys, count);
       flasher(expired);
     });

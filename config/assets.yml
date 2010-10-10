@@ -9,4 +9,5 @@ stylesheets:
     - public/stylesheets/reset.css
     - public/stylesheets/print.css
     - public/stylesheets/effects.css
+    - public/stylesheets/spinner.css
     - public/stylesheets/app.css

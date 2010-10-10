@@ -139,7 +139,7 @@ ol li a.loader {
   font-size: 15px;
   text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
 }
-.journey .origin, .journey .destination, .message, .warning {
+.journey .origin, .journey .destination, .invalid .origin, .invalid .destination, .message, .warning {
   position:absolute;
   top: 0;
   left:44px;
@@ -153,7 +153,7 @@ ol li a.loader {
   line-height: 20px;
   width: 112px; 
 }
-.journey .destination {
+.journey .destination, .invalid .destination {
   position:absolute;
   left:auto;
   right:0;

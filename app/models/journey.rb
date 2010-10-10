@@ -18,7 +18,9 @@ class Journey < ActiveRecord::Base
   #
   # Returns the last Journey or nil if none was found.
   def self.latest(origin, destination)
-    Journey.where(:origin_id => origin, :destination_id => destination).order('depart_at DESC').limit(1).first
+    uncached do
+      Journey.where(:origin_id => origin, :destination_id => destination).order('depart_at DESC').limit(1).first
+    end
   end
   
   # List the next departing Journeys after a given time.
@@ -47,7 +49,6 @@ class Journey < ActiveRecord::Base
           journeys = Journey.where(:origin_id => origin, :destination_id => destination).where('depart_at > ?', depart_after).order('depart_at ASC').limit(limit)
           # pull some more journeys if we don't have enough then try again
           count = (Journey.refresh(origin, destination, limit - journeys.length) if journeys.length < limit) || 0
-          raise "Journey.refresh did not download any new services for #{origin.name} to #{destination.name}" if count == 0
         rescue => detail
           puts "[ERROR] #{detail}"
           break # ignore errors, we'll just act like there are no services
@@ -66,8 +67,7 @@ class Journey < ActiveRecord::Base
   # Returns the Integer count of the number of services downloaded.
   # Raises an Exception if no services can be found on the TransLink site.
   def self.refresh(origin, destination, limit = @@limit)
-    retries, count, limit = 1, 0, limit.to_i
-    latest_journey = latest(origin, destination),
+    retries, count, limit, latest_journey = 1, 0, limit.to_i, latest(origin, destination)
     depart_after = latest_journey.depart_at + 1.minute unless latest_journey.nil?
     depart_after = Time.zone.now if depart_after.nil? or depart_after < Time.zone.now
     
@@ -75,8 +75,9 @@ class Journey < ActiveRecord::Base
       departure_times = []
       arrival_times = []
 
-      #puts "Trying: origin = #{origin.name}, destination = #{destination.name}, limit = #{limit}, depart_after = #{depart_after.to_s}"
-      html = Nokogiri::HTML(open(url(origin, destination, depart_after)))
+      u = url(origin, destination, depart_after)
+      puts "Trying: origin = #{origin.name}, destination = #{destination.name}, limit = #{limit}, depart_after = #{depart_after.to_s}, url = #{u}"
+      html = Nokogiri::HTML(open(u))
       # crappy screen scraping logic for the TransLink journey planner
       # will probably break if they change the page AT ALL!
       rows = html.css('table table + table tr')
@@ -84,36 +85,25 @@ class Journey < ActiveRecord::Base
         heading = row.css('td:first-child b').first
         location = row.css('td')[2]
         time = row.css('td')[1]
-        
         unless heading.nil? or location.nil? or time.nil?
-          if time.content.strip =~ /\+$/
-            base = depart_after.midnight + 1.day
-          else
-            base = depart_after.midnight
+          if heading.content.strip =~ /(departing)|(arriving)/i
+            location, time = location.content.strip, time.content.strip
+            if location == origin.translink_name or location == destination.translink_name
+              base = depart_after.midnight
+              base += 1.day if time =~ /\+$/
+              datetime = DateTime.strptime("#{base.strftime('%Y-%m-%d%z')} #{time}", '%Y-%m-%d%z %I.%M%P').in_time_zone.to_time
+              if location == origin.translink_name
+                departure_times << datetime
+              else
+                arrival_times << datetime
+              end
+            end
           end            
-          if heading.content.strip =~ /departing/i
-            if location.content.strip == origin.translink_name
-              # such a dirty hack to get the time into the correct time zone :-(
-              departure_times << DateTime.strptime("#{base.strftime('%Y-%m-%d')} #{time.content.strip}", '%Y-%m-%d %I.%M%P').in_time_zone - Time.zone.utc_offset.seconds
-            end
-          elsif heading.content.strip =~ /arriving/i
-            if location.content.strip == destination.translink_name
-              arrival_times << DateTime.strptime("#{base.strftime('%Y-%m-%d')} #{time.content.strip}", '%Y-%m-%d %I.%M%P').in_time_zone - Time.zone.utc_offset.seconds
-            end
-          end
         end
       end
       departure_times.each_with_index do |dt, idx|
-        journey = Journey.where(:origin_id => origin, :destination_id => destination, :depart_at => dt).limit(1).first
-        journey = Journey.new if journey.nil?
-        
-        journey.origin = origin
-        journey.destination = destination
-        journey.depart_at = dt
-        journey.arrive_at = arrival_times[idx]
-        journey.save
+        Journey.create :origin => origin, :destination => destination, :depart_at => dt, :arrive_at => arrival_times[idx]
       end
-      
       raise "No services returned by TransLink for #{origin.name} to #{destination.name}" if departure_times.length == 0
       depart_after = departure_times.last + 1.minute
       count += departure_times.length
@@ -148,6 +138,6 @@ class Journey < ActiveRecord::Base
   # Returns a String containing the Journey Planner search results URL.
   def self.url(origin, destination, depart_after = Time.zone.now)
     # it's important not to include leading zeroes on the dates or times in this URL :-(
-    "http://jp.translink.com.au/TransLinkEnquiry.asp?MaxJourneys=5&PageFrom=TransLinkStationTimetable.asp&Vehicle=Train&WalkDistance=0&FromSuburb=#{CGI::escape(origin.translink_name)}&ToSuburb=#{CGI::escape(destination.translink_name)}&IsAfter=A&JourneyTimeHours=#{CGI::escape(depart_after.strftime('%I').to_i.to_s)}&JourneyTimeMinutes=#{CGI::escape(depart_after.strftime('%M').to_i.to_s)}&JourneyTimeAmPm=#{CGI::escape(depart_after.strftime('%p'))}&Date=#{CGI::escape(depart_after.strftime('%d').to_i.to_s + '/' + depart_after.strftime('%m').to_i.to_s + '/' + depart_after.strftime('%Y'))}"    
+    "http://jp.translink.com.au/TransLinkEnquiry.asp?MaxJourneys=5&PageFrom=TransLinkStationTimetable.asp&Vehicle=Train&WalkDistance=0&FromSuburb=#{CGI::escape(origin.translink_name)}&ToSuburb=#{CGI::escape(destination.translink_name)}&IsAfter=A&JourneyTimeHours=#{CGI::escape(depart_after.strftime('%I').to_i.to_s)}&JourneyTimeMinutes=#{CGI::escape(depart_after.strftime('%M').to_i.to_s)}&JourneyTimeAmPm=#{CGI::escape(depart_after.strftime('%p'))}&Date=#{CGI::escape(depart_after.strftime('%d').to_i.to_s + '/' + depart_after.strftime('%m').to_i.to_s + '/' + depart_after.strftime('%Y'))}"
   end
 end

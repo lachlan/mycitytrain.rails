@@ -8,7 +8,8 @@
         %h1= SITE_NAME
         %a.slideup.fx{:href => '#settings'}
           %span.ir.settings Settings
-      - @journeys, @origin, @destination = favourite.journeys, favourite.origin, favourite.destination
+      - @journeys, @origin, @destination = [], favourite.origin, favourite.destination
+      - @journeys = favourite.journeys if request.xhr?
       = render :partial => 'shared/journeys'
       .footer
         = render :partial => 'footer', :locals => {:id_prefix => 'f', :count => favourites.length, :idx => id}
@@ -20,7 +21,8 @@
         %h1= SITE_NAME
         %a.slideup.fx{:href => '#about'}
           %span.ir.about About
-      - @journeys, @origin, @destination = favourite.invert.journeys, favourite.invert.origin, favourite.invert.destination
+      - @journeys, @origin, @destination = [], favourite.invert.origin, favourite.invert.destination
+      - @journeys = favourite.invert.journeys if request.xhr?
       = render :partial => 'shared/journeys'
       .footer
         = render :partial => 'footer', :locals => {:id_prefix => 'fr', :count => favourites.length, :idx => id}
