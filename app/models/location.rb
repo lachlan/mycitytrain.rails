@@ -9,8 +9,11 @@ class Location < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
   
+  # Finds a location given an ID or name.
+  #
+  # Returns the matching Location.
   def self.search(term)
-    term = term.to_s
+    term = term.to_s.downcase
     location = where(:id => term).limit(1).first
     location = where('name like ?', term).limit(1).first if location.nil?
     location
@@ -23,8 +26,13 @@ class Location < ActiveRecord::Base
     html = Nokogiri::HTML(open(url))
     tags = html.css('select[name=FromSuburb] option')
     locations = tags.map { |option| option['value'] }.sort
-    locations.map { |location| Location.find_or_create_by_name(:name => location.gsub(/ Railway Station/, '')) }
+    locations.map { |location| Location.find_or_create_by_name(:name => location.gsub(/ Railway Station/, '').downcase) }
     locations.count
+  end
+  
+  # Redefine name attribute to be titleized.
+  def name
+    attributes['name'].titleize
   end
   
   # Converts a Location name to a TransLink formatted CityTrain station name
