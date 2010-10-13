@@ -3,11 +3,8 @@ String.prototype.id = function() { return 'id_' + this.toString().replace(/[^a-z
 
 // Pluralizes a string by adding an 's' on the end
 String.prototype.pluralize = function(count) {
-  var plural = function(singular) {
-    return singular + "s";
-  }
   if (count == undefined) count = 0;
-  return count + " " + ((count == 1 || count == '1')? this : plural(this));
+  return count + " " + ((count == 1 || count == '1')? this : this + 's');
 };
 
 // Returns the duration between two dates
