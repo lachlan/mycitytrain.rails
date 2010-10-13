@@ -193,13 +193,13 @@ ol li a.loader {
   background-image: -webkit-gradient(linear,left top,left bottom,from(#66cc00),to(#53bc00));
   background-image: -moz-linear-gradient(top,#66cc00,#53bc00);
 }
-.lt_ten {
+.soon {
   background: #ff8c00;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#ff8c00),to(#d86c00));
   background-image: -moz-linear-gradient(top,#ff8c00,#d86c00);
   border-color: #c60;
 }
-.lt_five {
+.now {
   background: #e50000;
   background-image: -webkit-gradient(linear,left top,left bottom,from(#e50000),to(#bf0000));
   background-image: -moz-linear-gradient(top,#e50000,#bf0000);

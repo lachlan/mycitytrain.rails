@@ -1,5 +1,5 @@
 %li.journey{:"data-depart-time-iso8601" => format_time(journey.depart_at, :iso8601), :"data-depart-time-js" => format_time(journey.depart_at, :js)}
-  %p.eta{:class=>classify_duration_to_now(journey.depart_at)}
+  %p.eta
     %span.visuallyhidden Departing in
     =duration_in_concise_words_from_now(journey.depart_at)
   %p.origin
