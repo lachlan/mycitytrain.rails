@@ -165,6 +165,7 @@ $(document).ready(function() {
     var linker = link.parents('.page').last();    
     var href = link.attr('href');
     var fx = function(linkee) {
+      if (linkee.length == 0) linkee = $('.page').first(); // if we can't find the linkee, then default to first .page element
       $(':focus').blur();
       $(linker).add(linkee).removeClass(effects).addClass(effect);
       linkee.addClass('in').addClass(active);
