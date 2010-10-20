@@ -249,36 +249,40 @@ $(document).ready(function() {
   }
     
   var loadMoreJourneys = function(journeys, limit, callback) {
-    var origin = journeys.attr('data-origin');
-    var destination = journeys.attr('data-destination');
-    var href = '/' + escape(origin).toLowerCase() + '/' + escape(destination).toLowerCase() + '?';
-    var prev = journeys.find('.journey').last();
-    if (href) {
-      var departTime = prev.attr('data-depart-time-iso8601');
-      if (departTime) {
-        href += '&after=' + departTime;
-      }
-      if (limit && limit > 0) href = href + '&limit=' + limit;
-
-      $.get(href, function(data) {
-        var id = unescape(href).id() ;
-        $('#' + id).remove();
-        $('body').append('<div id="' + id + '"></div>');
-        $('#' + id).append(data);
-        
-        var newJourneys = $('#' + id).find('.journey:not(.missing)').hide();
-        if (newJourneys.length > 0) {
-          prev.after(newJourneys);
-          var loader = journeys.find('a.loader');
-          loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('data-depart-time-iso8601')));        
-          newJourneys.slideDown('slow');  
-          journeys.find('.missing').slideUp('slow', function() {
-            $(this).remove();
-          });
+    if (!journeys.data('semaphore')) {
+      journeys.data('semaphore', true);
+      var origin = journeys.attr('data-origin');
+      var destination = journeys.attr('data-destination');
+      var href = '/' + escape(origin).toLowerCase() + '/' + escape(destination).toLowerCase() + '?';
+      var prev = journeys.find('.journey').last();
+      if (href) {
+        var departTime = prev.attr('data-depart-time-iso8601');
+        if (departTime) {
+          href += '&after=' + departTime;
         }
-        $('#' + id).remove();
-        if (callback) callback();
-      });
+        if (limit && limit > 0) href = href + '&limit=' + limit;
+
+        $.get(href, function(data) {
+          var id = unescape(href).id() ;
+          $('#' + id).remove();
+          $('body').append('<div id="' + id + '"></div>');
+          $('#' + id).append(data);
+        
+          var newJourneys = $('#' + id).find('.journey:not(.missing)').hide();
+          if (newJourneys.length > 0) {
+            prev.after(newJourneys);
+            var loader = journeys.find('a.loader');
+            loader.attr('href', loader.attr('href').replace(/^(.*)=(.*)$/, '$1=' + journeys.find('.journey').last().attr('data-depart-time-iso8601')));        
+            newJourneys.slideDown('slow');  
+            journeys.find('.missing').slideUp('slow', function() {
+              $(this).remove();
+            });
+          }
+          $('#' + id).remove();
+          journeys.data('semaphore', false);
+          if (callback) callback();
+        });
+      }
     }
   }
   
