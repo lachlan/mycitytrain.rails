@@ -22,13 +22,13 @@ class Location < ActiveRecord::Base
   # Downloads all CityTrain station Locations from the TransLink web site.
   #
   # Returns the Integer count of Locations downloaded.
-  def self.seed
-    html = Nokogiri::HTML(open(url))
-    tags = html.css('select[name=FromSuburb] option')
-    locations = tags.map { |option| option['value'] }.sort
-    locations.map { |location| Location.find_or_create_by_name(:name => location.gsub(/ Railway Station/, '').downcase) }
-    locations.count
-  end
+  #def self.seed
+  #  html = Nokogiri::HTML(open(url))
+  #  tags = html.css('select[name=FromSuburb] option')
+  #  locations = tags.map { |option| option['value'] }.sort
+  #  locations.map { |location| Location.find_or_create_by_name(:name => location.gsub(/ Railway Station/, '').downcase) }
+  #  locations.count
+  #end
   
   # Redefine name attribute to be titleized.
   def name
@@ -56,7 +56,7 @@ class Location < ActiveRecord::Base
   end
   
   # Returs a String containing the URL for getting a list of TransLink CityTrain stations.
-  def self.url
-    'http://jp.translink.com.au/TransLinkstationTimetable.asp'
-  end
+  #def self.url
+  #  'http://jp.translink.com.au/TransLinkstationTimetable.asp'
+  #end
 end
