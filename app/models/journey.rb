@@ -80,27 +80,13 @@ class Journey < ActiveRecord::Base
       html = Nokogiri::HTML(open(u))
       # crappy screen scraping logic for the TransLink journey planner
       # will probably break if they change the page AT ALL!
-      rows = html.css('table table + table tr')
-      rows.each do |row|
-        heading = row.css('td:first-child b').first
-        location = row.css('td')[2]
-        time = row.css('td')[1]
-        unless heading.nil? or location.nil? or time.nil?
-          if heading.content.strip =~ /(departing)|(arriving)/i
-            location, time = location.content.strip, time.content.strip
-            if location == origin.translink_name or location == destination.translink_name
-              base = depart_after.midnight
-              base += 1.day if time =~ /\+$/
-              datetime = DateTime.strptime("#{base.strftime('%Y-%m-%d%z')} #{time}", '%Y-%m-%d%z %I.%M%P').in_time_zone.to_time
-              if location == origin.translink_name
-                departure_times << datetime
-              else
-                arrival_times << datetime
-              end
-            end
-          end            
-        end
+      results = html.css('.subheading .floatLeft')
+      results.each do |result|
+        depart_time, arrive_time = result.content.split(' - ').map{ |t| parse_translink_time(t.strip, depart_after.midnight) }
+        departure_times << depart_time
+        arrival_times << arrive_time
       end
+      
       departure_times.each_with_index do |dt, idx|
         Journey.create :origin => origin, :destination => destination, :depart_at => dt, :arrive_at => arrival_times[idx]
       end
@@ -117,6 +103,12 @@ class Journey < ActiveRecord::Base
       end
     end until count >= limit
     count
+  end
+  
+  def self.parse_translink_time(time_string, after = Time.now)
+    base = after.midnight
+    base += 1.day if time_string =~ /\+$/
+    datetime = DateTime.strptime("#{base.strftime('%Y-%m-%d%z')} #{time_string}", '%Y-%m-%d%z %I.%M%P').in_time_zone.to_time
   end
   
   # Journey spaceship operator: http://en.wikipedia.org/wiki/Spaceship_operator.
@@ -138,6 +130,6 @@ class Journey < ActiveRecord::Base
   # Returns a String containing the Journey Planner search results URL.
   def self.url(origin, destination, depart_after = Time.zone.now)
     # it's important not to include leading zeroes on the dates or times in this URL :-(
-    "http://jp.translink.com.au/TransLinkEnquiry.asp?MaxJourneys=5&PageFrom=TransLinkStationTimetable.asp&Vehicle=Train&WalkDistance=0&FromSuburb=#{CGI::escape(origin.translink_name)}&ToSuburb=#{CGI::escape(destination.translink_name)}&IsAfter=A&JourneyTimeHours=#{CGI::escape(depart_after.strftime('%I').to_i.to_s)}&JourneyTimeMinutes=#{CGI::escape(depart_after.strftime('%M').to_i.to_s)}&JourneyTimeAmPm=#{CGI::escape(depart_after.strftime('%p'))}&Date=#{CGI::escape(depart_after.strftime('%d').to_i.to_s + '/' + depart_after.strftime('%m').to_i.to_s + '/' + depart_after.strftime('%Y'))}"
+    "http://mobile.jp.translink.com.au/TransLinkExactEnquiry.asp?ToLoc=#{CGI::escape(origin.translink_name)}%7E%7E%3B#{CGI::escape(origin.translink_name)}%3B#{CGI::escape(origin.translink_name)}%7E%7ELOCATION+NO+WALK%7E%7EONS&FromLoc=#{CGI::escape(destination.translink_name)}%7E%7E%3B#{CGI::escape(destination.translink_name)}%3B#{CGI::escape(destination.translink_name)}%7E%7ELOCATION+NO+WALK%7E%7EONS&Vehicle=train&WalkDistance=0&IsAfter=A&JourneyTimeHours=#{CGI::escape(depart_after.strftime('%I').to_i.to_s)}&JourneyTimeMinutes=#{CGI::escape(depart_after.strftime('%M').to_i.to_s)}&JourneyTimeAmPm=#{CGI::escape(depart_after.strftime('%p'))}&Date=#{CGI::escape(depart_after.strftime('%d').to_i.to_s + '/' + depart_after.strftime('%m').to_i.to_s + '/' + depart_after.strftime('%Y'))}"
   end
 end
