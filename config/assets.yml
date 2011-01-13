@@ -1,7 +1,7 @@
 package_assets: on
 javascripts:
   app:
-    - public/javascripts/jquery.min.js
+    - public/javascripts/jquery-1.4.4.min.js
     - public/javascripts/jquery-ui-1.8.4.custom.min.js
     - public/javascripts/app.js
 stylesheets:
