@@ -68,35 +68,38 @@ class Journey < ActiveRecord::Base
   # Raises an Exception if no services can be found on the TransLink site.
   def self.refresh(origin, destination, limit = @@limit)
     retries, count, limit, latest_journey = 1, 0, limit.to_i, latest(origin, destination)
-    depart_after = latest_journey.depart_at + 1.minute unless latest_journey.nil?
-    depart_after = Time.zone.now if depart_after.nil? or depart_after < Time.zone.now
-    
-    begin  
-      departure_times = []
-      arrival_times = []
+    after = latest_journey.depart_at + 1.minute unless latest_journey.nil?
+    after = Time.zone.now if after.nil? or after < Time.zone.now
 
-      u = url(origin, destination, depart_after)
-      puts "Trying: origin = #{origin.name}, destination = #{destination.name}, limit = #{limit}, depart_after = #{depart_after.to_s}, url = #{u}"
-      html = Nokogiri::HTML(open(u))
-      # crappy screen scraping logic for the TransLink journey planner
-      # will probably break if they change the page AT ALL!
-      results = html.css('.subheading .floatLeft')
-      results.each do |result|
-        depart_time, arrive_time = result.content.split(' - ').map{ |t| parse_translink_time(t.strip, depart_after.midnight) }
-        departure_times << depart_time
-        arrival_times << arrive_time
+    url = 'http://jp.translink.com.au/travel-information/journey-planner/train-planner'
+
+    agent = Mechanize.new
+    begin
+      puts "Trying: origin = #{origin.name}, destination = #{destination.name}, limit = #{limit}, after = #{after.to_s}, url = #{url}"
+      page = agent.post(url, :FromStation => origin.translink_name, 
+                      :ToStation => destination.translink_name, 
+                      :TimeSearchMode => 'DepartAt', 
+                      :SearchDate => after.strftime('%Y-%m-%d'), 
+                      :SearchHour => after.strftime('%I').to_i.to_s, 
+                      :SearchMinute => after.strftime('%M').to_i.to_s, 
+                      :TimeMeridiem => after.strftime('%p'))
+      
+      html = Nokogiri::HTML(page.body)
+
+      results = html.css('#optionsTable tbody tr').map do |tr|
+        tr.css('td.timetd')[0,2].map { |td| parse_translink_time(td.content.strip, after.midnight) }
       end
       
-      departure_times.each_with_index do |dt, idx|
-        Journey.create :origin => origin, :destination => destination, :depart_at => dt, :arrive_at => arrival_times[idx]
+      results.each do |result|
+        Journey.create :origin => origin, :destination => destination, :depart_at => result[0], :arrive_at => result[1]
       end
-      raise "No services returned by TransLink for #{origin.name} to #{destination.name}" if departure_times.length == 0
-      depart_after = departure_times.last + 1.minute
-      count += departure_times.length
+      raise "No services returned by TransLink for #{origin.name} to #{destination.name}" if results.length == 0
+      after = results.last.first + 1.minute
+      count += results.length
     rescue => detail
       if retries > 0
         retries -= 1
-        depart_after = depart_after.midnight + 1.day # try starting from the next day
+        after = after.midnight + 1.day # try starting from the next day
         retry
       else
         raise
@@ -120,16 +123,4 @@ class Journey < ActiveRecord::Base
   def <=> (other)
     self.depart_at <=> other.depart_at
   end  
-  
-  # The URL for getting TransLink Journey Planner search results.
-  #
-  # origin       - Search for Journeys departing from this Location.
-  # destination  - Search for Journeys arriving to this Location.
-  # depart_after - Search for Journeys departing after this Time (default: Time.zone.now).
-  #
-  # Returns a String containing the Journey Planner search results URL.
-  def self.url(origin, destination, depart_after = Time.zone.now)
-    # it's important not to include leading zeroes on the dates or times in this URL :-(
-    "http://mobile.jp.translink.com.au/TransLinkExactEnquiry.asp?FromLoc=#{CGI::escape(origin.translink_name)}%7E%7E%3B#{CGI::escape(origin.translink_name)}%3B#{CGI::escape(origin.translink_name)}%7E%7ELOCATION+NO+WALK%7E%7EONS&ToLoc=#{CGI::escape(destination.translink_name)}%7E%7E%3B#{CGI::escape(destination.translink_name)}%3B#{CGI::escape(destination.translink_name)}%7E%7ELOCATION+NO+WALK%7E%7EONS&Vehicle=train&WalkDistance=0&IsAfter=A&JourneyTimeHours=#{CGI::escape(depart_after.strftime('%I').to_i.to_s)}&JourneyTimeMinutes=#{CGI::escape(depart_after.strftime('%M').to_i.to_s)}&JourneyTimeAmPm=#{CGI::escape(depart_after.strftime('%p'))}&Date=#{CGI::escape(depart_after.strftime('%d').to_i.to_s + '/' + depart_after.strftime('%m').to_i.to_s + '/' + depart_after.strftime('%Y'))}"
-  end
 end
