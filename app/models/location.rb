@@ -44,7 +44,12 @@ class Location < ActiveRecord::Base
   def translink_name
     # even if the location name retrieved from translink has an apostrophe in it, when requesting journeys 
     # translink's web site won't work if the location has an apostrophe
-    name.gsub(/'/, '').gsub(/ \(Vulture St\)/i, '') + " Railway Station"
+    aliases = {
+      'Domestic Airport' => 'Airport Domestic',
+      'International Airport' => 'Airport International'
+    }
+    
+    (aliases[name] || name).gsub(/'/, '').gsub(/ \(Vulture St\)/i, '') + " Railway Station"
   end
   
   # Location spaceship operator: http://en.wikipedia.org/wiki/Spaceship_operator.
