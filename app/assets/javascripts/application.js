@@ -136,7 +136,7 @@ $(function() {
 
   App.Models.Journeys = Backbone.Collection.extend({ 
     model: App.Models.Journey
-  , limit: 4
+  , limit: 5
   , initialize: function(models, options) {
       _(this).bindAll()
       _(this).extend(
