@@ -11,6 +11,10 @@ class Journey < ActiveRecord::Base
     
   validates_presence_of :origin, :destination, :depart_at, :arrive_at
   
+  def as_json(options={})
+    [self.depart_at.utc.iso8601, self.arrive_at.utc.iso8601]
+  end
+  
   # Find the very last Journey to depart.
   #
   # origin      - The Location to depart from.
