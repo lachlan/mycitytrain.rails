@@ -2,6 +2,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :init, :www_redirect
   
+  def index
+  end
+  
   def init
     #ensure the the session favourites array has been initialised before use
     session[:favourites] ||= []

@@ -10,19 +10,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100906015401) do
+ActiveRecord::Schema.define(:version => 20110523035722) do
 
   create_table "journeys", :force => true do |t|
     t.integer  "origin_id"
     t.integer  "destination_id"
     t.datetime "depart_at"
     t.datetime "arrive_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "journeys", ["origin_id", "destination_id", "depart_at"], :name => "journeys_primary_index"
 
   create_table "locations", :force => true do |t|
-    t.string "name"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "locations", ["name"], :name => "index_locations_on_name"

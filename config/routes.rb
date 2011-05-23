@@ -1,4 +1,8 @@
-MyCitytrain::Application.routes.draw do
+MycitytrainRails::Application.routes.draw do
+  match 'data/locations(.:format)' => 'location#index'
+  match 'data/:origin/:destination(.:format)' => 'journey#index'
+  root :to => 'application#index'
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -48,17 +52,11 @@ MyCitytrain::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => "welcome#index"
+  # root :to => 'welcome#index'
 
   # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id(.:format)))'
-  
-  root :to => 'favourites#index'
-  match '/favourites(.:format)', :to => 'favourites#index',  :via => 'get'
-  match '/favourites', :to => 'favourites#create', :via => 'post'
-  match '/locations',  :to => 'locations#index'
-  match '/:origin/:destination(.:format)', :to => 'journeys#index'
 end

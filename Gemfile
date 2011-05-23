@@ -1,26 +1,36 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.5'
+gem 'rails', '3.1.0.rc1'
 
 # Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+# gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'sqlite3'
+
+# Asset template engines
+gem 'slim'
+gem 'sass'
+#gem 'coffee-script'
+gem 'uglifier'
+
+gem 'jquery-rails'
+
+# Use unicorn as the web server
+gem 'unicorn'
+
+# Deploy with Capistrano
+# gem 'capistrano'
 
 # To use debugger
-# gem 'ruby-debug'
+# gem 'ruby-debug19', :require => 'ruby-debug'
 
-# Bundle the extra gems:
-# gem 'bj'
 gem 'nokogiri'
 gem 'mechanize'
-gem 'haml'
 
-# Bundle gems for the local environment. Make sure to
-# put test-only gems in this group so their generators
-# and rake tasks are available in development mode:
-group :development, :test do
-  gem 'jammit'
-  # Use unicorn as the web server
-  gem 'unicorn'
+# Heroku needs the following for Rails 3.1 sprockets to work: http://www.quickleft.com/blog/rails-31-sprockets-and-heroku
+gem 'therubyracer-heroku', '0.8.1.pre3'
+
+group :test do
+  # Pretty printed test output
+  gem 'turn', :require => false
 end

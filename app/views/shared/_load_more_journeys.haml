@@ -1,3 +1,0 @@
-- depart_after = (@journeys.last.depart_at unless @journeys.nil? or @journeys.empty?) || Time.zone.now
-- if @origin.id? and @destination.id?
-  %li= link_to "Load More Services&hellip;".html_safe, {:controller => 'journeys', :action => 'index', :origin => @origin.name.downcase, :destination => @destination.name.downcase, :after => format_time(depart_after, :iso8601) }, {:class => 'loader'}

@@ -1,0 +1,104 @@
+doctype html
+html manifest="/cache.manifest"
+  head
+    title MyCitytrain
+    meta content='Mobile-friendly Brisbane Queensland Rail CityTrain timetables' name='description'
+    meta content='Lachlan Dowding, Kevin Read'  name='author'
+    meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport'
+    meta content='yes' name='apple-mobile-web-app-capable'
+
+    link href='/assets/startup-320x460.png' rel='apple-touch-startup-image'
+    link href='/assets/apple-touch-icon-57x57.png' rel='apple-touch-icon'
+    link href='/assets/apple-touch-icon-72x72.png' rel='apple-touch-icon' sizes='72x72'
+    link href='/assets/apple-touch-icon-114x114.png' rel='apple-touch-icon' sizes='114x114'
+
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+    script id='header-template' type='text/template'
+      h1 MyCitytrain
+      a id='header-right-button' class='back reverse slideup fx' href='#' Done
+    script id='journey-header-template' type='text/template'
+      a id='header-left-button' class='flip fx return <%= inverse ? "reverse" : "" %>' href='<%= url %>'
+        span class='<%= inverse ? "inbound" : "" %>' Return
+      h1 MyCitytrain
+      | <% if (inverse) { %>
+      a id='header-right-button' class='slideup fx' href='/#/about'
+          span class='about' About
+      | <% } else { %>
+      a id='header-right-button' class='slideup fx' href='/#/settings'
+        span class='settings' Settings
+      | <% } %>
+    script id='footer-template' type='text/template'
+      | <% if (index === 0) { %>
+      a href='#' class='left arrow disabled reverse slide fx'
+      | <% } else { %>
+      a href='<%= collection.at(index - 1).url() %>' class='left arrow reverse slide fx'
+      | <% } %>
+      ul class='group'
+        | <% collection.each(function(item, idx) { %>
+        | <% if (idx === index) { %>
+        li class='active'
+          a href='<%= item.url() %>' class='reverse slide fx' &#9679;
+        | <% } else if (idx < index) { %>
+        li
+          a href='<%= item.url() %>' class='reverse slide fx' &#9675;
+        | <% } else { %>
+        li
+          a href='<%= item.url() %>' class='slide fx' &#9675;
+        | <% } %>
+        | <% }); %>
+      | <% if (index === (collection.length - 1)) { %>
+      a href='#' class='right arrow disabled slide fx'
+      | <% } else { %>
+      a href='<%= collection.at(index + 1).url() %>' class='right arrow slide fx'
+      | <% } %>    
+    script id='journey-template' type='text/template'
+      span class='eta <%= className %>'
+        | <%= eta %>
+      p class='origin'
+        span class='location'
+          | <%= origin %>
+        span class='time'
+          | <%= departure.format().toLowerCase() %>
+      p class='destination'
+        span class='location'
+          | <%= destination %>
+        span class='time'
+          | <%= arrival.format().toLowerCase() %>
+    script id='load-template' type='text/template'
+      button
+        | Load More Services
+        span .
+        span .
+        span .
+    script id='settings-template' type='text/template'
+      form
+        ol
+          | <% for (var i = 0; i < 7; i++) { %>
+          |   <% if (i < collection.length) { %>
+          li
+            input type='text' class='origin' placeholder='Origin' value='<%= collection[i][0] %>'
+            '  to
+            input type='text' class='destination' placeholder='Destination' value='<%= collection[i][1] %>'
+            |  <% } else { %>
+          li
+            input type='text' class='origin' placeholder='Origin' value=''
+            '  to
+            input type='text' class='destination' placeholder='Destination' value=''
+            |   <% } %>
+            | <% } %>
+    script id='about-template' type='text/template'
+      ul
+        li
+          h2 About
+          p 
+            | MyCitytrain is about taking the Queensland Rail timetable with you on the go. Optimised for mobile devices like the iPhone, it's now easy to check when your next train departs wherever you are. Please add 
+            a href='http://mycitytrain.info' mycitytrain.info
+            |  to your home screen.
+        li
+          h2 Credits
+          p Design and development by Lachlan Dowding and Kevin Read.
+  body
+    == yield
