@@ -17,7 +17,8 @@ class JourneyController < ApplicationController
 
       if @journeys.empty?
         render :text => "No services found", :status => :not_found
-      else    
+      else
+        expires_in (@journeys.first.depart_at - Time.now) - 1.minute
         render :json => @journeys
       end
     end
