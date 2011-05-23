@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 0.0.1
+# version 0.0.2
 /
 /favicon.ico
 /assets/apple-touch-icon-114x114.png
@@ -11,6 +11,7 @@ CACHE MANIFEST
 /assets/startup-320x460.png
 /assets/application.js
 /assets/application.css
+/stylesheets/effects.css
 
 NETWORK:
 /data
