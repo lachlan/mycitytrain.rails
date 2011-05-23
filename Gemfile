@@ -30,6 +30,9 @@ gem 'mechanize'
 # Heroku needs the following for Rails 3.1 sprockets to work: http://www.quickleft.com/blog/rails-31-sprockets-and-heroku
 gem 'therubyracer-heroku', '0.8.1.pre3'
 
+# Another Heroku fix: http://twitter.com/#!/dhh/status/71966528744071169
+gem "rake", "0.8.7"
+
 group :test do
   # Pretty printed test output
   gem 'turn', :require => false
