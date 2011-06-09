@@ -82,7 +82,7 @@ class Journey < ActiveRecord::Base
       puts "Trying: origin = #{origin.name}, destination = #{destination.name}, limit = #{limit}, after = #{after.to_s}, url = #{url}"
       page = agent.post(url, :FromStation => origin.translink_name, 
                       :ToStation => destination.translink_name, 
-                      :TimeSearchMode => 'DepartAt', 
+                      :TimeSearchMode => 'LeaveAfter', 
                       :SearchDate => after.strftime('%Y-%m-%d'), 
                       :SearchHour => after.strftime('%I').to_i.to_s, 
                       :SearchMinute => after.strftime('%M').to_i.to_s, 
