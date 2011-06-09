@@ -18,8 +18,8 @@ class JourneyController < ApplicationController
       if @journeys.empty?
         render :text => "No services found", :status => :not_found
       else
-        time_to_next_departure = (@journeys.first.depart_at - Time.now) - 1.minute
-        expires_in time_to_next_departure if time_to_next_departure > 0
+        #time_to_next_departure = (@journeys.first.depart_at - Time.now) - 1.minute
+        #expires_in time_to_next_departure if time_to_next_departure > 0
         render :json => @journeys
       end
     end
