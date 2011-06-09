@@ -15,8 +15,9 @@ gem 'uglifier'
 
 gem 'jquery-rails'
 
-# Use unicorn as the web server
-gem 'unicorn'
+# Use thin as the web server
+gem 'thin'
+
 
 # Deploy with Capistrano
 # gem 'capistrano'
