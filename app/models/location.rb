@@ -13,7 +13,7 @@ class Location < ActiveRecord::Base
   #
   # Returns the matching Location.
   def self.search(term)
-    term = term.to_s.downcase
+    term = term.to_s.downcase.gsub(/-/, ' ')
     location = where(:id => term).limit(1).first
     location = where('name like ?', term).limit(1).first if location.nil?
     location
